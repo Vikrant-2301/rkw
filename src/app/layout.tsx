@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ComingSoonOverlay } from "@/components/ComingSoonOverlay";
 
 export const metadata: Metadata = {
   title: "RKW - Ramesh Kolhu Wale | 100% Pure Wood-Pressed Oils & Vedic Bilona Ghee",
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="en" className="h-full scroll-smooth scroll-pt-28">
       <body className="min-h-full flex flex-col bg-[#fcfbf7] text-stone-900 font-sans antialiased selection:bg-amber-300 selection:text-emerald-950">
         <CartProvider>
+          <ComingSoonOverlay />
           <ScrollToTop />
           <Navbar />
           <main className="flex-1">
