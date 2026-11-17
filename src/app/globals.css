@@ -3,9 +3,19 @@
 @theme {
   --color-cream: #FAF8F3;
   --color-cream-dark: #F2EEE5;
-  --color-forest: #1C3829;
-  --color-forest-mid: #2A5240;
-  --color-forest-light: #3D7A5E;
+  --color-navy: #0E2A47;
+  --color-navy-dark: #0A1C30;
+  --color-navy-mid: #163A60;
+  --color-navy-light: #1E4E80;
+  --color-navy-soft: #EBF2F8;
+  --color-primary: #0E2A47;
+  --color-primary-mid: #163A60;
+  --color-primary-light: #1E4E80;
+  --color-primary-soft: #EBF2F8;
+  /* Compatibility aliases for previous theme tokens */
+  --color-forest: #0E2A47;
+  --color-forest-mid: #163A60;
+  --color-forest-light: #1E4E80;
   --color-gold: #B8860B;
   --color-gold-light: #D4A017;
   --color-gold-pale: #F5E6B0;
@@ -15,7 +25,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   background-color: var(--color-cream);

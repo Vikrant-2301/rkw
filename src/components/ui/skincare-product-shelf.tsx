@@ -2,9 +2,9 @@
 
 /**
  * Product Shelf. Originally designed by Aakash Mehra.
- * Adapted & Customized for Ramesh Kolhu Wale (RKW) Pure Wood-Pressed Oils & Vedic Bilona Ghee.
+ * Adapted & Customized for Ramesh Kolhu Wale (RKW) Pure Cold-Pressed Oils & Vedic Bilona Ghee.
  *
- * A store wall of three floating shelves with twelve authentic wood-pressed oils & Vedic ghee,
+ * A store wall of three floating shelves with twelve authentic cold-pressed oils & Vedic ghee,
  * drawn to look like studio product shots: cylinder shading with softbox reflections, printed type,
  * ridged caps, transparent glass with visible golden mustard/seed oil liquid and thick glass bases.
  * Click one and it moves from its place on the shelf to the left of a product page and turns once,
@@ -69,7 +69,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
   {
     id: "black-mustard-oil",
     kind: "round-bottle",
-    name: "Traditional Wood-Pressed Black Mustard Oil",
+    name: "Traditional Cold-Pressed Black Mustard Oil",
     short: "Black Mustard Oil",
     sub: "काली सरसों का तेल (झल वाला)",
     category: "Mustard Oil",
@@ -84,7 +84,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sizes: ["200 ml", "500 ml", "1 Litre", "2 Litres", "5 Litres"],
     rating: 4.9,
     reviews: 1420,
-    tagline: "Authentic pungent jhal, single cold-pressed in traditional neem wood Kolhu.",
+    tagline: "Authentic pungent jhal, single cold-pressed in traditional traditional Kolhu.",
     description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
     benefits: [
       "100% Single-Pressed at <38°C in Lakdi Ka Kolhu",
@@ -98,7 +98,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
   {
     id: "yellow-mustard-oil",
     kind: "round-bottle",
-    name: "Pure Wood-Pressed Yellow Mustard Oil",
+    name: "Pure Cold-Pressed Yellow Mustard Oil",
     short: "Yellow Mustard Oil",
     sub: "पीली सरसों का तेल (मीठी झल)",
     category: "Mustard Oil",
@@ -114,7 +114,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 5.0,
     reviews: 2150,
     tagline: "Naturally sweeter with mild golden aroma for everyday healthy curries.",
-    description: "Extracted slowly in our authentic wooden Kolhu (Lakdi Ki Ghani) in front of your eyes at less than 38°C. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat.",
+    description: "Extracted slowly in our authentic traditional cold-press Kolhu in front of your eyes at less than 38°C. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat.",
     benefits: [
       "Rich in Heart-Healthy MUFA and Omega-3 & 6",
       "Cold-Pressed at 14 RPM with zero chemical refining",
@@ -143,7 +143,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 5.0,
     reviews: 3280,
     tagline: "Handcrafted via 5000-year-old Vedic Bilona method in clay pots.",
-    description: "True Ayurvedic liquid gold crafted by Ramesh Kolhu Wale following the authentic 5-samskara Bilona method. Free-grazing desi Gir cows milk is boiled on slow cow dung wood fire, naturally set into whole curd in clay pots, and churned bi-directionally with a wooden mathani to extract fresh makkhan (cultured butter). Simmered to yield fragrant, golden, danedar (granular) A2 Ghee.",
+    description: "True Ayurvedic liquid gold crafted by Ramesh Kolhu Wale following the authentic 5-samskara Bilona method. Free-grazing desi Gir cows milk is boiled on slow earthen heat, naturally set into whole curd in clay pots, and churned bi-directionally with a traditional bilona churner to extract fresh makkhan (cultured butter). Simmered to yield fragrant, golden, danedar (granular) A2 Ghee.",
     benefits: [
       "Authentic A2 Beta-Casein Protein for easy digestion",
       "Granular (Danedar) golden texture rich in Butyric Acid",
@@ -183,9 +183,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
 
   // --- ROW 2: Nut & Seed Cold-Pressed Range ---
   {
-    id: "wood-pressed-groundnut-oil",
+    id: "cold-pressed-groundnut-oil",
     kind: "round-bottle",
-    name: "Wood-Pressed Groundnut Oil (Peanut Oil)",
+    name: "Cold-Pressed Groundnut Oil (Peanut Oil)",
     short: "Groundnut Oil",
     sub: "मूंगफली का तेल (गुजरात मूंगफली)",
     category: "Nut & Seed Oils",
@@ -201,7 +201,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 4.8,
     reviews: 890,
     tagline: "Cold pressed from Saurashtra red-skin peanuts. High 232°C smoke point.",
-    description: "The golden cooking pride of western and northern India. Pressed in our wooden Kolhu by Ramesh Kolhu Wale from sun-dried sweet Saurashtra peanuts without high temperatures, chemical filtration, or hexane solvents. Imparts a delightful, non-sticky aroma to puris and daily sabzis.",
+    description: "The golden cooking pride of western and northern India. Pressed in our cold-press Kolhu by Ramesh Kolhu Wale from sun-dried sweet Saurashtra peanuts without high temperatures, chemical filtration, or hexane solvents. Imparts a delightful, non-sticky aroma to puris and daily sabzis.",
     benefits: [
       "High Smoke Point (232°C): Ideal for Indian deep frying and tadka",
       "Rich in Natural Resveratrol for cardiovascular protection",
@@ -212,9 +212,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Excellent for frying puris, samosas, sauteing vegetables, and everyday family cooking."
   },
   {
-    id: "wood-pressed-white-sesame-oil",
+    id: "cold-pressed-white-sesame-oil",
     kind: "round-bottle",
-    name: "Wood-Pressed White Sesame Oil (Til Ka Tel)",
+    name: "Cold-Pressed White Sesame Oil (Til Ka Tel)",
     short: "White Sesame Oil",
     sub: "सफेद तिल का तेल (कच्ची घानी)",
     category: "Nut & Seed Oils",
@@ -230,7 +230,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 4.9,
     reviews: 670,
     tagline: "Ayurveda's supreme king of oils (Sarva Taila Pravara) for bones & joints.",
-    description: "In Charaka Samhita, sesame oil is revered as the king of all oils. Extracted slowly in Ramesh Kolhu Wale traditional wooden ghani without toasting or bleaching. Rich in natural sesamin and sesamolin, calms Vata dosha, and ideal for daily oil pulling (Gandusha) and Abhyanga massage.",
+    description: "In Charaka Samhita, sesame oil is revered as the king of all oils. Extracted slowly in Ramesh Kolhu Wale traditional cold-press ghani without toasting or bleaching. Rich in natural sesamin and sesamolin, calms Vata dosha, and ideal for daily oil pulling (Gandusha) and Abhyanga massage.",
     benefits: [
       "Ayurvedic King of Oils: Deeply penetrates and strengthens bone tissue",
       "Rich in Sesamin & Sesamolin for natural heart health",
@@ -241,9 +241,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Swish 1 tablespoon in mouth for 5 minutes in the morning, or warm gently for soothing full-body Abhyanga massage."
   },
   {
-    id: "wood-pressed-virgin-coconut-oil",
+    id: "cold-pressed-virgin-coconut-oil",
     kind: "round-bottle",
-    name: "Wood-Pressed Virgin Coconut Oil",
+    name: "Cold-Pressed Virgin Coconut Oil",
     short: "Virgin Coconut Oil",
     sub: "कच्ची घानी गोले का तेल (केरल)",
     category: "Nut & Seed Oils",
@@ -259,7 +259,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 4.9,
     reviews: 1120,
     tagline: "Sulfur-free sun-dried Kerala copra pressed at <35°C in neem ghani.",
-    description: "Experience the pure tropical magic of Kerala sun-dried coconuts, pressed in our wooden Ghani by Ramesh Kolhu Wale without heat or chemical deodorizers. In winters, it naturally solidifies into a pristine snow-white butter, proving its unrefined purity.",
+    description: "Experience the pure tropical magic of Kerala sun-dried coconuts, pressed in our traditional cold-press Ghani by Ramesh Kolhu Wale without heat or chemical deodorizers. In winters, it naturally solidifies into a pristine snow-white butter, proving its unrefined purity.",
     benefits: [
       "Over 50% Lauric Acid & Medium Chain Triglycerides (MCTs)",
       "Unrefined & Raw: Natural winter solidification proves genuine cold press",
@@ -346,7 +346,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 4.8,
     reviews: 410,
     tagline: "Cold pressed from high-altitude whole Kashmiri walnut kernels.",
-    description: "Extracted in small wooden batches from prized Kashmiri walnuts. Exceptional concentration of Alpha-Linolenic Acid (ALA) and polyphenols for cardiovascular wellness, memory enhancement, and radiant skin.",
+    description: "Extracted in small cold-press batches from prized Kashmiri walnuts. Exceptional concentration of Alpha-Linolenic Acid (ALA) and polyphenols for cardiovascular wellness, memory enhancement, and radiant skin.",
     benefits: [
       "Plant-Based Omega-3 Superfood for Brain & Heart",
       "Rich in Neuro-Protective Antioxidants and Melatonin",
@@ -755,7 +755,7 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
         <g transform={`translate(${centerX} ${P.y + P.h * 0.74})`}>
           <rect x="-24" y="-4" width="48" height="8" rx="2" fill={p.ink} fillOpacity="0.1" />
           <text x="0" y="1.8" fill={p.ink} fontSize="3.5" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
-            {isJar ? "VEDIC BILONA • 100% PURE" : "WOOD-PRESSED • <38°C"}
+            {isJar ? "VEDIC BILONA • 100% PURE" : "COLD-PRESSED • <38°C"}
           </text>
         </g>
 
@@ -933,8 +933,8 @@ export function ProductShelf({
   currency = "₹",
   className,
   children,
-  title = "Pure Wood-Pressed Cellar",
-  subtitle = "काष्ठ घानी दर्शन • 100% Raw, Unrefined & Cold Pressed below 38°C",
+  title = "Pure Cold-Pressed Cellar",
+  subtitle = "कच्ची घानी दर्शन • 100% Raw, Unrefined & Cold Pressed below 38°C",
   onAddToCart
 }: ProductShelfProps) {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -943,12 +943,7 @@ export function ProductShelf({
   const bagRef = useRef<HTMLButtonElement | null>(null);
 
   // Cart integration
-  let cartContext: ReturnType<typeof useCart> | null = null;
-  try {
-    cartContext = useCart();
-  } catch {
-    // Graceful fallback if rendered outside CartProvider
-  }
+  const cartContext = useCart();
 
   const effectiveBagCount = cartContext ? cartContext.totalItems : bag;
 
@@ -1053,7 +1048,7 @@ export function ProductShelf({
                     "03. Wellness Rogan, Walnut & Artisanal Oils"
                   ][r]}
                 </span>
-                <span className="text-[11px] font-medium text-emerald-800 lowercase">click bottle to rotate 360°</span>
+                <span className="text-[11px] font-medium text-sky-800 lowercase">click bottle to rotate 360°</span>
               </div>
 
               {/* Products Row Standing on Shelf */}
@@ -1069,7 +1064,7 @@ export function ProductShelf({
                         onClick={() => setOpenId(p.id)}
                         aria-label={`${p.name}, ${currency}${p.price}`}
                         transition={SPRING}
-                        className="group relative aspect-[2/3] w-full max-w-[160px] cursor-pointer rounded-2xl outline-none transition-transform duration-200 hover:-translate-y-2 focus-visible:ring-2 focus-visible:ring-emerald-800"
+                        className="group relative aspect-[2/3] w-full max-w-[160px] cursor-pointer rounded-2xl outline-none transition-transform duration-200 hover:-translate-y-2 focus-visible:ring-2 focus-visible:ring-[#0E2A47]"
                       >
                         <ProductArt p={p} className="size-full drop-shadow-sm group-hover:drop-shadow-md transition-all" />
                       </motion.button>
@@ -1078,7 +1073,7 @@ export function ProductShelf({
                 ))}
               </div>
 
-              {/* Floating 3D Wood Shelf with Soft Shadows */}
+              {/* Floating 3D Heritage Shelf with Soft Shadows */}
               <div aria-hidden className="relative -mt-[6px] h-[18px]">
                 <div className="absolute inset-x-0 top-0 h-[9px] bg-gradient-to-b from-[#e3ded4] to-[#fbf9f4] rounded-t-sm" />
                 <div className="absolute inset-x-0 top-[9px] h-[9px] bg-gradient-to-b from-[#ede9df] to-[#d6cfc0] shadow-[0_2px_4px_rgba(0,0,0,0.06)]" />
@@ -1089,7 +1084,7 @@ export function ProductShelf({
               <div className="mt-5 grid grid-cols-4 gap-3 px-3 sm:gap-8 sm:px-8">
                 {row.map((p) => (
                   <div key={p.id} className="text-center group cursor-pointer" onClick={() => setOpenId(p.id)}>
-                    <div className="text-[13px] leading-snug font-bold text-stone-900 sm:text-[14px] line-clamp-1 group-hover:text-emerald-900 transition-colors">
+                    <div className="text-[13px] leading-snug font-bold text-stone-900 sm:text-[14px] line-clamp-1 group-hover:text-[#0E2A47] transition-colors">
                       {p.short}
                     </div>
                     {p.sub && (
@@ -1097,7 +1092,7 @@ export function ProductShelf({
                         {p.sub}
                       </div>
                     )}
-                    <div className="mt-1 text-[13px] font-extrabold text-emerald-900 tabular-nums sm:text-[14px]">
+                    <div className="mt-1 text-[13px] font-extrabold text-[#0E2A47] tabular-nums sm:text-[14px]">
                       {currency}{p.price}
                       {p.compareAt && (
                         <span className="ml-1 text-[11px] font-normal text-stone-400 line-through">
@@ -1213,7 +1208,7 @@ function ProductPage({
       <ul key="b" className="space-y-2">
         {p.benefits.map((b, i) => (
           <li key={i} className="flex items-start gap-2 text-stone-700 text-xs sm:text-sm">
-            <Check className="size-4 text-emerald-800 flex-shrink-0 mt-0.5" />
+            <Check className="size-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
             <span>{b}</span>
           </li>
         ))}
@@ -1298,7 +1293,7 @@ function ProductPage({
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-extrabold uppercase tracking-wider text-emerald-950 bg-stone-100 hover:bg-stone-200 transition-colors focus-visible:outline-2 focus-visible:outline-emerald-800 cursor-pointer"
+              className="inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-extrabold uppercase tracking-wider text-[#0E2A47] bg-[#EBF2F8] hover:bg-[#DDE9F4] transition-colors focus-visible:outline-2 focus-visible:outline-[#0E2A47] cursor-pointer"
             >
               <ChevronLeft className="size-4" strokeWidth={2.4} /> Back to Shelves
             </button>
@@ -1311,7 +1306,7 @@ function ProductPage({
             {p.name}
           </h2>
           {p.sub && (
-            <p className="mt-1 text-sm font-bold text-emerald-800">
+            <p className="mt-1 text-sm font-bold text-[#0E2A47]">
               {p.sub}
             </p>
           )}
@@ -1331,7 +1326,7 @@ function ProductPage({
 
           {/* Price display */}
           <div className="mt-5 flex items-baseline gap-3 tabular-nums">
-            <span className="text-2xl sm:text-3xl font-black text-emerald-950">
+            <span className="text-2xl sm:text-3xl font-black text-[#0E2A47]">
               {currency}{computedPrice}
             </span>
             {computedCompareAt && (
@@ -1339,7 +1334,7 @@ function ProductPage({
                 {currency}{computedCompareAt}
               </span>
             )}
-            <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+            <span className="text-xs font-bold text-[#0E2A47] bg-[#EBF2F8] px-2 py-0.5 rounded-md border border-[#163A60]/20">
               100% Tax Included
             </span>
           </div>
@@ -1364,7 +1359,7 @@ function ProductPage({
                     className={cn(
                       "flex cursor-pointer flex-col justify-between rounded-xl border p-2.5 transition-all",
                       on
-                        ? "border-emerald-800 bg-emerald-50/70 shadow-xs ring-1 ring-emerald-800"
+                        ? "border-[#0E2A47] bg-[#EBF2F8] shadow-xs ring-1 ring-[#0E2A47]"
                         : "border-stone-200 hover:border-stone-400 bg-white"
                     )}
                   >
@@ -1377,7 +1372,7 @@ function ProductPage({
                       className="sr-only"
                     />
                     <span className="font-bold text-xs text-stone-900">{sz}</span>
-                    <span className="text-xs font-extrabold text-emerald-900 tabular-nums">
+                    <span className="text-xs font-extrabold text-[#0E2A47] tabular-nums">
                       {currency}{optPrice}
                     </span>
                   </label>
@@ -1414,8 +1409,8 @@ function ProductPage({
               className={cn(
                 "h-12 flex-1 rounded-xl text-sm font-extrabold tracking-wide uppercase shadow-md transition-all cursor-pointer flex items-center justify-center gap-2",
                 added
-                  ? "bg-green-700 text-white"
-                  : "bg-emerald-900 hover:bg-emerald-950 text-amber-200 hover:text-white"
+                  ? "bg-[#0E2A47] text-white"
+                  : "bg-[#0E2A47] hover:bg-[#163A60] text-amber-200 hover:text-white"
               )}
             >
               {added ? (

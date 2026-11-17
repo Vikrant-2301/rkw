@@ -10,7 +10,7 @@ export interface Product {
   name: string;
   hindiName: string;
   slug: string;
-  category: 'mustard-oils' | 'bilona-ghee' | 'nut-seed-oils' | 'wellness-rogan' | 'combos';
+  category: 'oil' | 'bilona-ghee' | 'all' | 'mustard-oils' | 'nut-seed-oils' | 'wellness-rogan' | 'combos';
   shortDesc: string;
   description: string;
   price: number;
@@ -40,7 +40,8 @@ export interface Product {
     temperature: string;
     rpm: string;
     seedOrigin: string;
-    woodType: string;
+    pressType?: string;
+    machineType?: string;
   };
   labReportSummary: {
     purity: string;

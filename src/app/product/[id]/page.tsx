@@ -34,7 +34,7 @@ export default function ProductDetailPage() {
         <p className="text-[#8A7E6E]">This product may have been moved or is no longer available.</p>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1C3829] text-white rounded-full font-medium text-sm hover:bg-[#2A5240] transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#0E2A47] text-white rounded-full font-semibold text-sm hover:bg-[#163A60] transition-colors"
         >
           Return to Shop <FiArrowRight className="w-4 h-4" />
         </Link>
@@ -69,25 +69,66 @@ export default function ProductDetailPage() {
     { id: 'lab', label: 'Lab Report' },
   ];
 
+  const productJsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": [`https://www.rameshkolhuwale.com${product.image}`],
+    "description": product.description,
+    "sku": `RKW-${product.id}`,
+    "brand": {
+      "@type": "Brand",
+      "name": "Ramesh Kolhu Wale"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": `https://www.rameshkolhuwale.com/product/${product.slug}`,
+      "priceCurrency": "INR",
+      "price": selectedVolume.price,
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Ramesh Kolhu Wale"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": product.rating,
+      "reviewCount": product.reviewsCount
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-[#8A7E6E] mb-10">
-        <Link href="/" className="hover:text-[#1C3829] transition-colors">Home</Link>
+        <Link href="/" className="hover:text-[#0E2A47] transition-colors">Home</Link>
         <FiChevronRight className="w-3.5 h-3.5" />
-        <Link href="/shop" className="hover:text-[#1C3829] transition-colors">Shop</Link>
+        <Link href="/shop" className="hover:text-[#0E2A47] transition-colors">Shop</Link>
         <FiChevronRight className="w-3.5 h-3.5" />
-        <span className="text-[#1C1A16] truncate">{product.name}</span>
+        <span className="text-[#1C1A16] font-medium truncate">{product.name}</span>
       </nav>
 
       {/* Main layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
         {/* Images */}
         <div className="space-y-4">
-          <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#EDE8DF]">
-            <Image src={currentImage} alt={product.name} fill priority className="object-cover" />
+          <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#EBF2F8] shadow-sm">
+            <Image
+              src={currentImage}
+              alt={product.name}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
             {discountPercent > 0 && (
-              <span className="absolute top-4 left-4 px-3 py-1 bg-[#1C3829] text-white text-xs font-medium rounded-full">
+              <span className="absolute top-4 left-4 px-3 py-1 bg-[#0E2A47] text-white text-xs font-semibold rounded-full shadow-md">
                 {discountPercent}% off
               </span>
             )}
@@ -98,23 +139,28 @@ export default function ProductDetailPage() {
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden relative flex-shrink-0 border-2 transition-all ${
+                  className={`w-20 h-20 rounded-xl overflow-hidden relative flex-shrink-0 border-2 transition-all cursor-pointer ${
                     activeImageIndex === idx
-                      ? 'border-[#1C3829]'
+                      ? 'border-[#0E2A47] shadow-xs'
                       : 'border-[#E8E0D0] opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <Image src={img} alt={`View ${idx + 1}`} fill className="object-cover" />
+                  <Image
+                    src={img}
+                    alt={`View ${idx + 1}`}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
                 </button>
               ))}
             </div>
           )}
           {/* Quality note */}
-          <div className="bg-[#F2EEE5] rounded-xl p-4 flex items-start gap-3">
-            <FiCheck className="w-4 h-4 text-[#1C3829] flex-shrink-0 mt-0.5" />
+          <div className="bg-[#EBF2F8] rounded-xl p-4 flex items-start gap-3 border border-[#163A60]/10">
+            <FiCheck className="w-4 h-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
             <p className="text-xs text-[#5A5248] leading-relaxed">
-              Pressed below 38°C in a traditional wooden ghani. No solvents, no chemicals, no refinement. 
-              Every batch NABL lab-tested.
+              Cold-pressed below 38°C in traditional Lakdi Ki Ghani. No chemical solvents, zero refinement, and tested by NABL accredited laboratories.
             </p>
           </div>
         </div>
@@ -129,21 +175,21 @@ export default function ProductDetailPage() {
                   <span key={i} className={`text-sm ${i < Math.floor(product.rating) ? 'text-[#B8860B]' : 'text-[#D0C8B8]'}`}>★</span>
                 ))}
               </div>
-              <span className="text-xs text-[#8A7E6E]">{product.rating} ({product.reviewsCount} reviews)</span>
+              <span className="text-xs text-[#8A7E6E] font-medium">{product.rating} ({product.reviewsCount} reviews)</span>
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal leading-snug">
               {product.name}
             </h1>
-            <p className="text-[#8A7E6E] text-sm mt-2">{product.hindiName}</p>
+            <p className="text-[#8A7E6E] text-sm mt-2 font-medium">{product.hindiName}</p>
           </div>
 
           {/* Price */}
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-semibold text-[#1C1A16]">₹{selectedVolume.price}</span>
+            <span className="text-3xl font-bold text-[#0E2A47]">₹{selectedVolume.price}</span>
             {selectedVolume.originalPrice > selectedVolume.price && (
               <>
                 <span className="text-[#A09585] line-through text-base">₹{selectedVolume.originalPrice}</span>
-                <span className="text-xs font-medium text-[#1C3829] bg-[#EDE8DF] px-2 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-[#0E2A47] bg-[#EBF2F8] px-2.5 py-1 rounded-full">
                   Save ₹{selectedVolume.originalPrice - selectedVolume.price}
                 </span>
               </>
@@ -154,7 +200,7 @@ export default function ProductDetailPage() {
 
           {/* Volume picker */}
           <div className="space-y-3">
-            <p className="text-xs font-medium text-[#8A7E6E] uppercase tracking-wider">Select size</p>
+            <p className="text-xs font-semibold text-[#8A7E6E] uppercase tracking-wider">Select size</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {product.volumes.map((vol) => {
                 const isSelected = selectedVolume.size === vol.size;
@@ -162,15 +208,15 @@ export default function ProductDetailPage() {
                   <button
                     key={vol.size}
                     onClick={() => setSelectedVolume(vol)}
-                    className={`p-3 rounded-xl border-2 text-left transition-all ${
+                    className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#1C3829] bg-[#EDE8DF]'
-                        : 'border-[#E8E0D0] hover:border-[#D0C8B8]'
+                        ? 'border-[#0E2A47] bg-[#EBF2F8] shadow-xs'
+                        : 'border-[#E8E0D0] hover:border-[#D0C8B8] bg-white'
                     }`}
                   >
                     <p className="text-xs font-semibold text-[#1C1A16]">{vol.size}</p>
-                    <p className="text-sm font-semibold text-[#1C3829] mt-1">₹{vol.price}</p>
-                    <p className="text-[10px] text-[#A09585] mt-0.5 truncate">{vol.packaging}</p>
+                    <p className="text-sm font-bold text-[#0E2A47] mt-1">₹{vol.price}</p>
+                    <p className="text-[10px] text-[#8A7E6E] mt-0.5 truncate">{vol.packaging}</p>
                   </button>
                 );
               })}
@@ -180,36 +226,36 @@ export default function ProductDetailPage() {
           {/* Quantity + CTAs */}
           <div className="space-y-3 pt-1">
             <div className="flex gap-3">
-              <div className="flex items-center border border-[#D0C8B8] rounded-full overflow-hidden h-12">
+              <div className="flex items-center border border-[#D0C8B8] rounded-full overflow-hidden h-12 bg-white">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 text-[#5A5248] hover:bg-[#EDE8DF] transition-colors h-full"
+                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer"
                 >
                   <FiMinus className="w-4 h-4" />
                 </button>
                 <span className="px-4 text-sm font-semibold text-[#1C1A16] min-w-[2rem] text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 text-[#5A5248] hover:bg-[#EDE8DF] transition-colors h-full"
+                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer"
                 >
                   <FiPlus className="w-4 h-4" />
                 </button>
               </div>
               <button
                 onClick={handleAddToCart}
-                className={`flex-1 h-12 px-6 rounded-full font-medium text-sm transition-all flex items-center justify-center gap-2 ${
+                className={`flex-1 h-12 px-6 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
                   addedMessage
-                    ? 'bg-[#1C3829] text-white'
-                    : 'bg-[#1C3829] text-white hover:bg-[#2A5240]'
+                    ? 'bg-[#0E2A47] text-white'
+                    : 'bg-[#0E2A47] text-white hover:bg-[#163A60]'
                 }`}
               >
-                {addedMessage ? <><FiCheck className="w-4 h-4" /> Added</> : <><FiShoppingBag className="w-4 h-4" /> Add to Basket</>}
+                {addedMessage ? <><FiCheck className="w-4 h-4 text-emerald-400" /> Added to Basket</> : <><FiShoppingBag className="w-4 h-4" /> Add to Basket</>}
               </button>
             </div>
 
             <button
               onClick={handleBuyNow}
-              className="w-full h-12 px-6 rounded-full border-2 border-[#1C3829] text-[#1C3829] font-medium text-sm hover:bg-[#1C3829] hover:text-white transition-all"
+              className="w-full h-12 px-6 rounded-full border-2 border-[#0E2A47] text-[#0E2A47] font-semibold text-sm hover:bg-[#0E2A47] hover:text-white transition-all cursor-pointer"
             >
               Buy Now
             </button>
@@ -218,7 +264,7 @@ export default function ProductDetailPage() {
               href={`https://wa.me/919811254321?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full h-11 rounded-full bg-green-700 hover:bg-green-800 text-white font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full h-11 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
             >
               <FaWhatsapp className="text-base" /> Order via WhatsApp
             </a>
@@ -227,11 +273,11 @@ export default function ProductDetailPage() {
           {/* Quick trust */}
           <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#E8E0D0] text-xs text-[#5A5248]">
             <div>
-              <p className="font-medium text-[#1C1A16]">Free delivery</p>
+              <p className="font-semibold text-[#0E2A47]">Free delivery</p>
               <p>Delhi NCR on orders ₹799+</p>
             </div>
             <div>
-              <p className="font-medium text-[#1C1A16]">NABL Lab Certified</p>
+              <p className="font-semibold text-[#0E2A47]">NABL Lab Certified</p>
               <p>Zero chemical guarantee</p>
             </div>
           </div>
@@ -245,9 +291,9 @@ export default function ProductDetailPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`pb-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+              className={`pb-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
                 activeTab === tab.id
-                  ? 'border-[#1C3829] text-[#1C3829]'
+                  ? 'border-[#0E2A47] text-[#0E2A47]'
                   : 'border-transparent text-[#8A7E6E] hover:text-[#1C1A16]'
               }`}
             >
@@ -260,14 +306,14 @@ export default function ProductDetailPage() {
           <div className="space-y-5">
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {product.benefits.map((b, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-sm text-[#5A5248] p-4 rounded-xl bg-[#F2EEE5]">
-                  <FiCheck className="text-[#1C3829] w-4 h-4 flex-shrink-0 mt-0.5" />
+                <li key={idx} className="flex items-start gap-3 text-sm text-[#5A5248] p-4 rounded-xl bg-white border border-[#E8E0D0]">
+                  <FiCheck className="text-[#0E2A47] w-4 h-4 flex-shrink-0 mt-0.5" />
                   {b}
                 </li>
               ))}
             </ul>
             {product.smokePoint && (
-              <p className="text-sm text-[#5A5248] bg-[#EDE8DF] px-4 py-3 rounded-xl">
+              <p className="text-sm text-[#5A5248] bg-[#EBF2F8] px-4 py-3 rounded-xl border border-[#163A60]/10">
                 <strong>Smoke Point:</strong> {product.smokePoint}
               </p>
             )}
@@ -278,9 +324,9 @@ export default function ProductDetailPage() {
           <div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {Object.entries(product.nutritionalInfo).map(([key, val]) => (
-                <div key={key} className="p-4 rounded-xl bg-[#F2EEE5]">
-                  <p className="text-xs text-[#8A7E6E] capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
-                  <p className="text-sm font-semibold text-[#1C1A16] mt-1">{val}</p>
+                <div key={key} className="p-4 rounded-xl bg-white border border-[#E8E0D0]">
+                  <p className="text-xs text-[#8A7E6E] capitalize font-medium">{key.replace(/([A-Z])/g, ' $1')}</p>
+                  <p className="text-sm font-bold text-[#0E2A47] mt-1">{val}</p>
                 </div>
               ))}
             </div>
@@ -294,11 +340,11 @@ export default function ProductDetailPage() {
               { label: 'Temperature', value: product.extractionDetails.temperature },
               { label: 'RPM Speed', value: product.extractionDetails.rpm },
               { label: 'Seed Origin', value: product.extractionDetails.seedOrigin },
-              { label: 'Wood Type', value: product.extractionDetails.woodType },
+              { label: 'Cold-Press Mechanism', value: product.extractionDetails.pressType || 'Traditional Cold-Press Ghani' },
             ].map((item) => (
-              <div key={item.label} className="p-4 rounded-xl bg-[#F2EEE5]">
-                <p className="text-xs text-[#8A7E6E]">{item.label}</p>
-                <p className="text-sm font-medium text-[#1C1A16] mt-1">{item.value}</p>
+              <div key={item.label} className="p-4 rounded-xl bg-white border border-[#E8E0D0]">
+                <p className="text-xs text-[#8A7E6E] font-medium">{item.label}</p>
+                <p className="text-sm font-semibold text-[#0E2A47] mt-1">{item.value}</p>
               </div>
             ))}
           </div>
@@ -313,16 +359,16 @@ export default function ProductDetailPage() {
                 { label: 'Argemone Screen', value: product.labReportSummary.argemone },
                 { label: 'Free Fatty Acid', value: product.labReportSummary.freeFattyAcid },
               ].map((item) => (
-                <div key={item.label} className="p-4 rounded-xl bg-[#F2EEE5] flex items-center justify-between">
+                <div key={item.label} className="p-4 rounded-xl bg-white border border-[#E8E0D0] flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-[#8A7E6E]">{item.label}</p>
-                    <p className="text-sm font-medium text-[#1C1A16] mt-0.5">{item.value}</p>
+                    <p className="text-xs text-[#8A7E6E] font-medium">{item.label}</p>
+                    <p className="text-sm font-bold text-[#0E2A47] mt-0.5">{item.value}</p>
                   </div>
-                  <FiCheck className="w-5 h-5 text-[#1C3829]" />
+                  <FiCheck className="w-5 h-5 text-[#0E2A47]" />
                 </div>
               ))}
             </div>
-            <Link href="/lab-reports" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1C3829] hover:text-[#B8860B] transition-colors">
+            <Link href="/lab-reports" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0E2A47] hover:text-[#B8860B] transition-colors">
               View full lab reports <FiArrowRight className="w-4 h-4" />
             </Link>
           </div>

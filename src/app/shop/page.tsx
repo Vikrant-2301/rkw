@@ -5,6 +5,9 @@ import { PRODUCTS } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { FaWhatsapp } from 'react-icons/fa';
+import { FiTruck, FiClock } from 'react-icons/fi';
+import { SITE_CONFIG } from '@/config/site';
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -13,9 +16,8 @@ function ShopContent() {
 
   const categories = [
     { id: 'all', label: 'All Products' },
-    { id: 'mustard-oils', label: 'Mustard Oils' },
+    { id: 'oil', label: 'Cold-Pressed Oils' },
     { id: 'bilona-ghee', label: 'Bilona Ghee' },
-    { id: 'nut-seed-oils', label: 'Nut & Seed Oils' },
   ];
 
   const filtered = activeCategory === 'all'
@@ -25,24 +27,49 @@ function ShopContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       {/* Page header */}
-      <div className="mb-12">
-        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3">Our Collection</p>
-        <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All</h1>
-        <p className="text-[#8A7E6E] mt-4 max-w-xl">
-          Every product is wood-pressed or Bilona-churned, NABL lab-tested, and free of chemical solvents or preservatives.
+      <div className="mb-8">
+        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Our Collection</p>
+        <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
+        <p className="text-[#8A7E6E] mt-3 max-w-xl font-light">
+          Every product is cold-pressed fresh or Vedic Bilona-churned, NABL lab-tested, and 100% chemical-free.
         </p>
       </div>
 
+      {/* Delivery & Hours Info Bar */}
+      <div className="bg-[#EBF2F8] border border-[#163A60]/15 rounded-xl p-4 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#0E2A47]">
+        <div className="flex items-center gap-2 font-medium">
+          <FiTruck className="w-4 h-4 text-[#B8860B] flex-shrink-0" />
+          <span><strong>Free Delhi NCR Home Delivery</strong> on orders above ₹799 (₹100 delivery fee on orders below ₹799).</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5 text-[#5A5248]">
+            <FiClock className="w-3.5 h-3.5 text-[#0E2A47]" />
+            <span>Workshop: {SITE_CONFIG.contact.workshopHours}</span>
+          </span>
+          <a
+            href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
+              'Hello RKW, I want to order pure cold-pressed oils & Vedic Bilona ghee!'
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full font-semibold shadow-xs"
+          >
+            <FaWhatsapp className="w-3.5 h-3.5" />
+            <span>Order on WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
       {/* Category filters */}
-      <div className="flex flex-wrap gap-2 mb-10">
+      <div className="flex flex-wrap gap-2.5 mb-10">
         {categories.map(cat => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
               activeCategory === cat.id
-                ? 'bg-[#1C3829] text-white'
-                : 'bg-[#EDE8DF] text-[#4A4035] hover:bg-[#E0D8CC]'
+                ? 'bg-[#0E2A47] text-white shadow-md'
+                : 'bg-[#EBF2F8] text-[#4A4035] hover:bg-[#DDE9F4] hover:text-[#0E2A47]'
             }`}
           >
             {cat.label}
@@ -68,7 +95,7 @@ function ShopContent() {
 
 export default function ShopPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" />}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[#8A7E6E]">Loading collection...</div>}>
       <ShopContent />
     </Suspense>
   );

@@ -20,10 +20,27 @@ interface CartContextType {
   setIsCartOpen: (open: boolean) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const defaultCartContext: CartContextType = {
+  cart: [],
+  addToCart: () => {},
+  removeFromCart: () => {},
+  updateQuantity: () => {},
+  clearCart: () => {},
+  subtotal: 0,
+  discount: 0,
+  couponCode: '',
+  applyCoupon: () => ({ success: false, message: 'Cart not ready' }),
+  shippingFee: 0,
+  total: 0,
+  totalItems: 0,
+  isCartOpen: false,
+  setIsCartOpen: () => {},
+};
+
+const CartContext = createContext<CartContextType>(defaultCartContext);
 
 const FREE_SHIPPING_THRESHOLD = 799;
-const STANDARD_SHIPPING = 80;
+const STANDARD_SHIPPING = 100;
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -32,11 +49,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  // Load cart from localStorage
+  // Load cart from localStorage after mount
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('rkw_cart');
       if (savedCart) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCart(JSON.parse(savedCart));
       }
       const savedCoupon = localStorage.getItem('rkw_coupon');
@@ -65,7 +83,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [cart, isLoaded]);
 
-  const addToCart = (product: Product, volume: ProductVolume, quantity = 1) => {
+  // Save coupon to localStorage
+  useEffect(() => {
+    if (isLoaded) {
+      try {
+        if (couponCode) {
+          localStorage.setItem('rkw_coupon', couponCode);
+        } else {
+          localStorage.removeItem('rkw_coupon');
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [couponCode, isLoaded]);
+
+  const addToCart = (product: Product, volume: ProductVolume, quantity: number = 1) => {
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex(
         (item) => item.product.id === product.id && item.selectedVolume.size === volume.size
@@ -83,8 +116,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (productId: string, volumeSize: string) => {
-    setCart((prev) =>
-      prev.filter(
+    setCart((prevCart) =>
+      prevCart.filter(
         (item) => !(item.product.id === productId && item.selectedVolume.size === volumeSize)
       )
     );
@@ -95,8 +128,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeFromCart(productId, volumeSize);
       return;
     }
-    setCart((prev) =>
-      prev.map((item) => {
+
+    setCart((prevCart) =>
+      prevCart.map((item) => {
         if (item.product.id === productId && item.selectedVolume.size === volumeSize) {
           return { ...item, quantity };
         }
@@ -107,7 +141,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setCart([]);
-    localStorage.removeItem('rkw_cart');
+    setCouponCode('');
+    setDiscountPercent(0);
+    try {
+      localStorage.removeItem('rkw_cart');
+      localStorage.removeItem('rkw_coupon');
+    } catch {
+      // ignore
+    }
   };
 
   const applyCoupon = (code: string) => {
@@ -115,34 +156,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (cleanCode === 'RKW10' || cleanCode === 'PURE10') {
       setCouponCode(cleanCode);
       setDiscountPercent(10);
-      try {
-        localStorage.setItem('rkw_coupon', cleanCode);
-      } catch {}
-      return { success: true, message: 'Coupon applied! 10% discount added.' };
+      return { success: true, message: '10% discount applied!' };
     } else if (cleanCode === 'RAMESHKOLHU') {
       setCouponCode(cleanCode);
       setDiscountPercent(15);
-      try {
-        localStorage.setItem('rkw_coupon', cleanCode);
-      } catch {}
-      return { success: true, message: 'Welcome offer! 15% discount applied.' };
-    } else {
-      return { success: false, message: 'Invalid coupon code. Try RKW10' };
+      return { success: true, message: 'Special 15% discount applied!' };
     }
+    return { success: false, message: 'Invalid coupon code' };
   };
 
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.selectedVolume.price * item.quantity,
+    (sum, item) => sum + item.selectedVolume.price * item.quantity,
     0
   );
 
   const discount = Math.round((subtotal * discountPercent) / 100);
-
-  const shippingFee = subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING;
-
+  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING;
   const total = Math.max(0, subtotal - discount + shippingFee);
-
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -169,9 +200,5 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
+  return useContext(CartContext);
 };
