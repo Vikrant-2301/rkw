@@ -21,6 +21,8 @@ export interface Product {
   featured: boolean;
   bestSeller: boolean;
   image: string;
+  bottleImage?: string;
+  showcaseImage?: string;
   additionalImages?: string[];
   volumes: ProductVolume[];
   benefits: string[];

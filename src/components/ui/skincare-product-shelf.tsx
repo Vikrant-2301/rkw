@@ -100,6 +100,11 @@ export type Product = {
   benefits: string[];
   ingredients: string;
   howTo: string;
+  origin?: string;
+  sourceType?: string;
+  stickerColor?: string;
+  bottleImage?: string;
+  showcaseImage?: string;
 };
 
 /**
@@ -110,49 +115,25 @@ export type Product = {
 export const DEFAULT_PRODUCTS: Product[] = [
   // --- ROW 1: Signature Mustard Oils & Vedic Bilona Ghee ---
   {
-    id: "black-mustard-oil",
-    kind: "round-bottle",
-    name: "Traditional Cold-Pressed Black Mustard Oil",
-    short: "Black Mustard Oil",
-    sub: "काली सरसों का तेल (झल वाला)",
-    category: "Mustard Oil",
-    color: "#e8edea",
-    cap: "#FAB800",
-    label: "#6b1424",
-    ink: "#fbf6ec",
-    glass: true,
-    liquid: "#a25f0a",
-    price: 70,
-    compareAt: 90,
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
-    rating: 4.9,
-    reviews: 1420,
-    tagline: "Authentic pungent jhal, single cold-pressed in traditional Cold Press Kolhu.",
-    description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
-    benefits: [
-      "100% Single-Pressed at <38°C in Traditional Cold Press Kolhu",
-      "Seeds sourced from Alwar & Bharatpur (Rajasthan)",
-      "Zero Palm Oil, Zero Argemone Adulteration",
-      "Natural Sinigrin & High Pungency for authentic Indian taste"
-    ],
-    ingredients: "100% Pure Cold-Pressed Black Mustard Seed Oil (Brassica nigra).",
-    howTo: "Heat until light smoking point for traditional curries and pickles, or warm gently for soothing joint and chest massage."
-  },
-  {
     id: "yellow-mustard-oil",
     kind: "round-bottle",
     name: "Pure Cold-Pressed Yellow Mustard Oil",
     short: "Yellow Mustard Oil",
-    sub: "पीली सरसों का तेल (मीठी झल)",
+    sub: "पीली सरसों का तेल",
     category: "Mustard Oil",
     color: "#faf6ee",
     cap: "#FAB800",
-    label: "#d48b0a",
+    label: "#D97706",
+    stickerColor: "#D97706",
+    origin: "RAJASTHAN",
+    sourceType: "Seeds Sourced from",
     ink: "#1c1404",
     glass: true,
     liquid: "#eab318",
     price: 75,
     compareAt: 95,
+    bottleImage: "/mockups/yellow-mustard/bottle.png",
+    showcaseImage: "/mockups/yellow-mustard/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
     reviews: 2150,
@@ -168,6 +149,40 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Ideal for daily Indian sabzis, dals, shallow sauteing, deep frying, and preserving seasonal pickles."
   },
   {
+    id: "black-mustard-oil",
+    kind: "round-bottle",
+    name: "Traditional Cold-Pressed Black Mustard Oil",
+    short: "Black Mustard Oil",
+    sub: "काली सरसों का तेल (झल वाला)",
+    category: "Mustard Oil",
+    color: "#e8edea",
+    cap: "#FAB800",
+    label: "#7A1426",
+    stickerColor: "#7A1426",
+    origin: "RAJASTHAN",
+    sourceType: "Seeds Sourced from",
+    ink: "#fbf6ec",
+    glass: true,
+    liquid: "#a25f0a",
+    price: 70,
+    compareAt: 90,
+    bottleImage: "/mockups/black-mustard/bottle.png",
+    showcaseImage: "/mockups/black-mustard/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.9,
+    reviews: 1420,
+    tagline: "Authentic pungent jhal, single cold-pressed in traditional Cold Press Kolhu.",
+    description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
+    benefits: [
+      "100% Single-Pressed at <38°C in Traditional Cold Press Kolhu",
+      "Seeds sourced from Alwar & Bharatpur (Rajasthan)",
+      "Zero Palm Oil, Zero Argemone Adulteration",
+      "Natural Sinigrin & High Pungency for authentic Indian taste"
+    ],
+    ingredients: "100% Pure Cold-Pressed Black Mustard Seed Oil (Brassica nigra).",
+    howTo: "Heat until light smoking point for traditional curries and pickles, or warm gently for soothing joint and chest massage."
+  },
+  {
     id: "dahi-bilona-desi-cow-ghee",
     kind: "jar",
     name: "Dahi Bilona Desi Cow Ghee",
@@ -176,12 +191,16 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: "Bilona Ghee",
     color: "#f6f3eb",
     cap: "#c29139",
-    label: "#fbf8f1",
+    label: "#8C4318",
+    stickerColor: "#8C4318",
+    origin: "VEDIC GAUSHALA",
+    sourceType: "Handcrafted at",
     ink: "#3d280b",
     glass: true,
     liquid: "#f0c64c",
-    price: 850,
-    compareAt: 950,
+    price: 750,
+    compareAt: 900,
+    showcaseImage: "/images/bilona_ghee.jpg",
     sizes: ["500 ml (PET bottle)", "1 L (PET bottle)"],
     rating: 5.0,
     reviews: 3280,
@@ -206,9 +225,10 @@ export const DEFAULT_PRODUCTS: Product[] = [
     color: "#e2e6e3",
     cap: "#7a1426",
     label: "#7a1426",
+    stickerColor: "#7A1426",
     ink: "#fdf8ef",
-    price: 1550,
-    compareAt: 1950,
+    price: 1500,
+    compareAt: 1850,
     sizes: ["2 Litres", "5 Litres"],
     rating: 4.9,
     reviews: 980,
@@ -224,29 +244,34 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Pull up the spout ring, decant into your daily glass kitchen cruet, and close the cap tightly."
   },
 
-  // --- ROW 2: Nut & Seed Cold-Pressed Range ---
+  // --- ROW 2: Nut & Coconut Cold-Pressed Range ---
   {
     id: "cold-pressed-groundnut-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Groundnut Oil (Peanut Oil)",
     short: "Groundnut Oil",
-    sub: "मूंगफली का तेल (गुजरात मूंगफली)",
+    sub: "मूंगफली का तेल",
     category: "Nut & Seed Oils",
     color: "#f2edf2",
     cap: "#FAB800",
-    label: "#52164a",
+    label: "#4A1D6D",
+    stickerColor: "#4A1D6D",
+    origin: "GUJARAT",
+    sourceType: "Seeds Sourced from",
     ink: "#faeef8",
     glass: true,
     liquid: "#e8af36",
-    price: 95,
-    compareAt: 120,
+    price: 80,
+    compareAt: 105,
+    bottleImage: "/mockups/groundnut-oil/bottle.png",
+    showcaseImage: "/mockups/groundnut-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 890,
-    tagline: "Cold pressed from Saurashtra red-skin peanuts. High 232°C smoke point.",
+    tagline: "Cold pressed from Saurashtra red-skin peanuts. High 225°C smoke point.",
     description: "The golden cooking pride of western and northern India. Pressed in our cold-press Kolhu by Ramesh Kolhu Wale from sun-dried sweet Saurashtra peanuts without high temperatures, chemical filtration, or hexane solvents. Imparts a delightful, non-sticky aroma to puris and daily sabzis.",
     benefits: [
-      "High Smoke Point (232°C): Ideal for Indian deep frying and tadka",
+      "High Smoke Point (225°C): Ideal for Indian deep frying and tadka",
       "Rich in Natural Resveratrol for cardiovascular protection",
       "Naturally Sweet Nutty Flavor with zero greasy aftertaste",
       "Single-pressed from Saurashtra certified organic farms"
@@ -255,49 +280,25 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Excellent for frying puris, samosas, sauteing vegetables, and everyday family cooking."
   },
   {
-    id: "cold-pressed-white-sesame-oil",
-    kind: "round-bottle",
-    name: "Cold-Pressed White Sesame Oil (Til Ka Tel)",
-    short: "White Sesame Oil",
-    sub: "सफेद तिल का तेल (कच्ची घानी)",
-    category: "Nut & Seed Oils",
-    color: "#f6f1e8",
-    cap: "#FAB800",
-    label: "#8f5e13",
-    ink: "#fcf8ee",
-    glass: true,
-    liquid: "#deb15b",
-    price: 120,
-    compareAt: 150,
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
-    rating: 4.9,
-    reviews: 670,
-    tagline: "Ayurveda's supreme king of oils (Sarva Taila Pravara) for bones & joints.",
-    description: "In Charaka Samhita, sesame oil is revered as the king of all oils. Extracted slowly in Ramesh Kolhu Wale traditional cold-press ghani without toasting or bleaching. Rich in natural sesamin and sesamolin, calms Vata dosha, and ideal for daily oil pulling (Gandusha) and Abhyanga massage.",
-    benefits: [
-      "Ayurvedic King of Oils: Deeply penetrates and strengthens bone tissue",
-      "Rich in Sesamin & Sesamolin for natural heart health",
-      "Perfect for Morning Oil Pulling (Gandusha) therapy",
-      "Pressed from raw unbleached Gujarat sesame seeds"
-    ],
-    ingredients: "100% Pure Virgin White Sesame Seeds (Sesamum indicum).",
-    howTo: "Swish 1 tablespoon in mouth for 5 minutes in the morning, or warm gently for soothing full-body Abhyanga massage."
-  },
-  {
-    id: "cold-pressed-virgin-coconut-oil",
+    id: "cold-pressed-coconut-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Virgin Coconut Oil",
-    short: "Virgin Coconut Oil",
-    sub: "कच्ची घानी गोले का तेल (केरल)",
+    short: "Coconut Oil",
+    sub: "गोले का तेल",
     category: "Nut & Seed Oils",
     color: "#eef4f0",
     cap: "#FAB800",
-    label: "#1c5432",
+    label: "#166534",
+    stickerColor: "#166534",
+    origin: "KERALA",
+    sourceType: "Coconut Sourced from",
     ink: "#eefcf3",
     glass: true,
     liquid: "#f5f8f6",
     price: 110,
     compareAt: 140,
+    bottleImage: "/mockups/coconut-oil/bottle.png",
+    showcaseImage: "/mockups/coconut-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 1120,
@@ -313,54 +314,100 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Use in South Indian recipes, stir into morning keto coffee, or apply directly to hair and skin for deep moisture."
   },
   {
-    id: "yellow-mustard-oil-5l-can",
-    kind: "tin",
-    name: "Yellow Mustard Oil Heritage 5L Eco Can",
-    short: "Yellow 5L Can",
-    sub: "5L पारम्परic टिन कैन (पीली सरसों)",
-    category: "Mustard Oil",
-    color: "#f5eee0",
-    cap: "#c48206",
-    label: "#c48206",
-    ink: "#1f1402",
-    price: 1650,
-    compareAt: 2100,
-    sizes: ["2 Litres", "5 Litres"],
+    id: "extra-virgin-coconut-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed Extra Virgin Coconut Oil",
+    short: "Extra Virgin Coconut",
+    sub: "गोले का तेल",
+    category: "Nut & Seed Oils",
+    color: "#eaf1fa",
+    cap: "#FAB800",
+    label: "#0D3B82",
+    stickerColor: "#0D3B82",
+    origin: "KARNATAKA (Tiptur)",
+    sourceType: "Coconut Sourced from",
+    ink: "#eef6fd",
+    glass: true,
+    liquid: "#f6f9fc",
+    price: 130,
+    compareAt: 165,
+    bottleImage: "/mockups/extra-virgin-coconut-oil/bottle.png",
+    showcaseImage: "/mockups/extra-virgin-coconut-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
-    reviews: 1240,
-    tagline: "Bestseller family pack in authentic protective food-grade eco tin.",
-    description: "Our most celebrated yellow mustard oil in heavy-duty food-grade tinplate. Preserves delicate natural Vitamin E and ensures 100% leakproof freshness right to your doorstep. The golden choice for healthy North Indian kitchens.",
+    reviews: 780,
+    tagline: "Single-pressed from fresh organic Tiptur coconuts. Superior crystal clarity.",
+    description: "Ultra-pure Cold-Pressed Extra Virgin Coconut Oil extracted from select sun-kissed organic coconuts from Tiptur, Karnataka. Retains light crystal-clear clarity when liquid and pure snow-white solid butter in cooler seasons. Highest concentration of medium-chain triglycerides (MCTs).",
     benefits: [
-      "Maximum Savings for Active Family Kitchens",
-      "Hermetically Sealed Against Heat & Light",
-      "Sturdy Carry Handle & Easy Pour Spout",
-      "100% Recyclable Eco-Friendly Tinplate"
+      "Over 55% Lauric Acid for immune vitality",
+      "Ultra-fine molecular texture for non-greasy facial hydration",
+      "100% raw virgin cold extraction below 32°C",
+      "Zero chemical deodorization, zero sulfur"
     ],
-    ingredients: "100% Pure Cold-Pressed Yellow Mustard Seeds.",
-    howTo: "Convenient master reserve for months of flavorful, healthy Indian cooking."
+    ingredients: "100% Pure Fresh Organic Tiptur Coconuts.",
+    howTo: "Consume 1 spoon directly, blend in smoothies, or use as delicate baby massage and facial moisturizer."
+  },
+  {
+    id: "cold-pressed-white-sesame-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed White Sesame Oil (Til Ka Tel)",
+    short: "White Sesame Oil",
+    sub: "सफेद तिल का तेल",
+    category: "Nut & Seed Oils",
+    color: "#f6f1e8",
+    cap: "#FAB800",
+    label: "#78350F",
+    stickerColor: "#78350F",
+    origin: "GUJARAT",
+    sourceType: "Seeds Sourced from",
+    ink: "#fcf8ee",
+    glass: true,
+    liquid: "#deb15b",
+    price: 120,
+    compareAt: 150,
+    bottleImage: "/mockups/white-sesame-oil/bottle.png",
+    showcaseImage: "/mockups/white-sesame-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.9,
+    reviews: 670,
+    tagline: "Ayurveda supreme king of oils (Sarva Taila Pravara) for bones & joints.",
+    description: "In Charaka Samhita, sesame oil is revered as the king of all oils. Extracted slowly in Ramesh Kolhu Wale traditional cold-press ghani without toasting or bleaching. Rich in natural sesamin and sesamolin, calms Vata dosha, and ideal for daily oil pulling (Gandusha) and Abhyanga massage.",
+    benefits: [
+      "Ayurvedic King of Oils: Deeply penetrates and strengthens bone tissue",
+      "Rich in Sesamin & Sesamolin for natural heart health",
+      "Perfect for Morning Oil Pulling (Gandusha) therapy",
+      "Pressed from raw unbleached Gujarat sesame seeds"
+    ],
+    ingredients: "100% Pure Virgin White Sesame Seeds (Sesamum indicum).",
+    howTo: "Swish 1 tablespoon in mouth for 5 minutes in the morning, or warm gently for soothing full-body Abhyanga massage."
   },
 
-  // --- ROW 3: Wellness Rogan, Exotic Seeds & Artisanal Oils ---
+  // --- ROW 3: Wellness Rogan, Walnut & Artisanal Oils ---
   {
     id: "pure-badam-rogan-almond-oil",
     kind: "round-bottle",
-    name: "100% Pure Badam Rogan (Sweet Almond Oil)",
-    short: "Pure Badam Rogan",
-    sub: "शुद्ध बादाम रोगन (मामरा बादाम)",
+    name: "100% Pure Mamra Badam Rogan (Sweet Almond Oil)",
+    short: "Mamra Almond Oil",
+    sub: "मामरा बादाम का तेल",
     category: "Wellness Rogan",
-    color: "#f2ede9",
+    color: "#f9f0f0",
     cap: "#FAB800",
-    label: "#8b2a16",
+    label: "#B91C1C",
+    stickerColor: "#B91C1C",
+    origin: "KASHMIR",
+    sourceType: "Almonds Sourced from",
     ink: "#fbf5f2",
     glass: true,
     liquid: "#dda835",
-    price: 490,
+    price: 520,
     compareAt: 650,
+    bottleImage: "/mockups/mamra-almond-oil/bottle.png",
+    showcaseImage: "/mockups/mamra-almond-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
     reviews: 1580,
-    tagline: "Single-press extra-virgin sweet almond elixir from Mamra almonds.",
-    description: "Gold standard elixir for neural health, radiant skin, and silky hair. Extracted without heat from grade-A sweet almonds by Ramesh Kolhu Wale. Unlike cosmetic synthetic oils packed with mineral paraffin, RKW Badam Rogan is 100% pure food-grade and therapeutic.",
+    tagline: "Single-press extra-virgin sweet almond elixir from Kashmiri Mamra almonds.",
+    description: "Gold standard elixir for neural health, radiant skin, and silky hair. Extracted without heat from grade-A Kashmiri sweet Mamra almonds by Ramesh Kolhu Wale. Unlike cosmetic synthetic oils packed with mineral paraffin, RKW Badam Rogan is 100% pure food-grade and therapeutic.",
     benefits: [
       "100% Pure Food-Grade & Edible: Safe to take orally with warm milk",
       "Rich in Natural Biotin & Vitamin E for healthy hair and scalp",
@@ -371,20 +418,59 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Drink 5-10 drops in warm milk at night for memory and sleep, or apply 2-3 drops topically under eyes and on face."
   },
   {
+    id: "gurbandi-almond-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed Gurbandi Almond Oil",
+    short: "Gurbandi Almond Oil",
+    sub: "गुरबन्दी बादाम का तेल",
+    category: "Wellness Rogan",
+    color: "#f7eee8",
+    cap: "#FAB800",
+    label: "#6E3917",
+    stickerColor: "#6E3917",
+    origin: "KASHMIR",
+    sourceType: "Almonds Sourced from",
+    ink: "#fdf6f0",
+    glass: true,
+    liquid: "#c8872a",
+    price: 380,
+    compareAt: 480,
+    bottleImage: "/mockups/gurbandi-almond-oil/bottle.png",
+    showcaseImage: "/mockups/gurbandi-almond-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.9,
+    reviews: 640,
+    tagline: "Cold pressed from high-altitude Kashmiri Gurbandi almonds. High natural oil density.",
+    description: "Pressed from wild Kashmiri Gurbandi almonds by Ramesh Kolhu Wale. Gurbandi almonds have a smaller profile but boast a significantly higher natural oil content and concentrated antioxidants compared to standard commercial varieties.",
+    benefits: [
+      "High natural oil concentration with potent phytonutrients",
+      "Supports brain function, neurological endurance, and sound sleep",
+      "Rich in natural antioxidants that fight oxidative cellular stress",
+      "100% edible food grade, zero artificial coloring or essence"
+    ],
+    ingredients: "100% Pure Cold-Pressed Gurbandi Almonds.",
+    howTo: "Take with warm milk or massage into temples for calming mental relief."
+  },
+  {
     id: "cold-pressed-walnut-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Kashmiri Walnut Oil (अखरोट तेल)",
-    short: "Kashmiri Walnut Oil",
-    sub: "कश्मीरी अखरोट का तेल (कोल्ड प्रेस्ड)",
+    short: "Walnut Oil",
+    sub: "अखरोट का तेल",
     category: "Wellness Rogan",
     color: "#ede9e6",
     cap: "#FAB800",
-    label: "#3d1e13",
+    label: "#4A2E1B",
+    stickerColor: "#4A2E1B",
+    origin: "KASHMIR",
+    sourceType: "Seeds of",
     ink: "#f6eee9",
     glass: true,
     liquid: "#ba741c",
     price: 280,
     compareAt: 350,
+    bottleImage: "/mockups/walnut-oil/bottle.png",
+    showcaseImage: "/mockups/walnut-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 410,
@@ -403,21 +489,26 @@ export const DEFAULT_PRODUCTS: Product[] = [
     id: "cold-pressed-flax-seed-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Flax Seed Oil (अलसी का तेल)",
-    short: "Flax Seed Oil (Alsi)",
-    sub: "अलसी का तेल (मध्य प्रदेश अलसी)",
+    short: "Flax Seed Oil",
+    sub: "अलसी का तेल",
     category: "Wellness Rogan",
     color: "#e8edf5",
     cap: "#FAB800",
-    label: "#193563",
+    label: "#1D4ED8",
+    stickerColor: "#1D4ED8",
+    origin: "MADHYA PRADESH",
+    sourceType: "Seeds Sourced from",
     ink: "#eef4fd",
     glass: true,
     liquid: "#ce9222",
     price: 95,
     compareAt: 120,
+    bottleImage: "/mockups/flax-seed-oil/bottle.png",
+    showcaseImage: "/mockups/flax-seed-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.7,
     reviews: 530,
-    tagline: "Mother Nature's richest plant source of Alpha-Linolenic Acid (ALA).",
+    tagline: "Mother Nature richest plant source of Alpha-Linolenic Acid (ALA).",
     description: "Pressed below 32°C from Madhya Pradesh organic brown flaxseeds. Never heated and unfiltered to preserve delicate lignans and essential omega-3 fatty acids that support cellular vitality and joint flexibility.",
     benefits: [
       "Over 55% Vegetarian Omega-3 Fatty Acids (ALA)",
@@ -428,26 +519,67 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ingredients: "100% Pure Cold-Pressed Brown Flax Seeds (Linum usitatissimum).",
     howTo: "Take 1 tablespoon daily with morning meals, blend into fresh smoothies, or drizzle over dal. Do not heat."
   },
+
+  // --- ROW 4: Specialty & Daily Kitchen Cold-Pressed Oils ---
+  {
+    id: "cold-pressed-black-sesame-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed Black Sesame Oil (Kaale Til Ka Tel)",
+    short: "Black Sesame Oil",
+    sub: "काले तिल का तेल",
+    category: "Specialty Oils",
+    color: "#e5e7eb",
+    cap: "#FAB800",
+    label: "#374151",
+    stickerColor: "#374151",
+    origin: "WEST BENGAL",
+    sourceType: "Seeds Sources from",
+    ink: "#f3f4f6",
+    glass: true,
+    liquid: "#4b3820",
+    price: 135,
+    compareAt: 170,
+    bottleImage: "/mockups/black-sesame-oil/bottle.png",
+    showcaseImage: "/mockups/black-sesame-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.9,
+    reviews: 480,
+    tagline: "Potent mineral-dense black sesame oil from Bengal organic heirloom seeds.",
+    description: "Pressed slowly in our cold-press Ghani by Ramesh Kolhu Wale from heirloom West Bengal black sesame seeds. Supreme for Ayurvedic therapeutic massage, nourishing hair follicles to delay premature greying, and deep bone-nourishing therapies.",
+    benefits: [
+      "Deeply penetrative for musculoskeletal strength and joint elasticity",
+      "Rich in Calcium, Iron & Magnesium for hair luster and density",
+      "Ayurvedic Shirodhara gold standard oil",
+      "Single-pressed from pure native West Bengal black sesame seeds"
+    ],
+    ingredients: "100% Pure Cold-Pressed Black Sesame Seeds.",
+    howTo: "Warm gently for joint massage or apply to scalp for deep root strength."
+  },
   {
     id: "cold-pressed-extra-virgin-olive-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Extra Virgin Olive Oil (जैतून तेल)",
     short: "Extra Virgin Olive Oil",
     sub: "एक्स्ट्रा वर्जिन जैतून का तेल",
-    category: "Wellness Rogan",
+    category: "Specialty Oils",
     color: "#edf3ee",
     cap: "#FAB800",
-    label: "#173f27",
+    label: "#164E22",
+    stickerColor: "#164E22",
+    origin: "RAJASTHAN & MEDITERRANEAN",
+    sourceType: "Olives Sourced from",
     ink: "#eefbee",
     glass: true,
     liquid: "#839328",
     price: 220,
     compareAt: 280,
+    bottleImage: "/mockups/olive-oil/bottle.png",
+    showcaseImage: "/mockups/olive-oil/showcase.png",
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 720,
-    tagline: "Single-estate cold pressed from Rajasthan olive groves.",
-    description: "First mechanical cold press of handpicked olives harvested in Rajasthan. Exhibits a fresh herbal aroma with a distinct peppery finish, proving high oleocanthal and polyphenol content.",
+    tagline: "Single-estate cold pressed from Rajasthan & Mediterranean olive groves.",
+    description: "First mechanical cold press of handpicked olives. Exhibits a fresh herbal aroma with a distinct peppery finish, proving high oleocanthal and polyphenol content.",
     benefits: [
       "Ultra-low Acidity (<0.5% Free Fatty Acids)",
       "High Oleic Acid and Potent Natural Antioxidants",
@@ -456,6 +588,74 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ],
     ingredients: "100% Pure Extra Virgin Olive Oil (Olea europaea).",
     howTo: "Drizzle generously over raw salads, warm breads, grilled vegetables, hummus, and Mediterranean bowls."
+  },
+  {
+    id: "cold-pressed-onion-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed Pure Onion Oil (प्याज का तेल)",
+    short: "Onion Oil",
+    sub: "प्याज का तेल",
+    category: "Specialty Oils",
+    color: "#fdf2f8",
+    cap: "#FAB800",
+    label: "#831843",
+    stickerColor: "#831843",
+    origin: "MAHARASHTRA",
+    sourceType: "Seeds of",
+    ink: "#fce7f3",
+    glass: true,
+    liquid: "#b3421b",
+    price: 140,
+    compareAt: 180,
+    bottleImage: "/mockups/onion-oil/bottle.png",
+    showcaseImage: "/mockups/onion-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.9,
+    reviews: 620,
+    tagline: "Pure cold-pressed onion seed oil (Kalonji) for follicular vitality and hair density.",
+    description: "Cold-pressed from genuine native Maharashtra onion seeds (Allium cepa) by Ramesh Kolhu Wale. Naturally rich in sulfur, potassium, and active quercetin, onion seed oil stimulates dormant hair follicles and reduces seasonal hair fall.",
+    benefits: [
+      "Rich in Natural Bio-Active Sulfur: Strengthens hair roots and prevents breakage",
+      "Potassium & Antioxidants: Revitalizes scalp and reduces dandruff flakes",
+      "100% Cold-Pressed Seed Extract: Zero mineral oil, zero artificial perfumes",
+      "Dual-use: Nourishing scalp oil and edible herbal dressing"
+    ],
+    ingredients: "100% Pure Cold-Pressed Onion Seed Oil.",
+    howTo: "Part hair into sections and massage gently into scalp 30 minutes before washing."
+  },
+  {
+    id: "cold-pressed-sunflower-oil",
+    kind: "round-bottle",
+    name: "Cold-Pressed Sunflower Oil (सूरजमुखी तेल)",
+    short: "Sunflower Oil",
+    sub: "सूरजमुखी का तेल",
+    category: "Specialty Oils",
+    color: "#fffbeb",
+    cap: "#FAB800",
+    label: "#EA580C",
+    stickerColor: "#EA580C",
+    origin: "KARNATAKA",
+    sourceType: "Seeds of",
+    ink: "#fef3c7",
+    glass: true,
+    liquid: "#f59e0b",
+    price: 90,
+    compareAt: 115,
+    bottleImage: "/mockups/sunflower-oil/bottle.png",
+    showcaseImage: "/mockups/sunflower-oil/showcase.png",
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    rating: 4.8,
+    reviews: 510,
+    tagline: "Light golden, non-greasy cooking oil cold pressed from Karnataka sunflower seeds.",
+    description: "Cold-pressed by Ramesh Kolhu Wale from non-GMO, sun-drenched Karnataka sunflower seeds. Naturally light, neutral, and clear, it allows the authentic flavors of vegetables and curries to shine without greasy residue. Exceptionally rich in Vitamin E.",
+    benefits: [
+      "Exceptionally High in Natural Vitamin E: Powerful cellular antioxidant",
+      "Ultra-light & non-sticky: Absorbs minimal oil during everyday frying",
+      "Balanced Omega-6 & MUFA profile for active cardiovascular health",
+      "Chemical-free: No hexane, no bleaching clays, zero artificial deodorizers"
+    ],
+    ingredients: "100% Pure Cold-Pressed Sunflower Seeds.",
+    howTo: "Ideal for everyday light cooking, sauteing, baking, and crispy deep frying."
   }
 ];
 
@@ -807,9 +1007,12 @@ function ProductArt({
     const sy = 93;
     const sw = 49;
     const sh = 159;
-    const maroon = "#7A1426";
+    const themeColor = p.stickerColor || p.label || "#7A1426";
+    const maroon = themeColor;
     const navy = "#0B2545";
     const gold = "#D4AF37";
+    const origin = p.origin || "RAJASTHAN";
+    const sourceType = p.sourceType || "Seeds Sourced from";
 
     const { line1: title1, line2: title2 } = getStickerTitle(p.short);
     const displayQty = getDisplayQty(size || p.sizes[0]);
@@ -967,7 +1170,7 @@ function ProductArt({
           </text>
         </g>
 
-        {/* 8. Sourcing Callout: Seeds Sourced from RAJASTHAN */}
+        {/* 8. Sourcing Callout: Dynamic Origin */}
         <text
           x={cx}
           y={sy + (title2 ? 70 : 66)}
@@ -976,18 +1179,18 @@ function ProductArt({
           fontWeight="600"
           textAnchor="middle"
         >
-          Seeds Sourced from
+          {sourceType}
         </text>
         <text
           x={cx}
           y={sy + (title2 ? 74.2 : 70.2)}
-          fill={maroon}
-          fontSize="3.3"
+          fill={themeColor}
+          fontSize={origin.length > 14 ? "2.4" : "3.1"}
           fontWeight="900"
-          letterSpacing="0.06em"
+          letterSpacing="0.05em"
           textAnchor="middle"
         >
-          RAJASTHAN
+          {origin}
         </text>
         <line
           x1={cx - 10}
@@ -1120,7 +1323,8 @@ function ProductArt({
     const sy = 93;
     const sw = 49;
     const sh = 159;
-    const maroon = "#7A1426";
+    const themeColor = p.stickerColor || p.label || "#7A1426";
+    const maroon = themeColor;
     const navy = "#0B2545";
 
     return (
@@ -1790,17 +1994,19 @@ export function ProductShelf({
   const cartContext = useCart();
   const effectiveBagCount = cartContext ? cartContext.totalItems : bag;
 
-  // Split into 3 shelves
+  // Split into 4 shelves
   const rows = [
     products.slice(0, 4),
     products.slice(4, 8),
-    products.slice(8, 12)
+    products.slice(8, 12),
+    products.slice(12, 16)
   ];
 
   const shelfTitles = [
     { title: "01. Signature Mustard Oils & Vedic Bilona Ghee", sub: "Traditional cold-press Kolhu & hand-churned Vedic curd ghee" },
-    { title: "02. Pure Cold-Pressed Nut & Seed Oils", sub: "Saurashtra peanuts, Gujarat white sesame & Kerala virgin coconut" },
-    { title: "03. Wellness Rogan, Walnut & Artisanal Oils", sub: "Mamra almond Badam Rogan, Kashmiri walnut & cold-pressed flaxseed" }
+    { title: "02. Pure Nut & Coconut Cold-Pressed Oils", sub: "Saurashtra peanuts, Kerala copra, Tiptur extra virgin & Gujarat sesame" },
+    { title: "03. Wellness Rogans & Exotic Seeds", sub: "Kashmir Mamra & Gurbandi almonds, wild walnut & organic flaxseed" },
+    { title: "04. Specialty & Daily Kitchen Cold-Pressed Oils", sub: "West Bengal black sesame, cold-pressed olive, Maharashtra onion & Karnataka sunflower" }
   ];
 
   const open = products.find((p) => p.id === openId) ?? null;
@@ -1908,10 +2114,11 @@ export function ProductShelf({
             {/* Category Jump Tabs */}
             <div className="pt-3 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
               {[
-                "All 3 Shelves (12 Items)",
+                "All 4 Shelves (16 Items)",
                 "01. Mustard & Ghee (4)",
-                "02. Nut & Seed Oils (4)",
-                "03. Wellness Rogans (4)"
+                "02. Nut & Coconut (4)",
+                "03. Wellness Rogans (4)",
+                "04. Daily & Specialty (4)"
               ].map((tabLabel, idx) => (
                 <button
                   key={idx}
@@ -1976,10 +2183,20 @@ export function ProductShelf({
                         >
                           {/* Ambient golden glow behind bottle on hover */}
                           <div className="absolute inset-0 bg-radial from-amber-400/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full" />
-                          <ProductArt
-                            p={p}
-                            className="h-full w-auto max-w-full drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300"
-                          />
+                          {p.bottleImage ? (
+                            <div className="relative h-full w-full flex items-end justify-center pb-1">
+                              <img
+                                src={p.bottleImage}
+                                alt={p.name}
+                                className="h-full w-auto object-contain max-h-[285px] sm:max-h-[325px] md:max-h-[355px] drop-shadow-xl group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
+                              />
+                            </div>
+                          ) : (
+                            <ProductArt
+                              p={p}
+                              className="h-full w-auto max-w-full drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300"
+                            />
+                          )}
                           {/* Floating 360 badge on hover */}
                           <span className="absolute top-2 px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black text-[#0E2A47] shadow-sm border border-stone-200/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none tracking-wider">
                             360° ⇄
@@ -2117,6 +2334,7 @@ function ProductPage({
   const [size, setSize] = useState(p.sizes[0]);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [viewMode, setViewMode] = useState<'3d' | 'mockup'>('3d');
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const drag = useRef<{ x: number; v: number; samples: { x: number; t: number }[] } | null>(null);
 
@@ -2183,27 +2401,68 @@ function ProductPage({
 
       {/* Main Dialog Container */}
       <div className="relative mx-auto flex min-h-full max-w-[1100px] flex-col justify-center px-3 py-4 sm:px-6 md:grid md:grid-cols-[1.05fr_1fr] md:items-center md:gap-8 md:py-8">
-        {/* Left Column: Big 3D interactive bottle display */}
+        {/* Left Column: Big 3D interactive bottle display / Studio Mockup toggle */}
         <div className="relative flex flex-col items-center justify-center pt-2 pb-4 md:py-0">
-          <motion.div
-            layoutId={`product-${p.id}`}
-            transition={SPRING}
-            className="relative z-10 w-[200px] sm:w-[250px] md:w-[290px] h-[44vh] sm:h-[52vh] md:h-[65vh] max-h-[580px] flex items-center justify-center cursor-grab touch-none select-none active:cursor-grabbing"
-            onPointerDown={onDown}
-            onPointerMove={onMove}
-            onPointerUp={onUp}
-            onPointerCancel={onUp}
-          >
-            <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
-          </motion.div>
-
-          {/* Wooden Turntable Plinth under bottle */}
-          <div className="relative -mt-2 sm:-mt-3 flex flex-col items-center">
-            <div className="h-4 sm:h-5 w-44 sm:w-56 rounded-[50%] bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-[#FDE68A]/40" />
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold text-amber-200 tracking-wider uppercase shadow-sm">
-              <span className="text-xs">⇄</span> Drag horizontally to rotate 360°
+          {p.showcaseImage && (
+            <div className="mb-3 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-full border border-white/20 shadow-md">
+              <button
+                type="button"
+                onClick={() => setViewMode("3d")}
+                className={cn(
+                  "px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer",
+                  viewMode === "3d"
+                    ? "bg-[#FAB800] text-stone-950 shadow-sm"
+                    : "text-white/80 hover:text-white"
+                )}
+              >
+                ⇄ 360° 3D Bottle
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("mockup")}
+                className={cn(
+                  "px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer",
+                  viewMode === "mockup"
+                    ? "bg-[#FAB800] text-stone-950 shadow-sm"
+                    : "text-white/80 hover:text-white"
+                )}
+              >
+                📸 Studio Mockup
+              </button>
             </div>
-          </div>
+          )}
+
+          {viewMode === "mockup" && p.showcaseImage ? (
+            <div className="relative z-10 w-[240px] sm:w-[300px] md:w-[350px] aspect-square rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40">
+              <img
+                src={p.showcaseImage}
+                alt={p.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : (
+            <>
+              <motion.div
+                layoutId={`product-${p.id}`}
+                transition={SPRING}
+                className="relative z-10 w-[200px] sm:w-[250px] md:w-[290px] h-[44vh] sm:h-[52vh] md:h-[65vh] max-h-[580px] flex items-center justify-center cursor-grab touch-none select-none active:cursor-grabbing"
+                onPointerDown={onDown}
+                onPointerMove={onMove}
+                onPointerUp={onUp}
+                onPointerCancel={onUp}
+              >
+                <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
+              </motion.div>
+
+              {/* Wooden Turntable Plinth under bottle */}
+              <div className="relative -mt-2 sm:-mt-3 flex flex-col items-center">
+                <div className="h-4 sm:h-5 w-44 sm:w-56 rounded-[50%] bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-[#FDE68A]/40" />
+                <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold text-amber-200 tracking-wider uppercase shadow-sm">
+                  <span className="text-xs">⇄</span> Drag horizontally to rotate 360°
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Right Column: Product Details, Volume Selector & CTA - Compact Single-Screen Layout (NO SCROLLING NEEDED!) */}
