@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Our Traditional Extraction Process | Ramesh Kolhu Wale',
-  description: 'Discover how we cold-press our oils below 38°C in Lakdi Ki Ghani and churn authentic Vedic A2 Bilona Ghee in clay pots at Ramesh Kolhu Wale.',
+  description: 'Discover how we cold-press our oils below 38°C in traditional cold-press units and churn authentic Bilona Ghee at Ramesh Kolhu Wale.',
   alternates: {
     canonical: '/process',
   },
@@ -36,17 +36,17 @@ export default function ProcessPage() {
     {
       num: '05',
       title: 'Lab Testing',
-      desc: 'Every batch is sent to NABL-certified laboratories for purity testing: free fatty acid levels, argemone contamination screen, adulteration check. Reports are shared on request.',
+      desc: 'Every batch undergoes rigorous quality testing for standard purity parameters: free fatty acid levels, argemone contamination screen, and adulteration checks.',
     },
     {
       num: '06',
       title: 'Bottling',
-      desc: 'Oil is filled into glass or food-grade HDPE bottles without any preservatives or additives. Sealed and labelled with the batch date so you always know when it was pressed.',
+      desc: 'Oil is filled into food-grade PET bottles or tins without any preservatives or additives. Sealed and labelled with the batch date so you always know when it was pressed.',
     },
   ];
 
   const gheeSteps = [
-    { num: '01', title: 'A2 Milk Collection', desc: 'Milk collected from grass-fed Gir cows or Murrah buffalo. No hormones, no supplements. The cows graze freely and are milked by hand.' },
+    { num: '01', title: 'Pure Milk Sourcing', desc: 'Fresh whole milk sourced from grass-fed desi cows or desi Murrah buffaloes. 100% natural, hormone-free, and ethically collected.' },
     { num: '02', title: 'Curd Setting', desc: 'Fresh milk is boiled gently, cooled to 40°C, and inoculated with live culture from the previous batch. Set overnight into thick curd.' },
     { num: '03', title: 'Hand Churning', desc: 'Curd is churned using a traditional bilona (hand churner) in a clay pot. The process takes 45–60 minutes per batch. No electric churners.' },
     { num: '04', title: 'Butter Separation', desc: 'The makkhan (butter) that rises to the top is carefully skimmed. The remaining buttermilk (chaach) retains all probiotics.' },
@@ -92,7 +92,7 @@ export default function ProcessPage() {
       <section className="py-20 sm:py-28 bg-[#F2EEE5] border-y border-[#E8E0D0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-14">
-            <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Vedic Bilona</p>
+            <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Bilona Method</p>
             <h2 className="font-serif text-3xl sm:text-4xl text-[#0E2A47] font-normal">Hand-Churned Ghee</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -112,7 +112,7 @@ export default function ProcessPage() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-6">
           <h2 className="font-serif text-3xl sm:text-4xl text-white font-normal">Watch it happen live</h2>
           <p className="text-[#93B5D9] font-light">
-            Visit our workshops across Delhi NCR any day between 10:00 AM and 10:00 PM. See cold-press extraction in action 
+            Visit our Units across Delhi NCR any day between 10:00 AM and 10:00 PM. See cold-press extraction in action 
             and taste the oil fresh from the press.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

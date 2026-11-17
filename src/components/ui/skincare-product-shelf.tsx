@@ -87,7 +87,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tagline: "Authentic pungent jhal, single cold-pressed in traditional traditional Kolhu.",
     description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
     benefits: [
-      "100% Single-Pressed at <38°C in Lakdi Ka Kolhu",
+      "100% Single-Pressed at <38°C in Traditional Cold Press Kolhu",
       "Seeds sourced from Alwar & Bharatpur (Rajasthan)",
       "Zero Palm Oil, Zero Argemone Adulteration",
       "Natural Sinigrin & High Pungency for authentic Indian taste"
@@ -110,7 +110,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     liquid: "#eab318",
     price: 360,
     compareAt: 450,
-    sizes: ["500 ml", "1 Litre", "2 Litres", "5 Litres"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
     reviews: 2150,
     tagline: "Naturally sweeter with mild golden aroma for everyday healthy curries.",
@@ -125,32 +125,32 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Ideal for daily Indian sabzis, dals, shallow sauteing, deep frying, and preserving seasonal pickles."
   },
   {
-    id: "vedic-a2-bilona-gir-cow-ghee",
+    id: "dahi-bilona-desi-cow-ghee",
     kind: "jar",
-    name: "Vedic A2 Gir Cow Bilona Desi Ghee",
-    short: "A2 Gir Cow Ghee",
-    sub: "वैदिक बिलोना देसी घी (मंथन विधि)",
-    category: "Vedic Bilona Ghee",
+    name: "Dahi Bilona Desi Cow Ghee",
+    short: "Desi Cow Ghee",
+    sub: "दही बिलोना देसी गाय का शुद्ध घी",
+    category: "Bilona Ghee",
     color: "#f6f3eb",
     cap: "#c29139",
     label: "#fbf8f1",
     ink: "#3d280b",
     glass: true,
     liquid: "#f0c64c",
-    price: 1450,
-    compareAt: 1800,
-    sizes: ["250 ml", "500 ml", "1 Litre", "2 Litres"],
+    price: 850,
+    compareAt: 950,
+    sizes: ["500 ml (PET bottle)", "1 L (PET bottle)"],
     rating: 5.0,
     reviews: 3280,
-    tagline: "Handcrafted via 5000-year-old Vedic Bilona method in clay pots.",
-    description: "True Ayurvedic liquid gold crafted by Ramesh Kolhu Wale following the authentic 5-samskara Bilona method. Free-grazing desi Gir cows milk is boiled on slow earthen heat, naturally set into whole curd in clay pots, and churned bi-directionally with a traditional bilona churner to extract fresh makkhan (cultured butter). Simmered to yield fragrant, golden, danedar (granular) A2 Ghee.",
+    tagline: "Handcrafted via traditional Dahi Bilona method in earthen vessels.",
+    description: "Authentic pure Desi Cow Ghee prepared using traditional curd bilona method. Slow-boiled whole cow milk is cultured into curd and hand-churned with a bilona to extract fresh makkhan, then gently heated to golden, granular perfection.",
     benefits: [
-      "Authentic A2 Beta-Casein Protein for easy digestion",
-      "Granular (Danedar) golden texture rich in Butyric Acid",
-      "Ayurvedic Medhya Rasayana: Enhances memory and vitality",
-      "100% Cultured curd butter source, never from industrial cream separators"
+      "100% Pure Desi Cow Ghee",
+      "Granular (Danedar) golden texture rich in natural aroma",
+      "Handcrafted from cultured dahi makkhan",
+      "Zero preservatives, no artificial coloring or essence"
     ],
-    ingredients: "100% Pure Clarified Butterfat from Grass-Fed Desi Gir Cow Milk.",
+    ingredients: "100% Pure Clarified Butterfat from Fresh Desi Cow Milk Curd.",
     howTo: "Enjoy 1-2 teaspoons over hot rotis, steaming dal, or stir into warm milk at bedtime for restful sleep and digestion."
   },
   {
@@ -177,7 +177,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "Built-in Spill-Proof Pouring Spout",
       "Extra family value savings for heavy Indian kitchen usage"
     ],
-    ingredients: "100% Pure Cold-Pressed Black Mustard Oil (Lakdi Ki Ghani).",
+    ingredients: "100% Pure Cold-Pressed Black Mustard Oil (Cold Press).",
     howTo: "Pull up the spout ring, decant into your daily glass kitchen cruet, and close the cap tightly."
   },
 
@@ -755,7 +755,7 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
         <g transform={`translate(${centerX} ${P.y + P.h * 0.74})`}>
           <rect x="-24" y="-4" width="48" height="8" rx="2" fill={p.ink} fillOpacity="0.1" />
           <text x="0" y="1.8" fill={p.ink} fontSize="3.5" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
-            {isJar ? "VEDIC BILONA • 100% PURE" : "COLD-PRESSED • <38°C"}
+            {isJar ? "BILONA GHEE • 100% PURE" : "COLD-PRESSED • <38°C"}
           </text>
         </g>
 
@@ -997,7 +997,7 @@ export function ProductShelf({
         processHighlight: product.tagline,
         smokePoint: "250°C",
         nutritionalInfo: { energy: "884 kcal / 100g" },
-        extractionDetails: { method: "Lakdi Ki Ghani (<38°C)" },
+        extractionDetails: { method: "Traditional Cold Press (<38°C)" },
         labReportSummary: { purity: "100% Pure Virgin Grade" }
       };
       cartContext.addToCart(cartProduct as any, vol as any, qty);
@@ -1043,7 +1043,7 @@ export function ProductShelf({
               <div className="mb-3 px-3 sm:px-8 flex items-center justify-between text-xs font-bold text-stone-500 uppercase tracking-widest">
                 <span>
                   {[
-                    "01. Pure Mustard Oils & Vedic Bilona Ghee",
+                    "01. Pure Mustard Oils & Bilona Ghee",
                     "02. Pure Cold-Pressed Nut & Seed Oils",
                     "03. Wellness Rogan, Walnut & Artisanal Oils"
                   ][r]}

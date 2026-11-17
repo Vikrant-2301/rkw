@@ -6,7 +6,7 @@ import { SITE_CONFIG } from '@/config/site';
 
 export const WhatsAppOrderButton: React.FC = () => {
   const whatsappUrl = `https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-    'Hello Ramesh Kolhu Wale! I would like to order fresh cold-pressed oils and Vedic Bilona ghee for doorstep delivery in Delhi NCR.'
+    'Hello Ramesh Kolhu Wale! I would like to order fresh cold-pressed oils and pure Bilona ghee for doorstep delivery in Delhi NCR.'
   )}`;
 
   return (

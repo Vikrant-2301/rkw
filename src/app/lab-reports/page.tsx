@@ -5,8 +5,8 @@ import { PRODUCTS } from '@/data/products';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'NABL Certified Lab Reports | Ramesh Kolhu Wale',
-  description: 'View authentic NABL-accredited laboratory test reports for our cold-pressed oils and Vedic Bilona ghee. Purity tested for every single batch.',
+  title: 'Quality & Purity Standards | Ramesh Kolhu Wale',
+  description: 'View authentic laboratory purity standards for our cold-pressed oils and pure Bilona ghee. 100% pure, Agmark standards tested for every single batch.',
   alternates: {
     canonical: '/lab-reports',
   },
@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 
 export default function LabReportsPage() {
   const testParameters = [
-    { name: 'Purity', description: 'Verifies 100% single-oil composition with no blending or cheap fillers' },
+    { name: 'Purity & Grade', description: 'Verifies 100% single-oil composition with no blending or cheap fillers' },
     { name: 'Free Fatty Acid (FFA)', description: 'Measures low acidity, ensuring maximum oil freshness and zero rancidity' },
     { name: 'Argemone Screen (TLC)', description: 'Certifies zero toxic argemone mexicana contamination' },
-    { name: 'Chemical Adulteration', description: 'Broad chromatographic screen for synthetic additives, mineral oils, and solvents' },
-    { name: 'Moisture Content', description: 'Confirms natural solar drying without water dilution' },
-    { name: 'Specific Gravity', description: 'Scientifically validates genuine seed density and slow cold-press extraction' },
+    { name: 'Chemical Adulteration', description: 'Broad screen ensuring zero synthetic additives, mineral oils, or chemical solvents' },
+    { name: 'Natural Moisture Content', description: 'Confirms natural solar drying without water dilution' },
+    { name: 'Specific Gravity', description: 'Scientifically validates genuine seed density and authentic slow cold-press extraction' },
   ];
 
   return (
@@ -30,10 +30,10 @@ export default function LabReportsPage() {
           <div className="max-w-2xl">
             <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-4 font-semibold">Transparency &amp; Trust</p>
             <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal leading-tight mb-6">
-              NABL Lab Reports
+              Quality &amp; Purity Reports
             </h1>
             <p className="text-[#5A5248] leading-relaxed text-lg font-light">
-              Every single batch is tested at independent NABL-accredited laboratories before it reaches your kitchen. 
+              Every single batch is tested for standard purity parameters before it reaches your kitchen. 
               We share these parameters openly because true purity must be provable, not just promised.
             </p>
           </div>
@@ -65,7 +65,7 @@ export default function LabReportsPage() {
       <section className="py-20 sm:py-28 bg-[#F2EEE5] border-y border-[#E8E0D0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="font-serif text-3xl text-[#0E2A47] font-semibold">Test results by product</h2>
+            <h2 className="font-serif text-3xl text-[#0E2A47] font-semibold">Test parameters by product</h2>
           </div>
           <div className="space-y-4">
             {PRODUCTS.filter(p => p.labReportSummary).map(product => (
@@ -91,14 +91,14 @@ export default function LabReportsPage() {
                 <div className="flex-shrink-0">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EBF2F8] text-xs text-[#0E2A47] font-semibold rounded-full border border-[#163A60]/10">
                     <FiShield className="w-3.5 h-3.5" />
-                    NABL Certified
+                    100% Pure Guarantee
                   </span>
                 </div>
               </div>
             ))}
           </div>
           <p className="mt-8 text-sm text-[#8A7E6E]">
-            Full laboratory certificate PDFs with signed batch numbers are available on request. Contact our quality team on WhatsApp or email care@rameshkolhuwale.com.
+            Full batch purity summaries and Agmark standards data are available on request. Contact our quality team on WhatsApp or email care@rameshkolhuwale.com.
           </p>
         </div>
       </section>
@@ -106,8 +106,8 @@ export default function LabReportsPage() {
       {/* CTA */}
       <section className="py-16 sm:py-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-5">
-          <h2 className="font-serif text-2xl text-[#1C1A16] font-normal">Want the full certificate?</h2>
-          <p className="text-sm text-[#8A7E6E]">We share complete NABL reports on request. Contact us via WhatsApp.</p>
+          <h2 className="font-serif text-2xl text-[#1C1A16] font-normal">Questions about our purity standards?</h2>
+          <p className="text-sm text-[#8A7E6E]">We share complete batch purity details on request. Contact us via WhatsApp.</p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 px-8 py-4 bg-[#0E2A47] hover:bg-[#163A60] text-white font-semibold rounded-full transition-colors shadow-sm hover:scale-105"

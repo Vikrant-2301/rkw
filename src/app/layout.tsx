@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Ramesh Kolhu Wale",
   },
   description:
-    "Ramesh Kolhu Wale (RKW) — Est. 1965. 100% pure, unrefined, chemical-free cold-pressed oils (Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic Vedic A2 Gir Cow Bilona Desi Ghee in Delhi NCR. Workshop hours 10:00 AM - 10:00 PM. Free home delivery in Delhi NCR above ₹799 (₹100 below ₹799).",
+    "Ramesh Kolhu Wale (RKW) — Est. 1981. 100% pure, unrefined, chemical-free cold-pressed oils (Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic Bilona Desi Ghee (Cow & Buffalo) in Delhi NCR. Unit hours 10:00 AM - 10:00 PM. Free home delivery in Delhi NCR above ₹799 (₹100 below ₹799).",
   keywords: [
     "Ramesh Kolhu Wale",
     "RKW Oils",
@@ -32,8 +32,10 @@ export const metadata: Metadata = {
     "Kachi Ghani Mustard Oil",
     "Yellow Mustard Oil",
     "Black Mustard Oil",
-    "Vedic Bilona Ghee",
-    "A2 Gir Cow Ghee",
+    "Bilona Ghee",
+    "Desi Cow Ghee",
+    "Desi Buffalo Ghee",
+    "Dahi Bilona Ghee",
     "Pure Badam Rogan Almond Oil",
     "Cold Pressed Coconut Oil",
     "Cold Pressed Sesame Oil",
@@ -53,9 +55,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Vedic Bilona Ghee",
+    title: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Bilona Desi Ghee",
     description:
-      "100% chemical-free cold-pressed oils and pure A2 Vedic Bilona Ghee. Fresh, authentic, delivered across Delhi NCR with free home delivery above ₹799.",
+      "100% chemical-free cold-pressed oils and pure Bilona Desi Ghee. Fresh, authentic, delivered across Delhi NCR with free home delivery above ₹799.",
     url: siteUrl,
     siteName: "Ramesh Kolhu Wale",
     locale: "en_IN",
@@ -77,9 +79,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Vedic Bilona Ghee",
+    title: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Bilona Desi Ghee",
     description:
-      "Traditional cold-pressed oils and Vedic A2 Bilona Ghee crafted with pride in Delhi NCR since 1965. Workshop hours 10:00 AM - 10:00 PM.",
+      "Traditional cold-pressed oils and Bilona Desi Ghee crafted with pride in Delhi NCR since 1981. Unit hours 10:00 AM - 10:00 PM.",
     images: ["/images/hero.jpg"],
   },
   robots: {
@@ -125,8 +127,8 @@ export default function RootLayout({
           "url": `${siteUrl}/logos/6.svg`,
           "caption": "Ramesh Kolhu Wale Logo",
         },
-        "description": "Manufacturer and retailer of authentic cold-pressed oils and Vedic A2 Bilona cow ghee since 1965.",
-        "foundingDate": "1965",
+        "description": "Manufacturer and retailer of authentic cold-pressed oils and pure Bilona Desi Ghee since 1981.",
+        "foundingDate": "1981",
         "sameAs": [
           "https://instagram.com/rameshkolhuwale",
           "https://facebook.com/rameshkolhuwale",
@@ -138,14 +140,14 @@ export default function RootLayout({
         "name": "Ramesh Kolhu Wale",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": siteUrl,
-        "telephone": "+91-9811254321",
+        "telephone": "+91-9217744378",
         "priceRange": "₹₹",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Plot 18, Block B, Main Market, Pitampura",
+          "streetAddress": "B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump (Opp. Samuday Bhawan)",
           "addressLocality": "New Delhi",
           "addressRegion": "Delhi",
-          "postalCode": "110034",
+          "postalCode": "110051",
           "addressCountry": "IN",
         },
         "geo": {

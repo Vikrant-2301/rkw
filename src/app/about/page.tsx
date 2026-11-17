@@ -5,8 +5,8 @@ import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Our Story & Heritage Since 1965 | Ramesh Kolhu Wale',
-  description: 'Learn the story of Ramesh Kolhu Wale — four generations of authentic Lakdi Ki Ghani cold-pressed oils and Vedic A2 Gir Cow Bilona Ghee in Delhi NCR.',
+  title: 'Our Story & Heritage Since 1981 | Ramesh Kolhu Wale',
+  description: 'Learn the story of Ramesh Kolhu Wale — four generations of authentic cold-pressed oils and pure Bilona Desi Ghee in Delhi NCR since 1981.',
   alternates: {
     canonical: '/about',
   },
@@ -24,7 +24,7 @@ export default function AboutPage() {
               A family tradition,<br />four generations deep
             </h1>
             <p className="text-[#5A5248] text-lg leading-relaxed font-light">
-              Ramesh Kolhu Wale began in 1965 with a sacred belief: that the best edible oil is extracted slowly, 
+              Ramesh Kolhu Wale began in 1981 with a sacred belief: that the best edible oil is extracted slowly, 
               with pure slow cold-press technique, zero heat, and zero chemicals — exactly as India&apos;s ancient Vaidyas prescribed.
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function AboutPage() {
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border border-stone-200">
                 <Image
                   src="/images/hero.jpg"
-                  alt="Traditional cold-press extraction at the RKW workshop"
+                  alt="Traditional cold-press extraction at RKW Unit"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
@@ -60,22 +60,22 @@ export default function AboutPage() {
 
             <div className="space-y-6 max-w-lg">
               <span className="text-xs font-semibold text-[#0E2A47] bg-[#EBF2F8] px-3 py-1 rounded-full uppercase tracking-wider">
-                Est. 1965 · Delhi NCR
+                Est. 1981 · Delhi NCR
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">The founding story</h2>
               <div className="space-y-4 text-[#5A5248] leading-relaxed text-sm sm:text-base">
                 <p>
-                  Ramesh ji started with a single traditional cold-press Kolhu in Pitampura, cold-pressing indigenous mustard seeds 
+                  Ramesh ji started with a single traditional cold-press Kolhu in Delhi, cold-pressing indigenous mustard seeds 
                   for local families. The demand grew not through commercial advertisements, but by word of mouth — 
                   families tasted the rich pungency of authentic cold-pressed mustard oil, the golden hues, and the complete absence of bleaching or chemical solvents.
                 </p>
                 <p>
-                  Today, Ramesh Kolhu Wale operates authentic extraction workshops across Delhi NCR, 
+                  Today, Ramesh Kolhu Wale operates authentic extraction Units across Delhi NCR, 
                   yet our core principle has never deviated. Every batch is cold-pressed 
                   at slow rotations below 38°C, preserving 100% of the seeds&apos; vital antioxidants, Omega-3s, and tocopherols.
                 </p>
                 <p>
-                  We are FSSAI registered and NABL lab-certified. But our truest badge of honor is open transparency: you can walk into any of our workshops, inspect the raw seeds, and watch your bottle pressed live before your eyes.
+                  We are FSSAI registered with Agmark R.B.O. Certified Quality (100% Pure Guarantee). But our truest badge of honor is open transparency: you can walk into any of our Units, inspect the raw seeds, and watch your bottle pressed live before your eyes.
                 </p>
               </div>
               <div className="pt-2 flex flex-wrap gap-4 text-xs font-semibold text-[#0E2A47]">
@@ -103,7 +103,7 @@ export default function AboutPage() {
               },
               {
                 title: 'Full transparency',
-                desc: 'Our NABL lab reports are publicly available for every batch. We welcome customers into our workshops to smell the crushed seeds and witness pure cold-pressed oil dripping into clean containers.',
+                desc: 'Our pure quality testing guarantees 100% purity for every batch. We welcome customers into our Units to smell the crushed seeds and witness pure cold-pressed oil dripping into clean containers.',
               },
               {
                 title: 'Vedic heritage',
@@ -126,7 +126,7 @@ export default function AboutPage() {
             Come see for yourself
           </h2>
           <p className="text-[#8A7E6E] leading-relaxed">
-            Our workshops in Delhi NCR are open daily from 10:00 AM to 10:00 PM. Experience the gentle rhythm of live cold-press extraction and take home oil pressed minutes earlier.
+            Our Units in Delhi NCR are open daily from 10:00 AM to 10:00 PM. Experience the gentle rhythm of live cold-press extraction and take home oil pressed minutes earlier.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

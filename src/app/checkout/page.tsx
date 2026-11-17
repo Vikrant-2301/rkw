@@ -14,6 +14,7 @@ import {
   FiHome 
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import { SITE_CONFIG } from '@/config/site';
 
 export default function CheckoutPage() {
   const { cart, subtotal, discount, shippingFee, total, clearCart } = useCart();
@@ -76,7 +77,7 @@ export default function CheckoutPage() {
               Thank You for Your Order
             </h1>
             <p className="text-sm text-[#5A5248] max-w-md mx-auto">
-              Your order <strong className="text-[#1C1A16]">#{orderId}</strong> has been received by our Delhi NCR workshop. 
+              Your order <strong className="text-[#1C1A16]">#{orderId}</strong> has been received by our Delhi NCR Unit. 
               We are preparing your fresh cold-pressed bottles.
             </p>
           </div>
@@ -110,7 +111,9 @@ export default function CheckoutPage() {
 
           <div className="space-y-3 pt-2">
             <a
-              href={`https://wa.me/919811254321?text=Hello%20Ramesh%20Kolhu%20Wale,%20I%20have%20placed%20order%20%23${orderId}.%20Please%20send%20tracking%20updates.`}
+              href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
+                `Hello Ramesh Kolhu Wale, I have placed order #${orderId}. Please send tracking updates.`
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-medium text-sm transition-colors shadow-sm"

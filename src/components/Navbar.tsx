@@ -34,11 +34,11 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { href: '/shop', label: 'Shop' },
-    { href: '/stores', label: 'Find Store' },
+    { href: '/stores', label: 'Find Unit' },
     { href: '/shelf', label: 'Virtual Shelf' },
     { href: '/process', label: 'Our Process' },
     { href: '/about', label: 'About' },
-    { href: '/lab-reports', label: 'Lab Reports' },
+    { href: '/lab-reports', label: 'Quality Standards' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -48,11 +48,11 @@ export const Navbar: React.FC = () => {
       <div className="bg-[#0E2A47] text-[#F5E6B0] text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
         <span>🚚 Free Delhi NCR Home Delivery above ₹799 (₹100 under ₹799)</span>
         <span className="hidden md:inline text-white/30">|</span>
-        <span className="hidden md:inline">⏰ Workshop Hours: {SITE_CONFIG.contact.workshopHours}</span>
+        <span className="hidden md:inline">⏰ Unit Hours: {SITE_CONFIG.contact.unitHours}</span>
         <span className="hidden sm:inline text-white/30">|</span>
         <a
           href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-            'Hello RKW, I want to order pure cold-pressed oils & Vedic Bilona ghee!'
+            'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
           )}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -172,7 +172,7 @@ export const Navbar: React.FC = () => {
             <div className="p-5 border-t border-[#E8E0D0] space-y-2.5">
               <a
                 href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-                  'Hello RKW, I would like to order fresh cold-pressed oils & Vedic Bilona ghee!'
+                  'Hello RKW, I would like to order fresh cold-pressed oils & Bilona ghee!'
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -182,7 +182,7 @@ export const Navbar: React.FC = () => {
                 <span>WhatsApp: {SITE_CONFIG.contact.whatsapp}</span>
               </a>
               <div className="text-center space-y-1 pt-1 text-[11px] text-[#5A5248]">
-                <p>⏰ Workshop Hours: {SITE_CONFIG.contact.workshopHours}</p>
+                <p>⏰ Unit Hours: {SITE_CONFIG.contact.unitHours}</p>
                 <p className="text-[#0E2A47] font-semibold">🚚 Free Delivery in Delhi NCR above ₹799</p>
               </div>
             </div>

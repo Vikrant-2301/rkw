@@ -31,7 +31,7 @@ function ShopContent() {
         <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Our Collection</p>
         <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
         <p className="text-[#8A7E6E] mt-3 max-w-xl font-light">
-          Every product is cold-pressed fresh or Vedic Bilona-churned, NABL lab-tested, and 100% chemical-free.
+          Every product is cold-pressed fresh or authentically Bilona-churned, Agmark standard tested, and 100% pure & chemical-free.
         </p>
       </div>
 
@@ -44,11 +44,11 @@ function ShopContent() {
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-[#5A5248]">
             <FiClock className="w-3.5 h-3.5 text-[#0E2A47]" />
-            <span>Workshop: {SITE_CONFIG.contact.workshopHours}</span>
+            <span>Unit Hours: {SITE_CONFIG.contact.unitHours}</span>
           </span>
           <a
             href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-              'Hello RKW, I want to order pure cold-pressed oils & Vedic Bilona ghee!'
+              'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
             )}`}
             target="_blank"
             rel="noopener noreferrer"

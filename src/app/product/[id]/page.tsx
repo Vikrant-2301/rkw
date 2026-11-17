@@ -10,6 +10,7 @@ import { useCart } from '@/context/CartContext';
 import { FiArrowRight, FiPlus, FiMinus, FiCheck, FiShoppingBag, FiChevronRight } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { ProductCard } from '@/components/ProductCard';
+import { SITE_CONFIG } from '@/config/site';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -160,7 +161,7 @@ export default function ProductDetailPage() {
           <div className="bg-[#EBF2F8] rounded-xl p-4 flex items-start gap-3 border border-[#163A60]/10">
             <FiCheck className="w-4 h-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
             <p className="text-xs text-[#5A5248] leading-relaxed">
-              Cold-pressed below 38°C in traditional Lakdi Ki Ghani. No chemical solvents, zero refinement, and tested by NABL accredited laboratories.
+              Cold-pressed below 38°C in traditional slow Kolhu. No chemical solvents, zero refinement, and Agmark standard 100% pure guarantee.
             </p>
           </div>
         </div>
@@ -261,7 +262,7 @@ export default function ProductDetailPage() {
             </button>
 
             <a
-              href={`https://wa.me/919811254321?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
+              href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full h-11 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
@@ -277,8 +278,8 @@ export default function ProductDetailPage() {
               <p>Delhi NCR on orders ₹799+</p>
             </div>
             <div>
-              <p className="font-semibold text-[#0E2A47]">NABL Lab Certified</p>
-              <p>Zero chemical guarantee</p>
+              <p className="font-semibold text-[#0E2A47]">100% Pure Guarantee</p>
+              <p>Agmark R.B.O. Quality</p>
             </div>
           </div>
         </div>

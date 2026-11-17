@@ -30,7 +30,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="max-w-2xl">
             <p className="text-[#F5E6B0] text-sm uppercase tracking-[0.2em] mb-6 font-semibold">
-              Ramesh Kolhu Wale — Est. 1965
+              Ramesh Kolhu Wale — Est. 1981
             </p>
             <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-white leading-tight mb-8">
               Pure Oils,<br />
@@ -65,9 +65,9 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-sm">
             {[
               { label: 'Cold-Pressed', sub: 'Never refined or solvent-extracted' },
-              { label: 'NABL Certified', sub: 'Lab tested every batch' },
+              { label: '100% Pure Guarantee', sub: 'Agmark R.B.O. Certified Quality' },
               { label: 'Free Delivery', sub: 'Delhi NCR on orders ₹799+ (₹100 under)' },
-              { label: '10 AM – 10 PM', sub: 'Workshop hours open all 7 days' },
+              { label: '10 AM – 10 PM', sub: 'Unit hours open all 7 days' },
             ].map(item => (
               <div key={item.label} className="space-y-1">
                 <p className="font-semibold text-[#0E2A47]">{item.label}</p>
@@ -136,8 +136,8 @@ export default function HomePage() {
                 {[
                   'Pressed below 38°C — nutrients fully preserved',
                   'Zero chemical solvents or refining',
-                  'NABL lab-tested for purity every batch',
-                  'Watch your oil being pressed live at our workshop (10 AM – 10 PM)',
+                  '100% Pure & Agmark standard quality tested',
+                  'Watch your oil being pressed live at our Units (10 AM – 10 PM)',
                 ].map(point => (
                   <li key={point} className="flex items-start gap-3 text-sm text-[#5A5248]">
                     <FiCheck className="w-4 h-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
@@ -199,14 +199,14 @@ export default function HomePage() {
                 location: "Rohini, Delhi",
               },
               {
-                quote: "I visited the workshop and watched my ghee being churned. That level of transparency is rare. The A2 cow ghee is exceptional.",
+                quote: "I visited the unit and watched pure oil pressed before my eyes. That level of transparency is rare. The Desi cow ghee is exceptional.",
                 author: "Rajesh Mehra",
-                location: "Gurgaon",
+                location: "East Delhi",
               },
               {
-                quote: "My mother has been buying from Ramesh ji for 15 years. We will never go back to supermarket oils. The quality is simply unmatched.",
+                quote: "My family has been buying from Ramesh ji for over 15 years. We will never go back to supermarket oils. The purity is unmatched.",
                 author: "Anita Kapoor",
-                location: "Pitampura, Delhi",
+                location: "Laxmi Nagar, Delhi",
               },
             ].map(item => (
               <div key={item.author} className="bg-[#163A60] rounded-2xl p-7 space-y-5 border border-[#1E4E80]/40 shadow-md">
@@ -221,7 +221,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Find Nearest Store & Live Workshops ───────────── */}
+      {/* ─── Find Nearest Store & Live Units ───────────── */}
       <StoreLocatorSection id="find-store" />
 
       {/* ─── CTA / WhatsApp ──────────────────────────────────── */}
@@ -233,12 +233,12 @@ export default function HomePage() {
           </h2>
           <p className="text-[#5A5248] leading-relaxed max-w-xl mx-auto">
             Free home delivery across Delhi NCR on orders above ₹799 (₹100 delivery fee on orders below ₹799). 
-            Workshop open everyday from 10:00 AM to 10:00 PM.
+            Units open everyday from 10:00 AM to 10:00 PM.
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-2">
             <a
               href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-                'Hello RKW, I want to order pure cold-pressed oils & Vedic Bilona ghee!'
+                'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
               )}`}
               target="_blank"
               rel="noopener noreferrer"
