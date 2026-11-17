@@ -1,174 +1,123 @@
-'use client';
-
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  FiCheckCircle, 
-  FiArrowRight, 
-  FiEye, 
-  FiShield, 
-  FiClock, 
-  FiThermometer, 
-  FiMapPin, 
-  FiPhone 
-} from 'react-icons/fi';
-import { ProcessComparison } from '@/components/ProcessComparison';
+import { FiArrowRight } from 'react-icons/fi';
+
+export const metadata = {
+  title: 'Our Process | Ramesh Kolhu Wale',
+  description: 'How we cold-press our oils and churn our ghee using traditional methods.',
+};
 
 export default function ProcessPage() {
+  const oilSteps = [
+    {
+      num: '01',
+      title: 'Seed Selection',
+      desc: 'We source single-origin seeds directly from farmers — mustard from Rajasthan, coconut from Kerala, groundnut from Gujarat. Each batch is inspected for freshness before pressing.',
+    },
+    {
+      num: '02',
+      title: 'Sun Drying',
+      desc: 'Seeds are spread and dried naturally for 2–3 days under the sun. This reduces moisture content and intensifies the natural flavour without any artificial heating.',
+    },
+    {
+      num: '03',
+      title: 'Cold Pressing',
+      desc: 'The dried seeds are fed into our traditional wooden ghanis (oil presses) rotating at 8–10 RPM. This slow speed keeps temperature below 38°C — the threshold above which nutrients begin to degrade.',
+    },
+    {
+      num: '04',
+      title: 'Natural Settling',
+      desc: 'Raw pressed oil is left to settle naturally for 48–72 hours. The sediment sinks, the pure oil rises. We filter it once through cloth — no chemical clarification, no deodorisation.',
+    },
+    {
+      num: '05',
+      title: 'Lab Testing',
+      desc: 'Every batch is sent to NABL-certified laboratories for purity testing: free fatty acid levels, argemone contamination screen, adulteration check. Reports are shared on request.',
+    },
+    {
+      num: '06',
+      title: 'Bottling',
+      desc: 'Oil is filled into glass or food-grade HDPE bottles without any preservatives or additives. Sealed and labelled with the batch date so you always know when it was pressed.',
+    },
+  ];
+
+  const gheeSteps = [
+    { num: '01', title: 'A2 Milk Collection', desc: 'Milk collected from grass-fed Gir cows or Murrah buffalo. No hormones, no supplements. The cows graze freely and are milked by hand.' },
+    { num: '02', title: 'Curd Setting', desc: 'Fresh milk is boiled gently, cooled to 40°C, and inoculated with live culture from the previous batch. Set overnight into thick curd.' },
+    { num: '03', title: 'Hand Churning', desc: 'Curd is churned using a traditional bilona (hand churner) in a clay pot. The process takes 45–60 minutes per batch. No electric churners.' },
+    { num: '04', title: 'Butter Separation', desc: 'The makkhan (butter) that rises to the top is carefully skimmed. The remaining buttermilk (chaach) retains all probiotics.' },
+    { num: '05', title: 'Slow Heating', desc: 'Makkhan is heated slowly in a heavy-bottomed brass vessel over a wood fire. This is a 2–3 hour process — no shortcuts with high heat.' },
+  ];
+
   return (
-    <div className="space-y-16 pb-16">
-      {/* Header Hero */}
-      <section className="relative bg-gradient-to-r from-[#031d15] via-[#062e22] to-[#083a2b] text-white py-20 px-4 sm:px-6 lg:px-8 border-b-2 border-amber-500/30">
-        <div className="max-w-4xl mx-auto text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-amber-300 text-xs font-bold uppercase tracking-widest">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            Zero Chemicals • Zero High-Heat
-          </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-serif">
-            The Ancient Art of Kolhu &amp; Vedic Bilona
+    <div>
+      <section className="bg-[#F2EEE5] py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
+          <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-4">How We Make It</p>
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#1C1A16] font-normal leading-tight mb-6">
+            The process behind every bottle
           </h1>
-          <p className="text-xl sm:text-2xl text-amber-300 font-bold font-sans">
-            शुद्धता और स्वाद, हर बूँद में विश्वास
-          </p>
-          <p className="text-emerald-100 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            At Ramesh Kolhu Wale, we practice open-door craftsmanship. See how slow wood-pressing and clay-pot churning retain living prana, aroma, and essential fatty acids.
+          <p className="text-[#5A5248] text-lg leading-relaxed max-w-2xl">
+            There are no shortcuts in our process. Cold-pressing yields less oil than chemical extraction. 
+            Bilona churning takes more time than machine processing. We choose these methods because 
+            nothing else preserves what matters.
           </p>
         </div>
       </section>
 
-      {/* Part 1: The Wooden Kolhu (Lakdi Ki Ghani) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6 relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/40">
-            <Image
-              src="/images/process_live.jpg"
-              alt="Lakdi Ki Ghani Machine crushing yellow mustard seeds"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-              <span className="text-amber-200 text-xs font-bold">
-                Operating live in Delhi NCR • 14 RPM slow cold extraction
-              </span>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 text-emerald-900 text-xs font-bold uppercase tracking-widest bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
-              Lakdi Ka Kolhu (Cold-Pressed)
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-serif">
-              Why Wood Makes All The Difference
-            </h2>
-            <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              When seeds are crushed in modern industrial metal expellers, intense friction creates temperatures up to <strong>160°C to 200°C</strong>. This destroys fragile antioxidants, oxidizes delicate Omega-3 chains, and alters molecular structures.
-            </p>
-            <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              In our traditional <strong>Lakdi Ki Ghani (Wooden Kolhu)</strong>, the mortar and pestle are carved out of aged Vagai (Albizia Lebbeck) and Neem wood. Wood naturally absorbs heat, keeping the extraction temperature strictly <strong>under 38°C</strong>.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200">
-                <FiThermometer className="text-emerald-800 w-5 h-5 mb-1" />
-                <span className="block text-xl font-extrabold text-stone-900">&lt; 38°C</span>
-                <span className="text-xs text-stone-600">Preserves natural Vitamin E</span>
-              </div>
-              <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200">
-                <FiClock className="text-amber-800 w-5 h-5 mb-1" />
-                <span className="block text-xl font-extrabold text-stone-900">14 RPM</span>
-                <span className="text-xs text-stone-600">Slow artisanal rotation</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Part 2: The 5-Step Vedic Bilona Churning */}
-      <section className="py-16 bg-[#031d15] text-white" id="bilona">
+      {/* Oil process */}
+      <section className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-6 order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-widest bg-emerald-900/60 px-3.5 py-1 rounded-full border border-amber-400/30">
-                Ancient Vedic 5-Samskara Method
+          <div className="mb-14">
+            <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3">Lakdi Ki Ghani</p>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">Wood-Pressed Oil</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {oilSteps.map(step => (
+              <div key={step.num} className="space-y-4">
+                <div className="text-5xl font-serif text-[#E0D8CC] font-bold leading-none">{step.num}</div>
+                <h3 className="font-semibold text-[#1C1A16]">{step.title}</h3>
+                <p className="text-sm text-[#5A5248] leading-relaxed">{step.desc}</p>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-white">
-                How We Make True A2 Desi Cow Bilona Ghee
-              </h2>
-              <p className="text-stone-300 text-sm sm:text-base leading-relaxed">
-                Most commercial ghee brands do not make ghee from curd; they separate raw cream with centrifugal machines and boil it. That is NOT Bilona ghee.
-              </p>
-              <p className="text-stone-300 text-sm sm:text-base leading-relaxed">
-                Ramesh Kolhu Wale follows the sacred 5-samskara process:
-              </p>
-
-              <div className="space-y-3">
-                {[
-                  { title: '1. Sandhana (Boiling)', text: 'Fresh A2 Gir cow milk is boiled slowly over cow-dung wood fire in earthen handis.' },
-                  { title: '2. Dadhimathan (Curdling)', text: 'Natural starter culture is added to turn whole milk into nutrient-rich whole curd in clay pots.' },
-                  { title: '3. Mathani (Bidirectional Churning)', text: 'Wooden churner rotates clockwise and anticlockwise to separate light cultured makkhan.' },
-                  { title: '4. Agnisanskar (Clarification)', text: 'Cultured butter is gently simmered till liquid gold granules (danedar ghee) emerge.' },
-                  { title: '5. Galana (Muslin Filtration)', text: 'Filtered through fine muslin cloth into sterilized glass jars.' }
-                ].map((s) => (
-                  <div key={s.title} className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-start gap-2.5 text-xs sm:text-sm">
-                    <FiCheckCircle className="text-amber-400 w-4 h-4 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-amber-200">{s.title}: </strong>
-                      <span className="text-stone-300">{s.text}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/40 order-1 lg:order-2">
-              <Image
-                src="/images/bilona_tradition.jpg"
-                alt="Vedic Bilona Churning in Clay Pot"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-amber-300 text-xs font-bold">
-                  28–30 Liters of A2 Gir Cow Milk yields exactly 1 Liter of RKW Bilona Ghee
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Comparison Component */}
-      <ProcessComparison />
+      {/* Ghee process */}
+      <section className="py-20 sm:py-28 bg-[#F2EEE5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-14">
+            <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3">Vedic Bilona</p>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">Hand-Churned Ghee</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {gheeSteps.map(step => (
+              <div key={step.num} className="space-y-4">
+                <div className="text-5xl font-serif text-[#D4C4A0] font-bold leading-none">{step.num}</div>
+                <h3 className="font-semibold text-[#1C1A16]">{step.title}</h3>
+                <p className="text-sm text-[#5A5248] leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* Visit Unit Live */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="visit-unit">
-        <div className="rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-8 sm:p-12 text-stone-900">
-          <div className="max-w-3xl space-y-4">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-900 bg-white px-3.5 py-1 rounded-full border border-emerald-200">
-              Live Transparency
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold font-serif">
-              Visit Our Pitampura Workshop in Delhi NCR
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              We welcome curious families, doctors, and students every single day. See the yellow mustard seeds poured into the wooden cavity, touch the cold oil frothing out, and fill your own glass bottles.
-            </p>
-            <div className="pt-2 flex flex-wrap gap-4 items-center">
-              <a
-                href="tel:9811254321"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow-md"
-              >
-                <FiPhone /> Call Workshop (+91 98112 54321)
-              </a>
-              <Link
-                href="/contact"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 font-bold text-xs text-stone-800"
-              >
-                <FiMapPin className="text-amber-600" /> View Map &amp; Directions
-              </Link>
-            </div>
+      {/* CTA */}
+      <section className="py-20 sm:py-24 bg-[#1C3829]">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-6">
+          <h2 className="font-serif text-3xl sm:text-4xl text-white font-normal">Watch it happen live</h2>
+          <p className="text-[#A0C4B0]">
+            Visit our Pitampura workshop any day between 9 AM and 6 PM. See the wooden ghani in action 
+            and taste the oil fresh from the press.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4 bg-[#B8860B] hover:bg-[#D4A017] text-white font-medium rounded-full transition-colors">
+              Get Directions <FiArrowRight className="w-4 h-4" />
+            </Link>
+            <Link href="/lab-reports" className="inline-flex items-center gap-2 px-8 py-4 border border-[#3D7A5E] text-[#A0C4B0] hover:border-[#A0C4B0] hover:text-white rounded-full transition-colors">
+              View Lab Reports
+            </Link>
           </div>
         </div>
       </section>

@@ -4,31 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
-import { 
-  FiX, 
-  FiTrash2, 
-  FiPlus, 
-  FiMinus, 
-  FiShoppingBag, 
-  FiArrowRight, 
-  FiShield, 
-  FiTruck, 
-  FiTag 
-} from 'react-icons/fi';
+import { FiX, FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTag } from 'react-icons/fi';
 
 export const CartDrawer: React.FC = () => {
   const {
-    cart,
-    isCartOpen,
-    setIsCartOpen,
-    removeFromCart,
-    updateQuantity,
-    subtotal,
-    discount,
-    couponCode,
-    applyCoupon,
-    shippingFee,
-    total,
+    cart, isCartOpen, setIsCartOpen,
+    removeFromCart, updateQuantity,
+    subtotal, discount, couponCode,
+    applyCoupon, shippingFee, total,
   } = useCart();
 
   const [inputCoupon, setInputCoupon] = useState('');
@@ -49,145 +32,106 @@ export const CartDrawer: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-stone-900/60 backdrop-blur-xs transition-opacity duration-300"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={() => setIsCartOpen(false)}
       />
-
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between animate-slideIn">
+        <div className="w-screen max-w-md bg-[#FAF8F3] shadow-2xl flex flex-col animate-slideIn">
           {/* Header */}
-          <div className="p-5 border-b border-stone-100 flex items-center justify-between bg-emerald-50/70">
-            <div className="flex items-center gap-2">
-              <FiShoppingBag className="w-5 h-5 text-emerald-800" />
-              <h2 className="text-lg font-bold text-stone-900 font-serif">Your Pure Basket</h2>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-950 font-bold">
+          <div className="px-6 py-5 border-b border-[#E8E0D0] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <FiShoppingBag className="w-5 h-5 text-[#1C3829]" />
+              <h2 className="text-base font-semibold text-[#1C1A16]">Your Basket</h2>
+              <span className="text-xs px-2 py-0.5 bg-[#EDE8DF] text-[#5A5248] rounded-full font-medium">
                 {cart.reduce((sum, item) => sum + item.quantity, 0)} items
               </span>
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-2 rounded-full hover:bg-emerald-100 text-stone-500 transition-colors"
+              className="p-2 text-[#8A7E6E] hover:text-[#1C1A16] transition-colors"
               aria-label="Close cart"
             >
               <FiX className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Free Shipping Meter */}
-          <div className="bg-amber-50/80 px-5 py-3 border-b border-amber-200/60">
-            <div className="flex items-center justify-between text-xs font-semibold text-stone-800 mb-1.5">
-              <span className="flex items-center gap-1.5">
-                <FiTruck className="text-emerald-700 w-4 h-4" />
-                {amountNeeded > 0 ? (
-                  <span>
-                    Add <strong className="text-emerald-800">₹{amountNeeded}</strong> more for{' '}
-                    <strong>FREE Delhi NCR Delivery</strong>
-                  </span>
-                ) : (
-                  <span className="text-emerald-800 font-bold">
-                    🎉 You unlocked FREE Delhi NCR Express Delivery!
-                  </span>
-                )}
-              </span>
-              <span className="text-[11px] font-bold text-emerald-800">{progressPercent}%</span>
+          {/* Free shipping progress */}
+          <div className="px-6 py-3 bg-[#F2EEE5] border-b border-[#E8E0D0]">
+            <div className="flex items-center justify-between text-xs text-[#5A5248] mb-2">
+              {amountNeeded > 0 ? (
+                <span>Add <strong className="text-[#1C3829]">₹{amountNeeded}</strong> for free Delhi NCR delivery</span>
+              ) : (
+                <span className="text-[#1C3829] font-medium">Free delivery unlocked</span>
+              )}
+              <span className="text-[#8A7E6E]">{progressPercent}%</span>
             </div>
-            <div className="w-full bg-amber-200/60 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[#E8E0D0] h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-gradient-to-r from-emerald-600 to-amber-500 h-full transition-all duration-500"
+                className="bg-[#1C3829] h-full transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
           </div>
 
-          {/* Cart Items List */}
-          <div className="flex-1 overflow-y-auto p-5 divide-y divide-stone-100">
+          {/* Items */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[#E8E0D0]">
             {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
-                <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700">
-                  <FiShoppingBag className="w-10 h-10" />
+              <div className="h-full flex flex-col items-center justify-center text-center py-12 space-y-5">
+                <div className="w-16 h-16 bg-[#EDE8DF] rounded-full flex items-center justify-center">
+                  <FiShoppingBag className="w-7 h-7 text-[#8A7E6E]" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-stone-800">Your basket is empty</h3>
-                  <p className="text-xs text-stone-500 mt-1 max-w-xs">
-                    Explore Ramesh Kolhu Wale authentic cold-pressed oils and clay-pot Vedic Bilona ghee.
-                  </p>
+                  <p className="font-medium text-[#1C1A16] text-sm">Your basket is empty</p>
+                  <p className="text-xs text-[#8A7E6E] mt-1">Discover our pure, wood-pressed collection</p>
                 </div>
                 <Link
                   href="/shop"
                   onClick={() => setIsCartOpen(false)}
-                  className="px-6 py-2.5 rounded-full bg-emerald-800 text-white font-bold text-xs hover:bg-emerald-900 transition-colors shadow-sm"
+                  className="px-6 py-2.5 bg-[#1C3829] text-white rounded-full text-sm font-medium hover:bg-[#2A5240] transition-colors"
                 >
-                  Explore Pure Oils &amp; Ghee
+                  Shop Now
                 </Link>
               </div>
             ) : (
-              cart.map((item) => (
-                <div key={`${item.product.id}-${item.selectedVolume.size}`} className="py-4 flex gap-3.5 items-start">
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 border border-stone-200">
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.name}
-                      fill
-                      className="object-cover"
-                    />
+              cart.map(item => (
+                <div key={`${item.product.id}-${item.selectedVolume.size}`} className="py-4 flex gap-4">
+                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-[#EDE8DF] flex-shrink-0">
+                    <Image src={item.product.image} alt={item.product.name} fill className="object-cover" />
                   </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-1">
-                      <h4 className="text-sm font-bold text-stone-900 leading-snug line-clamp-1">
-                        {item.product.name}
-                      </h4>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-medium text-[#1C1A16] leading-snug line-clamp-1">{item.product.name}</p>
+                        <p className="text-xs text-[#8A7E6E] mt-0.5">{item.selectedVolume.size} · {item.selectedVolume.packaging}</p>
+                      </div>
                       <button
                         onClick={() => removeFromCart(item.product.id, item.selectedVolume.size)}
-                        className="text-stone-400 hover:text-red-600 transition-colors p-1"
-                        aria-label="Remove item"
+                        className="p-1 text-[#C0B8A8] hover:text-red-500 transition-colors flex-shrink-0"
+                        aria-label="Remove"
                       >
                         <FiTrash2 className="w-4 h-4" />
                       </button>
                     </div>
-
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-900 border border-emerald-200">
-                        {item.selectedVolume.size}
-                      </span>
-                      <span className="text-[11px] text-stone-400 line-clamp-1">
-                        {item.selectedVolume.packaging}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-3">
-                      {/* Quantity Controller */}
-                      <div className="flex items-center border border-stone-200 rounded-lg overflow-hidden bg-stone-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center border border-[#D0C8B8] rounded-lg overflow-hidden">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.selectedVolume.size, item.quantity - 1)}
-                          className="px-2.5 py-1 text-stone-600 hover:bg-stone-200 transition-colors"
-                          aria-label="Decrease quantity"
+                          className="px-2.5 py-1.5 text-[#5A5248] hover:bg-[#EDE8DF] transition-colors"
                         >
                           <FiMinus className="w-3 h-3" />
                         </button>
-                        <span className="px-2.5 text-xs font-bold text-stone-800">
-                          {item.quantity}
-                        </span>
+                        <span className="px-3 text-xs font-semibold text-[#1C1A16]">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.selectedVolume.size, item.quantity + 1)}
-                          className="px-2.5 py-1 text-stone-600 hover:bg-stone-200 transition-colors"
-                          aria-label="Increase quantity"
+                          className="px-2.5 py-1.5 text-[#5A5248] hover:bg-[#EDE8DF] transition-colors"
                         >
                           <FiPlus className="w-3 h-3" />
                         </button>
                       </div>
-
-                      {/* Line Item Price */}
-                      <div className="text-right">
-                        <span className="text-sm font-extrabold text-stone-900">
-                          ₹{item.selectedVolume.price * item.quantity}
-                        </span>
-                        <span className="text-[10px] text-stone-400 block">
-                          ₹{item.selectedVolume.price} each
-                        </span>
-                      </div>
+                      <span className="text-sm font-semibold text-[#1C1A16]">
+                        ₹{item.selectedVolume.price * item.quantity}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -195,84 +139,66 @@ export const CartDrawer: React.FC = () => {
             )}
           </div>
 
-          {/* Footer Checkout Summary */}
+          {/* Checkout footer */}
           {cart.length > 0 && (
-            <div className="p-5 border-t border-stone-200 bg-stone-50 space-y-4">
-              {/* Coupon Form */}
+            <div className="px-6 py-5 border-t border-[#E8E0D0] bg-[#F2EEE5] space-y-4">
+              {/* Coupon */}
               <form onSubmit={handleApplyCoupon} className="flex gap-2">
                 <div className="relative flex-1">
-                  <FiTag className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 w-4 h-4" />
+                  <FiTag className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A09585] w-4 h-4" />
                   <input
                     type="text"
-                    placeholder="Coupon (e.g. RKW10)"
+                    placeholder="Coupon code (e.g. RKW10)"
                     value={inputCoupon}
-                    onChange={(e) => setInputCoupon(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-600 uppercase font-semibold text-stone-800 bg-white"
+                    onChange={e => setInputCoupon(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16] uppercase font-medium"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-colors"
+                  className="px-4 py-2 bg-[#1C3829] text-white rounded-lg text-xs font-medium hover:bg-[#2A5240] transition-colors"
                 >
                   Apply
                 </button>
               </form>
-
               {couponStatus && (
-                <p
-                  className={`text-xs font-semibold ${
-                    couponStatus.success ? 'text-emerald-700' : 'text-red-600'
-                  }`}
-                >
+                <p className={`text-xs font-medium ${couponStatus.success ? 'text-[#1C3829]' : 'text-red-600'}`}>
                   {couponStatus.message}
                 </p>
               )}
 
-              {/* Price Breakdown */}
-              <div className="space-y-1.5 text-xs text-stone-600">
-                <div className="flex justify-between">
+              {/* Summary */}
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between text-[#5A5248]">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-stone-800">₹{subtotal}</span>
+                  <span className="font-medium text-[#1C1A16]">₹{subtotal}</span>
                 </div>
                 {discount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-semibold">
+                  <div className="flex justify-between text-[#1C3829] font-medium">
                     <span>Discount ({couponCode})</span>
-                    <span>-₹{discount}</span>
+                    <span>−₹{discount}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>Delhi NCR Shipping</span>
-                  <span>
-                    {shippingFee === 0 ? (
-                      <span className="text-emerald-700 font-bold">FREE</span>
-                    ) : (
-                      `₹${shippingFee}`
-                    )}
+                <div className="flex justify-between text-[#5A5248]">
+                  <span>Shipping</span>
+                  <span className={shippingFee === 0 ? 'text-[#1C3829] font-medium' : ''}>
+                    {shippingFee === 0 ? 'Free' : `₹${shippingFee}`}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm font-extrabold text-stone-900 pt-2 border-t border-stone-200">
-                  <span>Total Payable</span>
-                  <span className="text-base text-emerald-950 font-serif">₹{total}</span>
+                <div className="flex justify-between font-semibold text-[#1C1A16] pt-2 border-t border-[#D0C8B8]">
+                  <span>Total</span>
+                  <span className="font-serif text-base">₹{total}</span>
                 </div>
               </div>
 
-              {/* Primary Checkout CTA */}
               <Link
                 href="/checkout"
                 onClick={() => setIsCartOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 text-amber-200 hover:text-white font-black text-sm tracking-wide shadow-lg transition-all"
+                className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#1C3829] hover:bg-[#2A5240] text-white font-medium text-sm rounded-full transition-colors"
               >
-                <span>Proceed to Secure Checkout</span>
-                <FiArrowRight className="w-4 h-4 text-amber-300" />
+                Proceed to Checkout
+                <FiArrowRight className="w-4 h-4" />
               </Link>
-
-              <div className="flex items-center justify-center gap-4 text-[11px] text-stone-500 pt-1">
-                <span className="flex items-center gap-1">
-                  <FiShield className="text-emerald-700" /> 100% Purity Assured
-                </span>
-                <span>•</span>
-                <span>UPI / Cash on Delivery</span>
-              </div>
             </div>
           )}
         </div>

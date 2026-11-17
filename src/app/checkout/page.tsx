@@ -8,11 +8,8 @@ import confetti from 'canvas-confetti';
 import { 
   FiCheckCircle, 
   FiTruck, 
-  FiShield, 
   FiShoppingBag, 
   FiArrowRight, 
-  FiPhone, 
-  FiCreditCard, 
   FiPrinter,
   FiHome 
 } from 'react-icons/fi';
@@ -41,7 +38,6 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (cart.length === 0) return;
 
-    // Generate random order ID
     const newOrderId = `RKW-${Math.floor(100000 + Math.random() * 900000)}`;
     const now = new Date().toLocaleDateString('en-IN', {
       day: 'numeric',
@@ -53,11 +49,10 @@ export default function CheckoutPage() {
     setOrderDate(now);
     setIsOrdered(true);
 
-    // Launch celebratory confetti
     try {
       confetti({
-        particleCount: 120,
-        spread: 70,
+        particleCount: 80,
+        spread: 60,
         origin: { y: 0.6 },
       });
     } catch {}
@@ -65,81 +60,75 @@ export default function CheckoutPage() {
     clearCart();
   };
 
-  // If order was placed, show confirmation receipt
   if (isOrdered) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 space-y-8 animate-fadeIn">
-        <div className="bg-white rounded-3xl p-8 sm:p-10 border border-emerald-200 shadow-2xl text-center space-y-6">
-          <div className="w-20 h-20 mx-auto rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shadow-inner">
-            <FiCheckCircle className="w-12 h-12" />
+      <div className="max-w-2xl mx-auto px-4 py-16 sm:py-24 animate-fadeIn">
+        <div className="bg-[#FAF8F3] rounded-3xl p-8 sm:p-12 border border-[#E8E0D0] shadow-sm text-center space-y-8">
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#EDE8DF] text-[#1C3829] flex items-center justify-center">
+            <FiCheckCircle className="w-8 h-8" />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-900 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
-              Order Confirmed &amp; In Production
-            </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-stone-900 font-serif">
-              Thank You for Trusting Ramesh Kolhu Wale!
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#B8860B]">
+              Order Confirmed
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-serif text-[#1C1A16] font-normal">
+              Thank You for Your Order
             </h1>
-            <p className="text-sm sm:text-base text-stone-600">
-              Your order <strong>#{orderId}</strong> has been received by our Delhi NCR workshop. Our masters are cold-pressing and packing your fresh bottles.
+            <p className="text-sm text-[#5A5248] max-w-md mx-auto">
+              Your order <strong className="text-[#1C1A16]">#{orderId}</strong> has been received by our Delhi NCR workshop. 
+              We are preparing your fresh cold-pressed bottles.
             </p>
           </div>
 
-          {/* Receipt Summary Card */}
-          <div className="bg-emerald-50/40 rounded-2xl p-6 border border-emerald-200 text-left space-y-4 text-xs sm:text-sm">
-            <div className="flex justify-between border-b border-emerald-100 pb-3">
-              <span className="text-stone-500 font-semibold">Order Number:</span>
-              <span className="font-extrabold text-stone-900 font-mono text-base">{orderId}</span>
+          <div className="bg-[#F2EEE5] rounded-2xl p-6 text-left space-y-3 text-sm">
+            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
+              <span className="text-[#8A7E6E]">Order Number</span>
+              <span className="font-semibold text-[#1C1A16] font-mono">{orderId}</span>
             </div>
-            <div className="flex justify-between border-b border-emerald-100 pb-3">
-              <span className="text-stone-500 font-semibold">Order Date:</span>
-              <span className="font-semibold text-stone-800">{orderDate}</span>
+            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
+              <span className="text-[#8A7E6E]">Order Date</span>
+              <span className="text-[#1C1A16]">{orderDate}</span>
             </div>
-            <div className="flex justify-between border-b border-emerald-100 pb-3">
-              <span className="text-stone-500 font-semibold">Shipping To:</span>
-              <span className="font-bold text-stone-900 text-right">
-                {formData.name}, {formData.address}, {formData.city}, {formData.pincode}
+            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
+              <span className="text-[#8A7E6E]">Shipping Address</span>
+              <span className="font-medium text-[#1C1A16] text-right max-w-xs">
+                {formData.name}, {formData.address}, {formData.city} {formData.pincode}
               </span>
             </div>
-            <div className="flex justify-between border-b border-emerald-100 pb-3">
-              <span className="text-stone-500 font-semibold">Payment Mode:</span>
-              <span className="font-bold uppercase text-emerald-900">
-                {formData.paymentMethod === 'upi'
-                  ? 'UPI / QR Payment'
-                  : formData.paymentMethod === 'cod'
-                  ? 'Cash on Delivery (COD)'
-                  : 'Card / Net Banking'}
+            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
+              <span className="text-[#8A7E6E]">Payment Method</span>
+              <span className="font-medium text-[#1C1A16] uppercase text-xs">
+                {formData.paymentMethod === 'upi' ? 'UPI / QR' : formData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
               </span>
             </div>
-            <div className="flex justify-between text-base font-black text-stone-900 pt-1">
-              <span>Total Amount:</span>
-              <span className="text-emerald-950 font-serif">₹{total}</span>
+            <div className="flex justify-between text-base font-semibold text-[#1C1A16] pt-1">
+              <span>Total Paid</span>
+              <span className="font-serif">₹{total}</span>
             </div>
           </div>
 
-          {/* WhatsApp Confirmation CTA */}
-          <div className="space-y-3">
+          <div className="space-y-3 pt-2">
             <a
               href={`https://wa.me/919811254321?text=Hello%20Ramesh%20Kolhu%20Wale,%20I%20have%20placed%20order%20%23${orderId}.%20Please%20send%20tracking%20updates.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-black text-sm shadow-md transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full bg-green-700 hover:bg-green-800 text-white font-medium text-sm transition-colors"
             >
-              <FaWhatsapp className="text-lg" />
+              <FaWhatsapp className="text-base" />
               <span>Get WhatsApp Tracking Updates</span>
             </a>
 
             <div className="flex justify-center gap-4 pt-2">
               <button
                 onClick={() => window.print()}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 text-xs font-bold"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#D0C8B8] text-[#5A5248] hover:bg-[#EDE8DF] text-xs font-medium transition-colors"
               >
                 <FiPrinter /> Print Receipt
               </button>
               <Link
                 href="/"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-800 text-white hover:bg-emerald-900 text-xs font-bold"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#1C3829] text-white hover:bg-[#2A5240] text-xs font-medium transition-colors"
               >
                 <FiHome /> Back to Home
               </Link>
@@ -150,267 +139,212 @@ export default function CheckoutPage() {
     );
   }
 
-  // If basket is empty
   if (cart.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-24 text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto">
-          <FiShoppingBag className="w-8 h-8" />
+      <div className="max-w-2xl mx-auto px-4 py-28 text-center space-y-5">
+        <div className="w-16 h-16 rounded-full bg-[#EDE8DF] text-[#8A7E6E] flex items-center justify-center mx-auto">
+          <FiShoppingBag className="w-7 h-7" />
         </div>
-        <h1 className="text-2xl font-bold text-stone-900 font-serif">Your Pure Basket is Empty</h1>
-        <p className="text-xs sm:text-sm text-stone-500 max-w-sm mx-auto">
-          You need at least one pure cold-pressed oil or bilona ghee product to checkout.
+        <h1 className="text-3xl font-serif text-[#1C1A16] font-normal">Your Basket is Empty</h1>
+        <p className="text-sm text-[#8A7E6E] max-w-sm mx-auto">
+          Add cold-pressed oils or Vedic Bilona ghee to your basket before checkout.
         </p>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-800 text-white rounded-xl text-xs font-bold"
+          className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#1C3829] text-white rounded-full text-sm font-medium hover:bg-[#2A5240] transition-colors"
         >
-          <span>Explore Catalog</span>
-          <FiArrowRight />
+          <span>Explore Collection</span>
+          <FiArrowRight className="w-4 h-4" />
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-10">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-stone-900 font-serif">
+        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-2">Checkout</p>
+        <h1 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">
           Complete Your Order
         </h1>
-        <p className="text-xs text-stone-500 mt-0.5">
-          Fast &amp; secure delivery from Ramesh Kolhu Wale central workshops.
-        </p>
       </div>
 
-      <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Delivery Details & Payment */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Customer Address */}
-          <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-4">
-            <h3 className="text-base font-bold text-stone-900 flex items-center gap-2 font-serif">
-              <FiTruck className="text-emerald-800" />
-              <span>1. Delivery Address</span>
+      <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* Left: Form */}
+        <div className="lg:col-span-7 space-y-8">
+          {/* Address */}
+          <div className="bg-[#FAF8F3] p-7 rounded-2xl border border-[#E8E0D0] space-y-5">
+            <h3 className="font-serif text-lg text-[#1C1A16] font-normal flex items-center gap-2.5">
+              <FiTruck className="text-[#1C3829]" />
+              <span>1. Delivery Details</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>
-                <label className="block text-stone-700 font-bold uppercase mb-1">Full Name</label>
+                <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Ramesh Chandra"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-600 text-stone-800"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
                 />
               </div>
-
               <div>
-                <label className="block text-stone-700 font-bold uppercase mb-1">Mobile Number</label>
+                <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">Mobile Number</label>
                 <input
                   type="tel"
                   required
                   placeholder="+91 98112 54321"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-600 text-stone-800"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
                 />
               </div>
             </div>
 
             <div className="text-xs">
-              <label className="block text-stone-700 font-bold uppercase mb-1">Email Address</label>
+              <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">Email Address</label>
               <input
                 type="email"
-                placeholder="name@gmail.com (for invoice receipt)"
+                placeholder="name@example.com (for order receipt)"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-600 text-stone-800"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
               />
             </div>
 
             <div className="text-xs">
-              <label className="block text-stone-700 font-bold uppercase mb-1">Full Street Address</label>
+              <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">Street Address</label>
               <textarea
                 rows={2}
                 required
-                placeholder="House/Flat No., Building Name, Street, Landmark"
+                placeholder="Flat / House No., Building, Street, Landmark"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:border-emerald-600 text-stone-800"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
               />
             </div>
 
             <div className="grid grid-cols-3 gap-3 text-xs">
               <div>
-                <label className="block text-stone-700 font-bold uppercase mb-1">City</label>
+                <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">City</label>
                 <input
                   type="text"
                   required
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-stone-800"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
                 />
               </div>
               <div>
-                <label className="block text-stone-700 font-bold uppercase mb-1">State</label>
+                <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">State</label>
                 <input
                   type="text"
                   required
                   value={formData.state}
                   onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-stone-800"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
                 />
               </div>
               <div>
-                <label className="block text-stone-700 font-bold uppercase mb-1">Pincode</label>
+                <label className="block text-[#5A5248] font-medium uppercase tracking-wider mb-1.5">PIN Code</label>
                 <input
                   type="text"
                   required
                   value={formData.pincode}
                   onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-300 text-stone-800"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] bg-white focus:outline-none focus:border-[#1C3829] text-[#1C1A16]"
                 />
               </div>
             </div>
           </div>
 
-          {/* Payment Method Selector */}
-          <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-4">
-            <h3 className="text-base font-bold text-stone-900 flex items-center gap-2 font-serif">
-              <FiCreditCard className="text-emerald-800" />
-              <span>2. Payment Option</span>
-            </h3>
-
-            <div className="space-y-2 text-xs">
-              <label
-                className={`flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                  formData.paymentMethod === 'upi'
-                    ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600 font-bold text-stone-900'
-                    : 'border-stone-200 hover:bg-stone-50 text-stone-700'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={formData.paymentMethod === 'upi'}
-                  onChange={() => setFormData({ ...formData, paymentMethod: 'upi' })}
-                  className="accent-emerald-700"
-                />
-                <div className="flex-1 flex items-center justify-between">
-                  <span>Instant UPI (GooglePay / PhonePe / Paytm / QR)</span>
-                  <span className="text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded font-bold">
-                    Fastest
-                  </span>
-                </div>
-              </label>
-
-              <label
-                className={`flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                  formData.paymentMethod === 'cod'
-                    ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600 font-bold text-stone-900'
-                    : 'border-stone-200 hover:bg-stone-50 text-stone-700'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={formData.paymentMethod === 'cod'}
-                  onChange={() => setFormData({ ...formData, paymentMethod: 'cod' })}
-                  className="accent-emerald-700"
-                />
-                <div className="flex-1 flex items-center justify-between">
-                  <span>Cash on Delivery (Pay when oil arrives)</span>
-                  <span className="text-[10px] text-stone-400 font-semibold">Delhi NCR only</span>
-                </div>
-              </label>
-
-              <label
-                className={`flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                  formData.paymentMethod === 'card'
-                    ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600 font-bold text-stone-900'
-                    : 'border-stone-200 hover:bg-stone-50 text-stone-700'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={formData.paymentMethod === 'card'}
-                  onChange={() => setFormData({ ...formData, paymentMethod: 'card' })}
-                  className="accent-emerald-700"
-                />
-                <div className="flex-1">
-                  <span>Credit / Debit Card &amp; Net Banking</span>
-                </div>
-              </label>
+          {/* Payment */}
+          <div className="bg-[#FAF8F3] p-7 rounded-2xl border border-[#E8E0D0] space-y-4">
+            <h3 className="font-serif text-lg text-[#1C1A16] font-normal">2. Payment Method</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              {[
+                { id: 'upi', label: 'UPI / QR Payment', desc: 'Google Pay, PhonePe, Paytm' },
+                { id: 'cod', label: 'Cash on Delivery', desc: 'Pay when delivered' },
+              ].map((method) => (
+                <label
+                  key={method.id}
+                  className={`p-4 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition-all ${
+                    formData.paymentMethod === method.id
+                      ? 'border-[#1C3829] bg-[#EDE8DF]'
+                      : 'border-[#E8E0D0] bg-white hover:border-[#D0C8B8]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value={method.id}
+                      checked={formData.paymentMethod === method.id}
+                      onChange={() => setFormData({ ...formData, paymentMethod: method.id })}
+                      className="text-[#1C3829] focus:ring-[#1C3829]"
+                    />
+                    <span className="font-medium text-[#1C1A16] text-xs">{method.label}</span>
+                  </div>
+                  <span className="text-[11px] text-[#8A7E6E] mt-2 block pl-5">{method.desc}</span>
+                </label>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Right Column: Order Summary */}
-        <div className="lg:col-span-5 bg-white p-6 rounded-3xl border border-stone-200 shadow-md space-y-5">
-          <h3 className="text-base font-bold text-stone-900 pb-3 border-b border-stone-200 font-serif">
-            Order Items ({cart.reduce((sum, i) => sum + i.quantity, 0)})
-          </h3>
+        {/* Right: Summary */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-[#F2EEE5] p-7 rounded-2xl border border-[#E8E0D0] space-y-5">
+            <h3 className="font-serif text-lg text-[#1C1A16] font-normal">Order Summary</h3>
 
-          <div className="max-h-60 overflow-y-auto divide-y divide-stone-100 pr-1">
-            {cart.map((item) => (
-              <div key={`${item.product.id}-${item.selectedVolume.size}`} className="py-2.5 flex items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-10 h-10 relative rounded-lg overflow-hidden bg-stone-100 flex-shrink-0">
+            <div className="divide-y divide-[#E0D8CC] max-h-72 overflow-y-auto">
+              {cart.map((item) => (
+                <div key={`${item.product.id}-${item.selectedVolume.size}`} className="py-3 flex gap-3.5 items-center">
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-white flex-shrink-0">
                     <Image src={item.product.image} alt={item.product.name} fill className="object-cover" />
                   </div>
-                  <div className="min-w-0">
-                    <h5 className="font-bold text-stone-900 truncate">{item.product.name}</h5>
-                    <span className="text-stone-400 text-[11px]">
-                      {item.selectedVolume.size} × {item.quantity}
-                    </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-[#1C1A16] truncate">{item.product.name}</p>
+                    <p className="text-[11px] text-[#8A7E6E]">{item.selectedVolume.size} × {item.quantity}</p>
                   </div>
+                  <span className="text-xs font-semibold text-[#1C1A16]">
+                    ₹{item.selectedVolume.price * item.quantity}
+                  </span>
                 </div>
-                <span className="font-extrabold text-stone-900 flex-shrink-0">
-                  ₹{item.selectedVolume.price * item.quantity}
-                </span>
+              ))}
+            </div>
+
+            <div className="space-y-2 text-xs pt-3 border-t border-[#E0D8CC]">
+              <div className="flex justify-between text-[#5A5248]">
+                <span>Subtotal</span>
+                <span className="font-medium text-[#1C1A16]">₹{subtotal}</span>
               </div>
-            ))}
-          </div>
-
-          <div className="pt-3 border-t border-stone-200 space-y-2 text-xs text-stone-600">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span className="font-bold text-stone-900">₹{subtotal}</span>
-            </div>
-            {discount > 0 && (
-              <div className="flex justify-between text-emerald-800 font-bold">
-                <span>Discount Applied</span>
-                <span>-₹{discount}</span>
+              {discount > 0 && (
+                <div className="flex justify-between text-[#1C3829] font-medium">
+                  <span>Discount</span>
+                  <span>−₹{discount}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-[#5A5248]">
+                <span>Shipping</span>
+                <span>{shippingFee === 0 ? 'Free' : `₹${shippingFee}`}</span>
               </div>
-            )}
-            <div className="flex justify-between">
-              <span>Delhi NCR Shipping</span>
-              <span className="font-bold text-stone-900">
-                {shippingFee === 0 ? <span className="text-emerald-800">FREE</span> : `₹${shippingFee}`}
-              </span>
+              <div className="flex justify-between text-base font-semibold text-[#1C1A16] pt-3 border-t border-[#E0D8CC]">
+                <span>Total</span>
+                <span className="font-serif">₹{total}</span>
+              </div>
             </div>
-            <div className="flex justify-between text-base font-extrabold text-stone-900 pt-2 border-t border-stone-200">
-              <span>Total Payable</span>
-              <span className="text-xl text-emerald-950 font-serif">₹{total}</span>
-            </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 text-amber-200 hover:text-white font-black text-sm tracking-wider uppercase transition-all shadow-lg cursor-pointer"
-          >
-            Confirm &amp; Place Order
-          </button>
-
-          <div className="flex items-center justify-center gap-3 text-[11px] text-stone-400 pt-1">
-            <span className="flex items-center gap-1">
-              <FiShield className="text-emerald-800" /> 100% Purity Guarantee
-            </span>
-            <span>•</span>
-            <span>Same-Day Workshop Bottling</span>
+            <button
+              type="submit"
+              className="w-full py-4 bg-[#1C3829] hover:bg-[#2A5240] text-white font-medium text-sm rounded-full transition-colors flex items-center justify-center gap-2"
+            >
+              <span>Place Order (₹{total})</span>
+              <FiArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </form>
