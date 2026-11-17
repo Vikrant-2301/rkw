@@ -74,17 +74,17 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sub: "काली सरसों का तेल (झल वाला)",
     category: "Mustard Oil",
     color: "#e8edea",
-    cap: "#6b1424",
+    cap: "#FAB800",
     label: "#6b1424",
     ink: "#fbf6ec",
     glass: true,
     liquid: "#a25f0a",
     price: 340,
     compareAt: 420,
-    sizes: ["200 ml", "500 ml", "1 Litre", "2 Litres", "5 Litres"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 1420,
-    tagline: "Authentic pungent jhal, single cold-pressed in traditional traditional Kolhu.",
+    tagline: "Authentic pungent jhal, single cold-pressed in traditional Cold Press Kolhu.",
     description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
     benefits: [
       "100% Single-Pressed at <38°C in Traditional Cold Press Kolhu",
@@ -103,7 +103,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sub: "पीली सरसों का तेल (मीठी झल)",
     category: "Mustard Oil",
     color: "#faf6ee",
-    cap: "#d48b0a",
+    cap: "#FAB800",
     label: "#d48b0a",
     ink: "#1c1404",
     glass: true,
@@ -190,14 +190,14 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sub: "मूंगफली का तेल (गुजरात मूंगफली)",
     category: "Nut & Seed Oils",
     color: "#f2edf2",
-    cap: "#52164a",
+    cap: "#FAB800",
     label: "#52164a",
     ink: "#faeef8",
     glass: true,
     liquid: "#e8af36",
     price: 330,
     compareAt: 410,
-    sizes: ["500 ml", "1 Litre", "2 Litres", "5 Litres"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 890,
     tagline: "Cold pressed from Saurashtra red-skin peanuts. High 232°C smoke point.",
@@ -219,14 +219,14 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sub: "सफेद तिल का तेल (कच्ची घानी)",
     category: "Nut & Seed Oils",
     color: "#f6f1e8",
-    cap: "#8f5e13",
+    cap: "#FAB800",
     label: "#8f5e13",
     ink: "#fcf8ee",
     glass: true,
     liquid: "#deb15b",
     price: 420,
     compareAt: 520,
-    sizes: ["500 ml", "1 Litre", "2 Litres"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 670,
     tagline: "Ayurveda's supreme king of oils (Sarva Taila Pravara) for bones & joints.",
@@ -248,14 +248,14 @@ export const DEFAULT_PRODUCTS: Product[] = [
     sub: "कच्ची घानी गोले का तेल (केरल)",
     category: "Nut & Seed Oils",
     color: "#eef4f0",
-    cap: "#1c5432",
+    cap: "#FAB800",
     label: "#1c5432",
     ink: "#eefcf3",
     glass: true,
     liquid: "#f5f8f6",
     price: 380,
     compareAt: 475,
-    sizes: ["500 ml", "1 Litre", "2 Litres"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 1120,
     tagline: "Sulfur-free sun-dried Kerala copra pressed at <35°C in neem ghani.",
@@ -300,20 +300,20 @@ export const DEFAULT_PRODUCTS: Product[] = [
   // --- ROW 3: Wellness Rogan, Exotic Seeds & Artisanal Oils ---
   {
     id: "pure-badam-rogan-almond-oil",
-    kind: "dropper",
+    kind: "round-bottle",
     name: "100% Pure Badam Rogan (Sweet Almond Oil)",
     short: "Pure Badam Rogan",
     sub: "शुद्ध बादाम रोगन (मामरा बादाम)",
     category: "Wellness Rogan",
     color: "#f2ede9",
-    cap: "#8b2a16",
+    cap: "#FAB800",
     label: "#8b2a16",
     ink: "#fbf5f2",
     glass: true,
     liquid: "#dda835",
     price: 490,
     compareAt: 650,
-    sizes: ["50 ml", "100 ml", "200 ml"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
     reviews: 1580,
     tagline: "Single-press extra-virgin sweet almond elixir from Mamra almonds.",
@@ -329,20 +329,20 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: "cold-pressed-walnut-oil",
-    kind: "bottle",
+    kind: "round-bottle",
     name: "Cold-Pressed Kashmiri Walnut Oil (अखरोट तेल)",
     short: "Kashmiri Walnut Oil",
-    sub: "कश्मीरी अखरोट का तेल (लकड़ी घानी)",
+    sub: "कश्मीरी अखरोट का तेल (कोल्ड प्रेस्ड)",
     category: "Wellness Rogan",
     color: "#ede9e6",
-    cap: "#3d1e13",
+    cap: "#FAB800",
     label: "#3d1e13",
     ink: "#f6eee9",
     glass: true,
     liquid: "#ba741c",
     price: 580,
     compareAt: 720,
-    sizes: ["500 ml", "1 Litre"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 410,
     tagline: "Cold pressed from high-altitude whole Kashmiri walnut kernels.",
@@ -358,20 +358,20 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: "cold-pressed-flax-seed-oil",
-    kind: "bottle",
+    kind: "round-bottle",
     name: "Cold-Pressed Flax Seed Oil (अलसी का तेल)",
     short: "Flax Seed Oil (Alsi)",
     sub: "अलसी का तेल (मध्य प्रदेश अलसी)",
     category: "Wellness Rogan",
     color: "#e8edf5",
-    cap: "#193563",
+    cap: "#FAB800",
     label: "#193563",
     ink: "#eef4fd",
     glass: true,
     liquid: "#ce9222",
     price: 390,
     compareAt: 480,
-    sizes: ["500 ml", "1 Litre"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.7,
     reviews: 530,
     tagline: "Mother Nature's richest plant source of Alpha-Linolenic Acid (ALA).",
@@ -387,20 +387,20 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: "cold-pressed-extra-virgin-olive-oil",
-    kind: "bottle",
+    kind: "round-bottle",
     name: "Cold-Pressed Extra Virgin Olive Oil (जैतून तेल)",
     short: "Extra Virgin Olive Oil",
     sub: "एक्स्ट्रा वर्जिन जैतून का तेल",
     category: "Wellness Rogan",
     color: "#edf3ee",
-    cap: "#173f27",
+    cap: "#FAB800",
     label: "#173f27",
     ink: "#eefbee",
     glass: true,
     liquid: "#839328",
     price: 620,
     compareAt: 780,
-    sizes: ["500 ml", "1 Litre"],
+    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 720,
     tagline: "Single-estate cold pressed from Rajasthan olive groves.",
@@ -432,6 +432,7 @@ const mixRgb = (a: RGB, b: RGB, t: number): RGB => [
 const css = (c: RGB, k = 1, a = 1) =>
   `rgba(${[0, 1, 2].map((i) => Math.round(Math.min(255, Math.max(0, c[i] * k)))).join(",")},${a})`;
 const WHITE: RGB = [255, 255, 255];
+const BLACK: RGB = [0, 0, 0];
 const lum = (c: RGB) => c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11;
 
 // ---------- packaging shapes (viewBox 200 x 300, stands on y = 286) ----------
@@ -463,41 +464,100 @@ const ridges = (x: number, y: number, w: number, h: number, step = 2.6) =>
     />
   ));
 
+const PET_OIL_BODY_PATH =
+  "M91 38 " +
+  "L91 42 " +
+  "L86 42 Q85 44 86 46 L91 46 " +
+  "L91 76 " +
+  "Q90 82 82 86 L66 104 " +
+  "L66 118 " +
+  "Q68 123 66 128 L66 134 " +
+  "Q68 139 66 144 L66 150 " +
+  "Q68 155 66 160 L66 166 " +
+  "Q68 171 66 176 L66 182 " +
+  "Q68 187 66 192 L66 198 " +
+  "Q68 203 66 208 L66 214 " +
+  "Q68 219 66 224 L66 230 " +
+  "Q68 235 66 240 L66 246 " +
+  "Q68 251 66 256 L66 262 " +
+  "Q64 266 64 272 L64 280 Q64 286 70 286 " +
+  "L78 286 Q100 281 122 286 L130 286 " +
+  "Q136 286 136 280 L136 272 Q136 266 134 262 " +
+  "L134 256 Q132 251 134 246 L134 240 " +
+  "Q132 235 134 230 L134 224 " +
+  "Q132 219 134 214 L134 208 " +
+  "Q132 203 134 198 L134 192 " +
+  "Q132 187 134 182 L134 176 " +
+  "Q132 171 134 166 L134 160 " +
+  "Q132 155 134 150 L134 144 " +
+  "Q132 139 134 134 L134 128 " +
+  "Q132 123 134 118 L134 104 " +
+  "L118 86 Q110 82 109 76 " +
+  "L109 46 " +
+  "L114 46 Q115 44 114 42 L109 42 " +
+  "L109 38 " +
+  "Z";
+
+const renderPetOilCap = (id: string) => {
+  const capX = 87.5;
+  const capW = 25;
+  const capTop = 10;
+  return (
+    <g id={`${id}-pet-cap-group`}>
+      {/* Upper Cap Body with rounded top */}
+      <path
+        d={`M${capX + 2.5} ${capTop} h${capW - 5} a2.5 2.5 0 0 1 2.5 2.5 v18.5 h-${capW} v-18.5 a2.5 2.5 0 0 1 2.5 -2.5 z`}
+        fill={`url(#${id}-yellow-cap)`}
+      />
+      {/* Top rim highlight */}
+      <ellipse cx="100" cy={capTop + 1.2} rx="10" ry="1.2" fill="#FFF4AA" opacity="0.85" />
+      <path d={`M${capX + 2} ${capTop + 1} h${capW - 4}`} stroke="#FFE875" strokeWidth="1" strokeOpacity="0.9" />
+
+      {/* Fluted Vertical Ridges (Knurling) */}
+      {Array.from({ length: 15 }, (_, i) => {
+        const rx = capX + 2.5 + i * 1.4;
+        return (
+          <g key={i}>
+            <line x1={rx} y1={capTop + 3} x2={rx} y2={capTop + 20} stroke="#B37400" strokeWidth="0.6" strokeOpacity="0.45" />
+            <line x1={rx + 0.6} y1={capTop + 3} x2={rx + 0.6} y2={capTop + 20} stroke="#FFF8C4" strokeWidth="0.6" strokeOpacity="0.75" />
+          </g>
+        );
+      })}
+
+      {/* Separation Groove / Tear Line */}
+      <rect x={capX + 0.5} y={capTop + 21} width={capW - 1} height="1.4" fill="#8A4E00" opacity="0.6" />
+
+      {/* Tamper Evident Safety Ring */}
+      <path
+        d={`M${capX} ${capTop + 22.4} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
+        fill={`url(#${id}-yellow-cap)`}
+      />
+      {/* Tamper Ring Highlight and Slits */}
+      <line x1={capX + 1} y1={capTop + 28} x2={capX + capW - 1} y2={capTop + 28} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.7" />
+      {[92, 97, 103, 108].map((sx) => (
+        <line key={sx} x1={sx} y1={capTop + 21} x2={sx} y2={capTop + 23.5} stroke="#6B3900" strokeWidth="0.8" strokeOpacity="0.75" />
+      ))}
+    </g>
+  );
+};
+
 const SHAPES: Record<Kind, Shape> = {
-  // 1. Round Mustard Oil Bottle (Inspired by FINAL OIL STICKER ROUND BOTTLE.pdf)
+  // 1. Signature Square PET Cold-Pressed Oil Bottle (Square with Side Grip Ribs & Yellow Cap)
   "round-bottle": {
-    body: "M66 94 Q66 74 88 70 L112 70 Q134 74 134 94 L139 268 Q139 286 122 286 L78 286 Q61 286 61 268 Z",
-    box: { x: 61, y: 70, w: 78, h: 216 },
-    print: { x: 61, y: 122, w: 78, h: 118, paper: true },
-    fill: 96,
-    cap: (id) => (
-      <>
-        {/* Ribbed Oil Screw Cap with Pour Nozzle Neck */}
-        <path d={rr(76, 44, 48, 28, 5)} fill={`url(#${id}-cap)`} />
-        <g>{ridges(76, 48, 48, 22, 2.4)}</g>
-        <path d={rr(76, 44, 48, 28, 5)} fill={`url(#${id}-capv)`} />
-        {/* Tamper evident safety ring */}
-        <path d="M78 56 H122" stroke="#000" strokeOpacity="0.35" strokeWidth="1" />
-        <path d="M78 45.5 H122" stroke="#fff" strokeOpacity="0.5" strokeWidth="1" />
-      </>
-    )
+    body: PET_OIL_BODY_PATH,
+    box: { x: 64, y: 38, w: 72, h: 248 },
+    print: { x: 74, y: 110, w: 52, h: 144, paper: true },
+    fill: 62,
+    cap: (id) => renderPetOilCap(id),
   },
 
-  // 2. Standard 500ml Cold Pressed Oil Bottle (OIL STICKER 500 ML.pdf)
+  // 2. Standard PET Cold Pressed Oil Bottle
   bottle: {
-    body: "M63 110 Q63 84 86 80 L114 80 Q137 84 137 110 L140 268 Q140 286 122 286 L78 286 Q60 286 60 268 Z",
-    box: { x: 60, y: 80, w: 80, h: 206 },
-    print: { x: 60, y: 130, w: 80, h: 114, paper: true },
-    fill: 104,
-    cap: (id) => (
-      <>
-        <path d={rr(78, 50, 44, 32, 5)} fill={`url(#${id}-cap)`} />
-        <g>{ridges(78, 54, 44, 26, 2.3)}</g>
-        <path d={rr(78, 50, 44, 32, 5)} fill={`url(#${id}-capv)`} />
-        <path d="M80 62 H120" stroke="#000" strokeOpacity="0.4" />
-        <path d="M80 51.5 H120" stroke="#fff" strokeOpacity="0.45" />
-      </>
-    )
+    body: PET_OIL_BODY_PATH,
+    box: { x: 64, y: 38, w: 72, h: 248 },
+    print: { x: 74, y: 110, w: 52, h: 144, paper: true },
+    fill: 62,
+    cap: (id) => renderPetOilCap(id),
   },
 
   // 3. Heritage 2L & 5L Oil Can / Metal Tin
@@ -622,8 +682,8 @@ const SHAPES: Record<Kind, Shape> = {
 
 const EXTENT: Record<Kind, { top: number; w: number }> = {
   jar: { top: 160, w: 132 },
-  bottle: { top: 50, w: 84 },
-  "round-bottle": { top: 44, w: 84 },
+  bottle: { top: 10, w: 76 },
+  "round-bottle": { top: 10, w: 76 },
   tin: { top: 60, w: 106 },
   dropper: { top: 60, w: 72 },
   tube: { top: 37, w: 76 },
@@ -640,6 +700,7 @@ const pageZoom = (k: Kind) => Math.min(2.2, 262 / (290 - EXTENT[k].top), 190 / E
 
 function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<number>; className?: string }) {
   const id = "ps" + useId().replace(/[^a-zA-Z0-9]/g, "");
+  const isPet = p.kind === "round-bottle" || p.kind === "bottle";
   const s = SHAPES[p.kind] || SHAPES["round-bottle"];
   const c = hexRgb(p.color);
   const k = hexRgb(p.cap);
@@ -654,10 +715,119 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
   const subSize = Math.min(6.2, P.w * 0.075, (P.w * 1.2) / (p.sub ?? "").length);
 
   const printArt = (dx: number) => {
+    const isPet = p.kind === "round-bottle" || p.kind === "bottle";
     const isRound = p.kind === "round-bottle";
     const isTin = p.kind === "tin";
     const isJar = p.kind === "jar";
     const centerX = P.x + P.w / 2;
+
+    if (isPet) {
+      return (
+        <g transform={`translate(${dx} 0)`}>
+          {/* Authentic RKW Front Label Sticker */}
+          <rect
+            x={P.x + 1}
+            y={P.y + 4}
+            width={P.w - 2}
+            height={P.h - 8}
+            rx={4}
+            fill={css(lab)}
+            stroke={p.ink}
+            strokeWidth={0.8}
+            strokeOpacity={0.25}
+          />
+          {/* Inner gold border */}
+          <rect
+            x={P.x + 3}
+            y={P.y + 6}
+            width={P.w - 6}
+            height={P.h - 12}
+            rx={3}
+            fill="none"
+            stroke={p.ink}
+            strokeWidth={0.6}
+            strokeOpacity={0.35}
+          />
+
+          {/* Brand Header: Authentic RKW Logo & Typography */}
+          <g transform={`translate(${centerX} ${P.y + P.h * 0.14})`}>
+            <circle cx="-13" cy="-1.5" r="3.6" fill={p.ink} />
+            <circle cx="-13" cy="-1.5" r="2.6" fill={css(lab)} />
+            <path d="M-14.2 -1.5 H-11.8 M-13 -2.7 V-0.3" stroke={p.ink} strokeWidth="0.6" />
+            <text
+              x="0"
+              y="0.5"
+              fill={p.ink}
+              fontSize={Math.min(6.8, P.w * 0.12)}
+              fontWeight="800"
+              letterSpacing="0.08em"
+              textAnchor="middle"
+            >
+              RKW
+            </text>
+            <text x="9.5" y="-1.5" fill={p.ink} fontSize="3" fontWeight="bold">®</text>
+          </g>
+
+          {/* Hindi Brand Name */}
+          <text
+            x={centerX}
+            y={P.y + P.h * 0.25}
+            fill={p.ink}
+            fontSize={Math.min(4.2, P.w * 0.075)}
+            fontWeight="600"
+            opacity="0.9"
+            textAnchor="middle"
+          >
+            रमेश कोल्हू वाले
+          </text>
+
+          {/* Product Title (e.g. BLACK MUSTARD OIL) */}
+          <text
+            x={centerX}
+            y={P.y + P.h * 0.44}
+            fill={p.ink}
+            fontSize={Math.min(7.8, (P.w * 0.95) / p.short.length)}
+            fontWeight="700"
+            letterSpacing="-0.1"
+            textAnchor="middle"
+          >
+            {p.short}
+          </text>
+
+          {/* Subtitle / Hindi Name */}
+          {p.sub && (
+            <text
+              x={centerX}
+              y={P.y + P.h * 0.58}
+              fill={p.ink}
+              fontSize={Math.min(4.5, (P.w * 0.9) / (p.sub ?? "").length)}
+              fontWeight="500"
+              opacity="0.85"
+              textAnchor="middle"
+            >
+              {p.sub}
+            </text>
+          )}
+
+          {/* Trust badge stamp */}
+          <g transform={`translate(${centerX} ${P.y + P.h * 0.72})`}>
+            <rect x="-18" y="-3.5" width="36" height="7" rx="1.5" fill={p.ink} fillOpacity="0.1" />
+            <text x="0" y="1.5" fill={p.ink} fontSize="3.2" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
+              COLD-PRESSED • &lt;38°C
+            </text>
+          </g>
+
+          {/* Bottom row: FSSAI Green Veg Dot & Net Qty */}
+          <g transform={`translate(${centerX} ${P.y + P.h * 0.88})`}>
+            <rect x={-P.w * 0.36} y="-3" width="5.5" height="5.5" fill="#fff" stroke="#138808" strokeWidth="0.5" rx="0.5" />
+            <circle cx={-P.w * 0.36 + 2.75} cy="-0.25" r="1.5" fill="#138808" />
+            <text x="1" y="0.8" fill={p.ink} opacity="0.95" fontSize={Math.min(5, P.w * 0.09)} fontWeight="600" textAnchor="middle">
+              {p.sizes[0]}
+            </text>
+          </g>
+        </g>
+      );
+    }
 
     return (
       <g transform={`translate(${dx} 0)`}>
@@ -820,6 +990,39 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
           <stop offset="0.7" stopColor={css(liq, 0.94)} />
           <stop offset="1" stopColor={css(liq, 0.72)} />
         </linearGradient>
+
+        {/* PET Yellow Cap Gradient matching uploaded photo */}
+        <linearGradient id={`${id}-yellow-cap`} x1="0" x2="1">
+          <stop offset="0" stopColor="#D98A00" />
+          <stop offset="0.08" stopColor="#FAB800" />
+          <stop offset="0.22" stopColor="#FFE564" />
+          <stop offset="0.38" stopColor="#FFC820" />
+          <stop offset="0.65" stopColor="#F5A800" />
+          <stop offset="0.88" stopColor="#E09200" />
+          <stop offset="1" stopColor="#BA7200" />
+        </linearGradient>
+
+        {/* PET Plastic Sheen Gradient */}
+        <linearGradient id={`${id}-pet-plastic`} x1="0" x2="1">
+          <stop offset="0" stopColor="rgba(255,255,255,0.4)" />
+          <stop offset="0.08" stopColor="rgba(255,255,255,0.12)" />
+          <stop offset="0.5" stopColor="rgba(255,255,255,0.03)" />
+          <stop offset="0.92" stopColor="rgba(255,255,255,0.12)" />
+          <stop offset="1" stopColor="rgba(255,255,255,0.3)" />
+        </linearGradient>
+
+        {/* PET Golden Oil Liquid Gradient */}
+        <linearGradient id={`${id}-pet-oil-grad`} x1="0" x2="1">
+          <stop offset="0" stopColor={css(mixRgb(liq, BLACK, 0.28))} />
+          <stop offset="0.08" stopColor={css(mixRgb(liq, BLACK, 0.1))} />
+          <stop offset="0.18" stopColor={css(mixRgb(liq, WHITE, 0.25))} />
+          <stop offset="0.35" stopColor={css(mixRgb(liq, WHITE, 0.5))} />
+          <stop offset="0.55" stopColor={css(mixRgb(liq, WHITE, 0.35))} />
+          <stop offset="0.82" stopColor={css(mixRgb(liq, BLACK, 0.05))} />
+          <stop offset="0.94" stopColor={css(mixRgb(liq, BLACK, 0.2))} />
+          <stop offset="1" stopColor={css(mixRgb(liq, BLACK, 0.35))} />
+        </linearGradient>
+
         <filter id={`${id}-soft`} x="-50%" y="-10%" width="200%" height="120%">
           <feGaussianBlur stdDeviation="2.2" />
         </filter>
@@ -838,77 +1041,176 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
       </defs>
 
       {/* Shelf contact shadow */}
-      <ellipse cx="100" cy="287" rx={B.w * 0.7} ry="6" fill={`url(#${id}-floor)`} />
-      <ellipse cx="100" cy="286.3" rx={B.w * 0.47} ry="1.4" fill="#000" opacity="0.35" />
+      {isPet ? (
+        <>
+          <ellipse cx="100" cy="287" rx="46" ry="5.5" fill={`url(#${id}-floor)`} />
+          <ellipse cx="100" cy="286.3" rx="34" ry="1.4" fill="#000" opacity="0.32" />
+        </>
+      ) : (
+        <>
+          <ellipse cx="100" cy="287" rx={B.w * 0.7} ry="6" fill={`url(#${id}-floor)`} />
+          <ellipse cx="100" cy="286.3" rx={B.w * 0.47} ry="1.4" fill="#000" opacity="0.35" />
+        </>
+      )}
 
       {/* Body background */}
-      <path d={s.body} fill={`url(#${id}-body)`} />
+      <path d={s.body} fill={isPet ? `url(#${id}-pet-plastic)` : `url(#${id}-body)`} />
 
       {/* Liquid & Glass Layer */}
       <g clipPath={`url(#${id}-clip)`}>
-        {p.glass && s.fill !== undefined && (
+        {isPet ? (
           <>
-            <rect
-              x={B.x + 3}
-              y={s.fill}
-              width={B.w - 6}
-              height={286 - s.fill - 8}
-              fill={`url(#${id}-liquid)`}
-              opacity="0.82"
-            />
-            {/* Liquid surface meniscus highlight */}
-            <rect x={B.x + 3} y={s.fill} width={B.w - 6} height="1.8" fill="#fff" opacity="0.5" />
-            {s.tube && (
-              <rect x="98.6" y={B.y - 4} width="2.8" height={286 - B.y - 4} fill="#fff" opacity="0.4" />
+            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=62 */}
+            <rect x="60" y="62" width="80" height="225" fill={`url(#${id}-pet-oil-grad)`} opacity="0.95" />
+
+            {/* 2. Clear PET Neck Headspace above oil (y=38 to 62) */}
+            <rect x="91" y="38" width="18" height="24" fill="rgba(255,255,255,0.08)" />
+            <line x1="93" y1="44" x2="93" y2="62" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.6" />
+            <line x1="107" y1="44" x2="107" y2="62" stroke="#fff" strokeWidth="0.5" strokeOpacity="0.3" />
+
+            {/* 2b. Protruding Neck Collar / Transfer Ring (y=42 to 46) */}
+            <path d="M 86 42 H 114 Q 115 44 114 46 H 86 Q 85 44 86 42 Z" fill="rgba(255,255,255,0.18)" />
+            <line x1="86" y1="42.5" x2="114" y2="42.5" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.8" />
+            <line x1="86" y1="45.5" x2="114" y2="45.5" stroke="rgba(0,0,0,0.25)" strokeWidth="0.8" />
+
+            {/* 3. Liquid Meniscus at y=62 with specular glint */}
+            <ellipse cx="100" cy="62" rx="8.5" ry="2.2" fill={css(mixRgb(liq, BLACK, 0.1))} />
+            <path d="M 92 62 Q 100 63.8 108 62" stroke="#FFF7D0" strokeWidth="1.2" strokeOpacity="0.85" fill="none" />
+
+            {/* 4. The 9 Side Grip Ribs (Notches on Left & Right) */}
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+              const ny = 118.75 + i * 16;
+              return (
+                <g key={i}>
+                  {/* Left Notch */}
+                  <rect x="67" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.28)" />
+                  <rect x="67.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,215,80,0.22)" />
+                  <line x1="67" y1={ny} x2="74" y2={ny} stroke="rgba(255,255,255,0.75)" strokeWidth="0.8" />
+                  <line x1="67" y1={ny + 8.5} x2="74" y2={ny + 8.5} stroke="rgba(90,40,0,0.45)" strokeWidth="0.8" />
+                  <ellipse cx="70.5" cy={ny + 4.25} rx="1.5" ry="1.8" fill="#FFEAA7" opacity="0.55" />
+
+                  {/* Right Notch */}
+                  <rect x="126" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.28)" />
+                  <rect x="126.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,215,80,0.22)" />
+                  <line x1="126" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
+                  <line x1="126" y1={ny + 8.5} x2="133" y2={ny + 8.5} stroke="rgba(90,40,0,0.45)" strokeWidth="0.8" />
+                  <ellipse cx="129.5" cy={ny + 4.25} rx="1.5" ry="1.8" fill="#FFEAA7" opacity="0.45" />
+                </g>
+              );
+            })}
+
+            {/* 5. Shoulder Chamfer Facets */}
+            <line x1="91" y1="76" x2="66" y2="104" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.55" />
+            <line x1="109" y1="76" x2="134" y2="104" stroke="rgba(0,0,0,0.22)" strokeWidth="1" />
+            <path d="M 76 96 H 124" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.35" />
+
+            {/* 6. Front Recessed Panel Bevel Frame */}
+            <g>
+              <polygon points="73,106 75,108 75,254 73,256" fill="rgba(255,255,255,0.38)" />
+              <polygon points="73,106 127,106 125,108 75,108" fill="rgba(255,255,255,0.45)" />
+              <polygon points="127,106 127,256 125,254 125,108" fill="rgba(0,0,0,0.22)" />
+              <polygon points="73,256 75,254 125,254 127,256" fill="rgba(0,0,0,0.16)" />
+              <line x1="73" y1="106" x2="75" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
+              <line x1="127" y1="106" x2="125" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="73" y1="256" x2="75" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="127" y1="256" x2="125" y2="254" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
+              <rect x="75" y="108" width="50" height="146" rx="2" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.8" />
+            </g>
+
+            {/* 7. Rotating Sticker Art */}
+            <motion.g style={{ x }}>
+              {printArt(0)}
+              {printArt(period)}
+            </motion.g>
+
+            {/* 8. Studio Lighting Reflections matching the photo */}
+            {/* Left softbox diffuse highlight */}
+            <rect x="69" y="106" width="6" height="152" rx="3" fill="#fff" opacity="0.36" filter={`url(#${id}-soft)`} />
+            {/* Sharp specular pinstripe */}
+            <line x1="72" y1="106" x2="72" y2="256" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.9" />
+            {/* Shoulder specular */}
+            <path d="M 75 97 L 88 84" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.65" strokeLinecap="round" />
+            {/* Right fill light */}
+            <line x1="129" y1="108" x2="129" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.25" />
+            {/* Base pedestal kick-up arch and thick plastic reflections */}
+            <path d="M 72 286 Q 100 278 128 286" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.75" fill="none" />
+            <path d="M 74 286 Q 100 279.5 126 286" stroke="rgba(120,60,0,0.4)" strokeWidth="1" fill="none" />
+            <rect x="67" y="275" width="66" height="3" rx="1.5" fill="rgba(255,255,255,0.35)" />
+          </>
+        ) : (
+          <>
+            {p.glass && s.fill !== undefined && (
+              <>
+                <rect
+                  x={B.x + 3}
+                  y={s.fill}
+                  width={B.w - 6}
+                  height={286 - s.fill - 8}
+                  fill={`url(#${id}-liquid)`}
+                  opacity="0.82"
+                />
+                {/* Liquid surface meniscus highlight */}
+                <rect x={B.x + 3} y={s.fill} width={B.w - 6} height="1.8" fill="#fff" opacity="0.5" />
+                {s.tube && (
+                  <rect x="98.6" y={B.y - 4} width="2.8" height={286 - B.y - 4} fill="#fff" opacity="0.4" />
+                )}
+                {/* Thick studio glass base */}
+                <rect x={B.x} y="274" width={B.w} height="12" fill={css(c, 0.5, 0.55)} />
+                <path d={`M${B.x + 6} 275 H${B.x + B.w - 6}`} stroke="#fff" strokeOpacity="0.55" strokeWidth="0.8" />
+              </>
             )}
-            {/* Thick studio glass base */}
-            <rect x={B.x} y="274" width={B.w} height="12" fill={css(c, 0.5, 0.55)} />
-            <path d={`M${B.x + 6} 275 H${B.x + B.w - 6}`} stroke="#fff" strokeOpacity="0.55" strokeWidth="0.8" />
+
+            {/* 360-Degree Rotating Sticker Art */}
+            <motion.g style={{ x }}>
+              {printArt(0)}
+              {printArt(period)}
+            </motion.g>
+
+            {/* Shadow gradient wrap & vertical reflections */}
+            <rect x={B.x} y={P.y - 2} width={B.w} height={P.h + 4} fill={`url(#${id}-wrap)`} opacity="0.5" />
+            <rect x={B.x} y={B.y} width={B.w} height={B.h} fill={`url(#${id}-shade)`} />
+            {/* Softbox reflection highlights */}
+            <rect
+              x={B.x + B.w * 0.07}
+              y={B.y + 4}
+              width={B.w * 0.11}
+              height={B.h - 8}
+              rx="3"
+              fill="#fff"
+              opacity={lum(c) > 200 ? 0.45 : 0.3}
+              filter={`url(#${id}-soft)`}
+            />
+            <rect
+              x={B.x + B.w * 0.11}
+              y={B.y + 6}
+              width={B.w * 0.028}
+              height={B.h - 12}
+              rx="1"
+              fill="#fff"
+              opacity="0.85"
+            />
+            <rect
+              x={B.x + B.w * 0.86}
+              y={B.y + 8}
+              width={B.w * 0.025}
+              height={B.h - 16}
+              rx="1"
+              fill="#fff"
+              opacity="0.3"
+            />
           </>
         )}
-
-        {/* 360-Degree Rotating Sticker Art */}
-        <motion.g style={{ x }}>
-          {printArt(0)}
-          {printArt(period)}
-        </motion.g>
-
-        {/* Shadow gradient wrap & vertical reflections */}
-        <rect x={B.x} y={P.y - 2} width={B.w} height={P.h + 4} fill={`url(#${id}-wrap)`} opacity="0.5" />
-        <rect x={B.x} y={B.y} width={B.w} height={B.h} fill={`url(#${id}-shade)`} />
-        {/* Softbox reflection highlights */}
-        <rect
-          x={B.x + B.w * 0.07}
-          y={B.y + 4}
-          width={B.w * 0.11}
-          height={B.h - 8}
-          rx="3"
-          fill="#fff"
-          opacity={lum(c) > 200 ? 0.45 : 0.3}
-          filter={`url(#${id}-soft)`}
-        />
-        <rect
-          x={B.x + B.w * 0.11}
-          y={B.y + 6}
-          width={B.w * 0.028}
-          height={B.h - 12}
-          rx="1"
-          fill="#fff"
-          opacity="0.85"
-        />
-        <rect
-          x={B.x + B.w * 0.86}
-          y={B.y + 8}
-          width={B.w * 0.025}
-          height={B.h - 16}
-          rx="1"
-          fill="#fff"
-          opacity="0.3"
-        />
       </g>
 
       {/* Glass outer contour stroke */}
-      <path d={s.body} fill="none" stroke={css(c, 0.45, 0.45)} strokeWidth="0.7" />
+      {isPet ? (
+        <>
+          <path d={s.body} fill="none" stroke="rgba(255,200,50,0.4)" strokeWidth="0.8" />
+          <path d={s.body} fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="0.5" />
+        </>
+      ) : (
+        <path d={s.body} fill="none" stroke={css(c, 0.45, 0.45)} strokeWidth="0.7" />
+      )}
       {s.cap(id)}
     </svg>
   );
