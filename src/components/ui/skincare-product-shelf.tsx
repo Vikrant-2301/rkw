@@ -508,45 +508,61 @@ const ridges = (x: number, y: number, w: number, h: number, step = 2.6) =>
   ));
 
 const PET_OIL_BODY_PATH =
-  "M91 38 " +
-  "L91 41 " +
-  "L87 41 Q85 43 87 45 L91 45 " +
-  "L91 74 " +
-  "Q91 82 84 88 L68 103 Q66 105 66 108 " +
-  "L66 119 Q68.5 123 66 127 " +
-  "L66 135 Q68.5 139 66 143 " +
-  "L66 151 Q68.5 155 66 159 " +
-  "L66 167 Q68.5 171 66 175 " +
-  "L66 183 Q68.5 187 66 191 " +
-  "L66 199 Q68.5 203 66 207 " +
-  "L66 215 Q68.5 219 66 223 " +
-  "L66 231 Q68.5 235 66 239 " +
-  "L66 247 Q68.5 251 66 255 " +
-  "L66 258 Q64 263 64 270 L64 280 Q64 286 70 286 " +
-  "L74 286 Q100 277 126 286 L130 286 " +
-  "Q136 286 136 280 L136 270 Q136 263 134 258 " +
-  "L134 255 Q131.5 251 134 247 " +
-  "L134 239 Q131.5 235 134 231 " +
-  "L134 223 Q131.5 219 134 215 " +
-  "L134 207 Q131.5 203 134 199 " +
-  "L134 191 Q131.5 187 134 183 " +
-  "L134 175 Q131.5 171 134 167 " +
-  "L134 159 Q131.5 155 134 151 " +
-  "L134 143 Q131.5 139 134 135 " +
-  "L134 127 Q131.5 123 134 119 " +
-  "L134 108 Q134 105 132 103 L116 88 Q109 82 109 74 " +
-  "L109 45 L113 45 Q115 43 113 41 L109 41 " +
-  "L109 38 " +
+  // Top of neck cylinder (thick diameter: width 28, x = 86 to 114)
+  "M 86 38 " +
+  "L 86 40 " +
+  // Left collar flange (transfer ring)
+  "L 83 40 Q 82 42 83 44 L 86 44 " +
+  // Short thick neck cylinder (small height: only y=44 to 56)
+  "L 86 56 " +
+  // Left shoulder sloping smoothly down to body
+  "C 86 68 76 80 66 90 " +
+  // Left side with 9 grip ribs (notches)
+  "L 66 98 Q 69.5 102.25 66 106.5 " +
+  "L 66 113.5 Q 69.5 117.75 66 122 " +
+  "L 66 129 Q 69.5 133.25 66 137.5 " +
+  "L 66 144.5 Q 69.5 148.75 66 153 " +
+  "L 66 160 Q 69.5 164.25 66 168.5 " +
+  "L 66 175.5 Q 69.5 179.75 66 184 " +
+  "L 66 191 Q 69.5 195.25 66 199.5 " +
+  "L 66 206.5 Q 69.5 210.75 66 215 " +
+  "L 66 222 Q 69.5 226.25 66 230.5 " +
+  "L 66 256 " +
+  // Left base pedestal flare and corner
+  "Q 64 262 64 270 L 64 280 Q 64 286 70 286 " +
+  // Bottom kick-up arch
+  "L 74 286 Q 100 277 126 286 L 130 286 " +
+  // Right base corner and pedestal flare
+  "Q 136 286 136 280 L 136 270 Q 136 262 134 256 " +
+  // Right side with 9 grip ribs (going upwards)
+  "L 134 230.5 Q 130.5 226.25 134 222 " +
+  "L 134 215 Q 130.5 210.75 134 206.5 " +
+  "L 134 199.5 Q 130.5 195.25 134 191 " +
+  "L 134 184 Q 130.5 179.75 134 175.5 " +
+  "L 134 168.5 Q 130.5 164.25 134 160 " +
+  "L 134 153 Q 130.5 148.75 134 144.5 " +
+  "L 134 137.5 Q 130.5 133.25 134 129 " +
+  "L 134 122 Q 130.5 117.75 134 113.5 " +
+  "L 134 106.5 Q 130.5 102.25 134 98 " +
+  "L 134 90 " +
+  // Right shoulder sloping in to neck
+  "C 124 80 114 68 114 56 " +
+  // Short thick neck cylinder
+  "L 114 44 " +
+  // Right collar flange
+  "L 117 44 Q 118 42 117 40 L 114 40 " +
+  // Top right of neck
+  "L 114 38 " +
   "Z";
 
 const renderPetOilCap = (id: string) => {
-  const capX = 86;
-  const capW = 28;
-  const capTop = 12;
+  const capX = 84;
+  const capW = 32;
+  const capTop = 15;
   return (
     <g id={`${id}-pet-cap-group`}>
       {/* Soft contact shadow from cap onto neck collar */}
-      <ellipse cx="100" cy="38.5" rx="13" ry="1.2" fill="#000" opacity="0.3" />
+      <ellipse cx="100" cy="39" rx="16" ry="1.5" fill="#000" opacity="0.32" />
 
       {/* Main Cap Body with rounded top */}
       <path
@@ -554,12 +570,12 @@ const renderPetOilCap = (id: string) => {
         fill={`url(#${id}-yellow-cap)`}
       />
       {/* Top rim highlight */}
-      <ellipse cx="100" cy={capTop + 1.2} rx="12" ry="1.5" fill="#FFF8C4" opacity="0.9" />
+      <ellipse cx="100" cy={capTop + 1.2} rx="14" ry="1.6" fill="#FFF8C4" opacity="0.9" />
       <path d={`M${capX + 2} ${capTop + 1} h${capW - 4}`} stroke="#FFE875" strokeWidth="1" strokeOpacity="0.95" />
 
       {/* Fluted Vertical Ridges (Knurling) */}
-      {Array.from({ length: 20 }, (_, i) => {
-        const rx = capX + 2.4 + i * 1.22;
+      {Array.from({ length: 22 }, (_, i) => {
+        const rx = capX + 2.5 + i * 1.25;
         return (
           <g key={i}>
             <line x1={rx} y1={capTop + 3} x2={rx} y2={capTop + 18} stroke="#9E5400" strokeWidth="0.5" strokeOpacity="0.45" />
@@ -569,17 +585,17 @@ const renderPetOilCap = (id: string) => {
       })}
 
       {/* Separation Groove / Tear Line */}
-      <rect x={capX + 0.5} y={capTop + 18.2} width={capW - 1} height="1.2" fill="#7A3E00" opacity="0.75" />
+      <rect x={capX + 0.5} y={capTop + 18} width={capW - 1} height="1.2" fill="#7A3E00" opacity="0.75" />
 
       {/* Tamper Evident Safety Ring */}
       <path
-        d={`M${capX} ${capTop + 19.4} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
+        d={`M${capX} ${capTop + 19.2} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
         fill={`url(#${id}-yellow-cap)`}
       />
       {/* Tamper Ring Highlight and Breakout Slits */}
-      <line x1={capX + 1} y1={capTop + 25.5} x2={capX + capW - 1} y2={capTop + 25.5} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.75" />
-      {[90, 95, 100, 105, 110].map((sx) => (
-        <line key={sx} x1={sx} y1={capTop + 18.2} x2={sx} y2={capTop + 20.8} stroke="#542B00" strokeWidth="0.8" strokeOpacity="0.85" />
+      <line x1={capX + 1} y1={capTop + 25.4} x2={capX + capW - 1} y2={capTop + 25.4} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.75" />
+      {[88, 93, 98, 103, 108, 112].map((sx) => (
+        <line key={sx} x1={sx} y1={capTop + 18} x2={sx} y2={capTop + 20.6} stroke="#542B00" strokeWidth="0.8" strokeOpacity="0.85" />
       ))}
     </g>
   );
@@ -590,8 +606,8 @@ const SHAPES: Record<Kind, Shape> = {
   "round-bottle": {
     body: PET_OIL_BODY_PATH,
     box: { x: 64, y: 38, w: 72, h: 248 },
-    print: { x: 74, y: 110, w: 52, h: 144, paper: true },
-    fill: 62,
+    print: { x: 75.5, y: 93, w: 49, h: 159, paper: true },
+    fill: 48,
     cap: (id) => renderPetOilCap(id),
   },
 
@@ -599,8 +615,8 @@ const SHAPES: Record<Kind, Shape> = {
   bottle: {
     body: PET_OIL_BODY_PATH,
     box: { x: 64, y: 38, w: 72, h: 248 },
-    print: { x: 74, y: 110, w: 52, h: 144, paper: true },
-    fill: 62,
+    print: { x: 75.5, y: 93, w: 49, h: 159, paper: true },
+    fill: 48,
     cap: (id) => renderPetOilCap(id),
   },
 
@@ -726,8 +742,8 @@ const SHAPES: Record<Kind, Shape> = {
 
 const EXTENT: Record<Kind, { top: number; w: number }> = {
   jar: { top: 160, w: 132 },
-  bottle: { top: 10, w: 76 },
-  "round-bottle": { top: 10, w: 76 },
+  bottle: { top: 14, w: 76 },
+  "round-bottle": { top: 14, w: 76 },
   tin: { top: 60, w: 106 },
   dropper: { top: 60, w: 72 },
   tube: { top: 37, w: 76 },
@@ -742,7 +758,33 @@ const pageZoom = (k: Kind) => Math.min(1.45, 230 / (290 - EXTENT[k].top), 170 / 
 
 // ---------- The Product Drawing with Cylinder Shading & Spinning Label ----------
 
-function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<number>; className?: string }) {
+const getStickerTitle = (short: string) => {
+  const clean = short.replace(/\s*\([^)]*\)/g, "").trim();
+  const words = clean.split(/\s+/);
+  if (words.length <= 1) return { line1: words[0].toUpperCase(), line2: "" };
+  if (words.length === 2) return { line1: words[0].toUpperCase(), line2: words[1].toUpperCase() };
+  if (words.length === 3) return { line1: `${words[0]} ${words[1]}`.toUpperCase(), line2: words[2].toUpperCase() };
+  return { line1: `${words[0]} ${words[1]}`.toUpperCase(), line2: words.slice(2).join(" ").toUpperCase() };
+};
+
+const getDisplayQty = (raw?: string) => {
+  if (!raw) return "500ml";
+  const match = raw.match(/(\d+)\s*(ml|l|kg)/i);
+  if (match) return `${match[1]}${match[2].toLowerCase()}`;
+  return raw.split(" ")[0];
+};
+
+function ProductArt({
+  p,
+  spin,
+  size,
+  className
+}: {
+  p: Product;
+  spin?: MotionValue<number>;
+  size?: string;
+  className?: string;
+}) {
   const id = "ps" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const isPet = p.kind === "round-bottle" || p.kind === "bottle";
   const s = SHAPES[p.kind] || SHAPES["round-bottle"];
@@ -752,111 +794,550 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
   const a = p.glass ? (lum(c) > 200 ? 0.32 : 0.78) : 1;
   const liq = hexRgb(p.liquid ?? p.color);
   const { print: P, box: B } = s;
-  const period = P.w * 2.6; // Wrap period for 360-degree rotation
+  const period = isPet ? 136 : P.w * 2.6; // Wrap period for 360-degree rotation
   const fallback = useMotionValue(0);
   const x = useTransform(spin ?? fallback, (v) => -((((v * period) % period) + period) % period));
   const nameSize = Math.min(9.5, P.w * 0.11, (P.w * 1.1) / p.short.length);
   const subSize = Math.min(6.2, P.w * 0.075, (P.w * 1.2) / (p.sub ?? "").length);
 
+  // Dynamic front sticker matching authentic RKW label (media_1794909193509_b2918e2a.jpg)
+  const renderFrontSticker = (dx: number) => {
+    const cx = 100 + dx;
+    const sx = 75.5 + dx;
+    const sy = 93;
+    const sw = 49;
+    const sh = 159;
+    const maroon = "#7A1426";
+    const navy = "#0B2545";
+    const gold = "#D4AF37";
+
+    const { line1: title1, line2: title2 } = getStickerTitle(p.short);
+    const displayQty = getDisplayQty(size || p.sizes[0]);
+    const cleanHindiSub = p.sub ? p.sub.replace(/\s*\([^)]*\)/g, "").trim() : "";
+
+    return (
+      <g key={`front-${dx}`}>
+        {/* 1. White Sticker Base with Rich Maroon Border */}
+        <rect
+          x={sx}
+          y={sy}
+          width={sw}
+          height={sh}
+          rx={3.5}
+          fill="#FFFFFF"
+          stroke={maroon}
+          strokeWidth={1.2}
+        />
+        {/* Inner thin maroon decorative pinstripe */}
+        <rect
+          x={sx + 1.2}
+          y={sy + 1.2}
+          width={sw - 2.4}
+          height={sh - 2.4}
+          rx={2.5}
+          fill="none"
+          stroke={maroon}
+          strokeWidth={0.35}
+          strokeOpacity={0.5}
+        />
+
+        {/* 2. Top Circular RKW Logo Emblem */}
+        <g transform={`translate(${cx} ${sy + 9.5})`}>
+          <circle cx="0" cy="0" r="5.8" fill="#FFF" stroke={navy} strokeWidth="0.8" />
+          <circle cx="0" cy="0" r="5" fill="none" stroke={gold} strokeWidth="0.4" />
+          {/* Swirling stylized R design */}
+          <path
+            d="M -3.2 -2.8 C -1 -4.2 2.8 -4.2 3.8 -2 C 4.5 -0.5 4 1.5 2.5 2.6 C 1 3.5 -0.8 4 -2.8 3.5 C -0.8 3 1.2 2.2 2 -0.2 C 2.5 -1.8 1.2 -3 -1.2 -2.5 Z"
+            fill="#D62828"
+          />
+          <path
+            d="M -3.2 -1.2 C -1.5 -2.4 1.8 -2.2 2.4 -0.6 C 3 1 1.8 2.4 0.2 3 C -1.5 3.6 -2.8 2.8 -3.2 1.5 C -2.4 2 -1 2.2 0.2 1.6 C 1.2 1.1 1.6 0.2 1 -0.8 C 0.4 -1.6 -1.8 -1.5 -3.2 -1.2 Z"
+            fill={navy}
+          />
+          <circle cx="0" cy="0.2" r="1.1" fill={gold} />
+          {/* Registered symbol ® */}
+          <text x="6.8" y="-3.2" fill={navy} fontSize="2.2" fontWeight="bold">®</text>
+        </g>
+
+        {/* 3. Brand Name "RKW" + Veg Dot */}
+        <text
+          x={cx}
+          y={sy + 20}
+          fill={navy}
+          fontSize="6.8"
+          fontWeight="900"
+          letterSpacing="0.06em"
+          textAnchor="middle"
+        >
+          RKW
+        </text>
+        {/* Veg Stamp */}
+        <g transform={`translate(${cx + 15} ${sy + 16})`}>
+          <rect x="0" y="0" width="3.8" height="3.8" rx="0.5" fill="#FFF" stroke="#138808" strokeWidth="0.5" />
+          <circle cx="1.9" cy="1.9" r="1.1" fill="#138808" />
+        </g>
+
+        {/* 4. Hindi Brand Name: रमेश कोल्हू वाले */}
+        <text
+          x={cx}
+          y={sy + 25.5}
+          fill={navy}
+          fontSize="4.2"
+          fontWeight="800"
+          textAnchor="middle"
+        >
+          रमेश कोल्हू वाले
+        </text>
+
+        {/* Golden Drop Accent Underline */}
+        <line x1={cx - 16} y1={sy + 27.2} x2={cx - 2} y2={sy + 27.2} stroke="#E5A812" strokeWidth="0.6" strokeLinecap="round" />
+        <line x1={cx + 2} y1={sy + 27.2} x2={cx + 16} y2={sy + 27.2} stroke="#E5A812" strokeWidth="0.6" strokeLinecap="round" />
+        <path
+          d={`M ${cx} ${sy + 26.4} Q ${cx - 1.2} ${sy + 28} ${cx} ${sy + 28.8} Q ${cx + 1.2} ${sy + 28} ${cx} ${sy + 26.4} Z`}
+          fill="#E5A812"
+        />
+
+        {/* Cursive Tagline: पीढ़ियों का विश्वास */}
+        <text
+          x={cx}
+          y={sy + 32.5}
+          fill={maroon}
+          fontSize="3.4"
+          fontWeight="700"
+          fontStyle="italic"
+          textAnchor="middle"
+        >
+          पीढ़ियों का विश्वास
+        </text>
+
+        {/* 5. Maroon Pill: COLD PRESSED */}
+        <g transform={`translate(${cx} ${sy + 37.5})`}>
+          <rect x="-17" y="-3" width="34" height="6" rx="3" fill={maroon} />
+          <text x="0" y="1.2" fill="#FFF" fontSize="3.1" fontWeight="900" letterSpacing="0.08em" textAnchor="middle">
+            COLD PRESSED
+          </text>
+        </g>
+
+        {/* 6. Product Title in Bold Maroon (Line 1 & Line 2) */}
+        <text
+          x={cx}
+          y={sy + 46.5}
+          fill={maroon}
+          fontSize={title2 ? "5.4" : "6"}
+          fontWeight="900"
+          letterSpacing="0.02em"
+          textAnchor="middle"
+        >
+          {title1}
+        </text>
+        {title2 && (
+          <text
+            x={cx}
+            y={sy + 52.5}
+            fill={maroon}
+            fontSize="5.2"
+            fontWeight="900"
+            letterSpacing="0.02em"
+            textAnchor="middle"
+          >
+            {title2}
+          </text>
+        )}
+
+        {/* Subtitle / Hindi Name in Italic Serif */}
+        {cleanHindiSub && (
+          <text
+            x={cx}
+            y={sy + (title2 ? 57.5 : 53.5)}
+            fill={maroon}
+            fontSize="3.6"
+            fontWeight="600"
+            fontStyle="italic"
+            textAnchor="middle"
+          >
+            {cleanHindiSub}
+          </text>
+        )}
+
+        {/* 7. Maroon Pill: SINGLE PRESSED */}
+        <g transform={`translate(${cx} ${sy + (title2 ? 63 : 59)})`}>
+          <rect x="-15" y="-2.6" width="30" height="5.2" rx="2.6" fill={maroon} />
+          <text x="0" y="1.1" fill="#FFF" fontSize="2.7" fontWeight="800" letterSpacing="0.06em" textAnchor="middle">
+            SINGLE PRESSED
+          </text>
+        </g>
+
+        {/* 8. Sourcing Callout: Seeds Sourced from RAJASTHAN */}
+        <text
+          x={cx}
+          y={sy + (title2 ? 70 : 66)}
+          fill="#555"
+          fontSize="2.4"
+          fontWeight="600"
+          textAnchor="middle"
+        >
+          Seeds Sourced from
+        </text>
+        <text
+          x={cx}
+          y={sy + (title2 ? 74.2 : 70.2)}
+          fill={maroon}
+          fontSize="3.3"
+          fontWeight="900"
+          letterSpacing="0.06em"
+          textAnchor="middle"
+        >
+          RAJASTHAN
+        </text>
+        <line
+          x1={cx - 10}
+          y1={sy + (title2 ? 75.5 : 71.5)}
+          x2={cx + 10}
+          y2={sy + (title2 ? 75.5 : 71.5)}
+          stroke={maroon}
+          strokeWidth="0.5"
+        />
+
+        {/* 9. Farm, Flowers & Cruet Illustration Section */}
+        <g transform={`translate(${cx} ${sy + 77})`}>
+          {/* Background farm glow */}
+          <rect x="-22" y="0" width="44" height="38" rx="2" fill={`url(#${id}-farm-field-glow)`} />
+
+          {/* Yellow mustard field flowers & greenery */}
+          <ellipse cx="-12" cy="30" rx="9" ry="6" fill="#15803D" opacity="0.8" />
+          <ellipse cx="-11" cy="27" rx="8" ry="5" fill="#EAB308" opacity="0.9" />
+          <circle cx="-15" cy="25" r="2.2" fill="#FACC15" />
+          <circle cx="-12" cy="23" r="2" fill="#FDE047" />
+          <circle cx="-8" cy="24" r="1.8" fill="#FACC15" />
+          <circle cx="-13" cy="28" r="2" fill="#EAB308" />
+
+          {/* Traditional Glass Cruet Bottle */}
+          <g transform="translate(-10 6)">
+            {/* Wooden cork stopper */}
+            <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+            {/* Glass neck */}
+            <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+            {/* Golden oil inside cruet */}
+            <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill="#D97706" opacity="0.92" />
+            {/* Glass specular highlight */}
+            <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+          </g>
+
+          {/* Wooden Bowl of Pure Mustard Seeds */}
+          <g transform="translate(6 22)">
+            {/* Wooden bowl */}
+            <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+            {/* Mound of black seeds */}
+            <ellipse cx="0" cy="1" rx="7.5" ry="3" fill="#1C1917" />
+            <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill="#292524" />
+            {/* Tiny seed textures */}
+            <circle cx="-3" cy="0.5" r="0.6" fill="#444" />
+            <circle cx="0" cy="0" r="0.6" fill="#555" />
+            <circle cx="3" cy="0.8" r="0.6" fill="#444" />
+          </g>
+
+          {/* Quality Badges on Right */}
+          <g transform="translate(10 6)">
+            <text x="0" y="0" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
+              Premium Quality
+            </text>
+            <text x="0" y="4" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
+              No Preservatives
+            </text>
+            <text x="0" y="8" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
+              No Added Colour
+            </text>
+          </g>
+        </g>
+
+        {/* 10. Maroon Bottom Banner with White Ornate Filigree Scrolls */}
+        <g>
+          {/* Maroon shaped bottom background */}
+          <path
+            d={`M ${sx + 1.2} ${sy + 118} Q ${cx} ${sy + 115} ${sx + sw - 1.2} ${sy + 118} L ${sx + sw - 1.2} ${sy + sh - 2.5} Q ${cx} ${sy + sh - 1} ${sx + 1.2} ${sy + sh - 2.5} Z`}
+            fill={maroon}
+          />
+
+          {/* Ornate White Floral Filigree Scrolls on Left & Right */}
+          {/* Left Scroll */}
+          <g transform={`translate(${sx + 7} ${sy + 135})`} stroke="#FFF" fill="none" strokeWidth="0.5" strokeLinecap="round">
+            <path d="M 0 0 C -4 -4 -6 2 -2 5 C 1 7 -2 10 -5 9" />
+            <circle cx="-3.5" cy="4" r="0.8" fill="#FFF" stroke="none" />
+            <path d="M -1 2 C -3 0 -5 1 -4 3" />
+            <circle cx="-1" cy="7" r="0.6" fill="#FFF" stroke="none" />
+          </g>
+          {/* Right Scroll (Mirrored) */}
+          <g transform={`translate(${sx + sw - 7} ${sy + 135}) scale(-1 1)`} stroke="#FFF" fill="none" strokeWidth="0.5" strokeLinecap="round">
+            <path d="M 0 0 C -4 -4 -6 2 -2 5 C 1 7 -2 10 -5 9" />
+            <circle cx="-3.5" cy="4" r="0.8" fill="#FFF" stroke="none" />
+            <path d="M -1 2 C -3 0 -5 1 -4 3" />
+            <circle cx="-1" cy="7" r="0.6" fill="#FFF" stroke="none" />
+          </g>
+
+          {/* Net Qty Header */}
+          <text
+            x={cx}
+            y={sy + 124}
+            fill="#FFFFFF"
+            fontSize="3.2"
+            fontWeight="600"
+            letterSpacing="0.04em"
+            textAnchor="middle"
+          >
+            Net Qty.
+          </text>
+
+          {/* Big Bold Volume Display: e.g. 500ml */}
+          <text
+            x={cx}
+            y={sy + 136}
+            fill="#FFFFFF"
+            fontSize="9.2"
+            fontWeight="900"
+            letterSpacing="-0.02em"
+            textAnchor="middle"
+          >
+            {displayQty}
+          </text>
+
+          {/* Recycling Emblem Icon at bottom */}
+          <g transform={`translate(${cx} ${sy + 148})`}>
+            <polygon points="0,-4.5 4,2 -4,2" fill="none" stroke="#FACC15" strokeWidth="0.6" strokeLinejoin="round" />
+            <path d="M 0 -4.5 L 1 -3" stroke="#FACC15" strokeWidth="0.5" />
+            <path d="M 4 2 L 2.5 2" stroke="#FACC15" strokeWidth="0.5" />
+            <path d="M -4 2 L -3 0.5" stroke="#FACC15" strokeWidth="0.5" />
+            <circle cx="0" cy="-0.2" r="1" fill="#22C55E" />
+          </g>
+        </g>
+      </g>
+    );
+  };
+
+  // Dynamic back sticker matching authentic RKW label (media_1794909193509_b2918e2a.jpg)
+  const renderBackSticker = (dx: number) => {
+    const cx = 100 + dx;
+    const sx = 75.5 + dx;
+    const sy = 93;
+    const sw = 49;
+    const sh = 159;
+    const maroon = "#7A1426";
+    const navy = "#0B2545";
+
+    return (
+      <g key={`back-${dx}`}>
+        {/* 1. White Base Card with Maroon Border */}
+        <rect
+          x={sx}
+          y={sy}
+          width={sw}
+          height={sh}
+          rx={3.5}
+          fill="#FFFFFF"
+          stroke={maroon}
+          strokeWidth={1.2}
+        />
+        <rect
+          x={sx + 1.2}
+          y={sy + 1.2}
+          width={sw - 2.4}
+          height={sh - 2.4}
+          rx={2.5}
+          fill="none"
+          stroke={maroon}
+          strokeWidth="0.35"
+          strokeOpacity={0.5}
+        />
+
+        {/* 2. Top Header: RKW Logo + Ramesh Kolhu Wale */}
+        <g transform={`translate(${cx - 10} ${sy + 7.5})`}>
+          <circle cx="0" cy="0" r="4.2" fill="#FFF" stroke={navy} strokeWidth="0.6" />
+          <circle cx="0" cy="0" r="3.2" fill="#FFF" stroke="#D97706" strokeWidth="0.4" />
+          <text x="0" y="1" fill={navy} fontSize="3" fontWeight="bold" textAnchor="middle">R</text>
+          <text x="5.2" y="-2" fill={navy} fontSize="1.8" fontWeight="bold">®</text>
+        </g>
+        <text
+          x={cx + 6}
+          y={sy + 6.2}
+          fill={navy}
+          fontSize="4.2"
+          fontWeight="900"
+          letterSpacing="0.05em"
+          textAnchor="middle"
+        >
+          RKW
+        </text>
+        <g transform={`translate(${cx + 17} ${sy + 3.8})`}>
+          <rect x="0" y="0" width="3.2" height="3.2" rx="0.4" fill="#FFF" stroke="#138808" strokeWidth="0.4" />
+          <circle cx="1.6" cy="1.6" r="0.9" fill="#138808" />
+        </g>
+
+        <text
+          x={cx}
+          y={sy + 11.8}
+          fill={navy}
+          fontSize="3.8"
+          fontWeight="800"
+          textAnchor="middle"
+        >
+          Ramesh Kolhu Wale
+        </text>
+
+        {/* Golden drop */}
+        <path
+          d={`M ${cx} ${sy + 13} Q ${cx - 0.9} ${sy + 14.5} ${cx} ${sy + 15.2} Q ${cx + 0.9} ${sy + 14.5} ${cx} ${sy + 13} Z`}
+          fill="#E5A812"
+        />
+
+        {/* 3. Nutrition Facts Box with Yellow Header */}
+        <g transform={`translate(${cx} ${sy + 17.5})`}>
+          {/* Yellow header banner */}
+          <rect x="-22" y="0" width="44" height="4.5" fill="#FDE047" stroke="#333" strokeWidth="0.4" />
+          <text x="0" y="3.2" fill="#1C1917" fontSize="2.2" fontWeight="900" textAnchor="middle">
+            Nutrition Facts (Per 100g)
+          </text>
+
+          {/* Nutrition Table Grid */}
+          <rect x="-22" y="4.5" width="44" height="28" fill="#FFF" stroke="#333" strokeWidth="0.4" />
+          <line x1="8" y1="4.5" x2="8" y2="32.5" stroke="#333" strokeWidth="0.3" />
+
+          {[
+            ["ENERGY", "900 KCAL"],
+            ["PROTIEN", "0 g"],
+            ["CARBOHYDRATE", "0 g"],
+            ["TOTAL FAT", "100 g"],
+            ["SATURATED FAT", "12 g"],
+            ["TRANS FAT", "0 g"],
+            ["MONO UNSATURATED", "58 g"],
+            ["POLY UNSATURATED", "16 g"],
+            ["CHOLESTEROL", "0 g"]
+          ].map(([label, val], idx) => {
+            const rowY = 7.5 + idx * 3;
+            return (
+              <g key={idx}>
+                {idx > 0 && <line x1="-22" y1={4.5 + idx * 3} x2="22" y2={4.5 + idx * 3} stroke="#E5E7EB" strokeWidth="0.3" />}
+                <text x="-20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="700">
+                  {label}
+                </text>
+                <text x="20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="800" textAnchor="end">
+                  {val}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+
+        {/* 4. Ingredients & Declarations */}
+        <g transform={`translate(${cx} ${sy + 53})`}>
+          <text x="0" y="0" fill="#111" fontSize="2.1" fontWeight="800" textAnchor="middle">
+            Ingredients: 100% Pure Cold-Pressed Oil
+          </text>
+          <text x="0" y="3.2" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">
+            Free From Argemone Oil Representative
+          </text>
+          <text x="0" y="6.8" fill="#111" fontSize="2.2" fontWeight="800" textAnchor="middle">
+            NET QUANTITY : 500 ML (450 g)
+          </text>
+        </g>
+
+        {/* 5. Free Delivery Scooter & Contact Callout */}
+        <g transform={`translate(${cx} ${sy + 68})`}>
+          {/* Red delivery scooter */}
+          <g transform="translate(-16 -2) scale(0.65)">
+            <circle cx="3" cy="11" r="2.5" fill="#333" />
+            <circle cx="15" cy="11" r="2.5" fill="#333" />
+            <path d="M 3 11 L 8 11 L 10 5 L 14 5 L 15 11" fill="none" stroke="#DC2626" strokeWidth="2.2" strokeLinecap="round" />
+            <rect x="5" y="3" width="5" height="5" rx="0.5" fill="#DC2626" />
+          </g>
+          <text x="-3" y="1" fill="#DC2626" fontSize="2.5" fontWeight="900">
+            FREE DELIVERY
+          </text>
+          <text x="-3" y="4.2" fill="#444" fontSize="1.8" fontWeight="700">
+            Delhi NCR &bull; Min. ₹799
+          </text>
+
+          {/* WhatsApp & Phones */}
+          <g transform="translate(0 9)">
+            <circle cx="-14" cy="0" r="2.6" fill="#22C55E" />
+            <path d="M -15 -1 Q -14 -2 -13 -1 L -12.5 0 Q -13 1 -14 1 Q -15 0 -15 -1 Z" fill="#FFF" />
+            <text x="-8" y="0.8" fill="#111" fontSize="2.1" fontWeight="800">
+              +91 9217744378 / 79
+            </text>
+          </g>
+        </g>
+
+        {/* 6. Factory Address & FSSAI */}
+        <g transform={`translate(${cx} ${sy + 89})`}>
+          <text x="0" y="0" fill="#666" fontSize="1.7" fontWeight="600" textAnchor="middle">
+            Mfg. &amp; Pkd. By:
+          </text>
+          <text x="0" y="3.2" fill="#111" fontSize="2.3" fontWeight="900" textAnchor="middle">
+            VINAYAK UDYOG GLOBAL PVT. LTD.
+          </text>
+          <text x="0" y="6.4" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">
+            Plot No. 100, Pocket A, Sector 1, DSIIDC, Bawana, Delhi-39
+          </text>
+
+          {/* FSSAI Logo & Lic No */}
+          <g transform="translate(0 12)">
+            <text x="-12" y="1.8" fill="#1E3A8A" fontSize="3.6" fontWeight="900" fontStyle="italic">
+              fssai
+            </text>
+            <text x="2" y="1.8" fill="#111" fontSize="2" fontWeight="800">
+              Lic. No. 10018011004919
+            </text>
+          </g>
+          <text x="0" y="18" fill="#2563EB" fontSize="2" fontWeight="700" textAnchor="middle">
+            www.rameshkolhuwale.com
+          </text>
+        </g>
+
+        {/* 7. Barcode & QR Code */}
+        <g transform={`translate(${cx} ${sy + 120})`}>
+          {/* QR Code Simulation */}
+          <rect x="-18" y="0" width="12" height="12" fill="#FFF" stroke="#222" strokeWidth="0.5" />
+          <rect x="-16.5" y="1.5" width="3.5" height="3.5" fill="#222" />
+          <rect x="-10" y="1.5" width="2" height="2" fill="#222" />
+          <rect x="-16.5" y="7" width="2" height="2" fill="#222" />
+          <rect x="-11.5" y="5.5" width="3.5" height="3.5" fill="#222" />
+
+          {/* Barcode Simulation */}
+          <g transform="translate(-1 0)">
+            {[0, 2, 3, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19].map((bx, i) => (
+              <line
+                key={i}
+                x1={bx}
+                y1="0"
+                x2={bx}
+                y2="10"
+                stroke="#111"
+                strokeWidth={i % 3 === 0 ? "0.9" : "0.5"}
+              />
+            ))}
+            <text x="9.5" y="13.5" fill="#111" fontSize="1.8" fontWeight="bold" letterSpacing="0.08em" textAnchor="middle">
+              8 906225 820923
+            </text>
+          </g>
+        </g>
+
+        {/* 8. Bottom Swachh Bharat & Recycling Marks */}
+        <g transform={`translate(${cx} ${sy + 144})`}>
+          {/* Chashma logo */}
+          <circle cx="-8" cy="0" r="2.2" fill="none" stroke="#222" strokeWidth="0.4" />
+          <circle cx="-2" cy="0" r="2.2" fill="none" stroke="#222" strokeWidth="0.4" />
+          <line x1="-5.8" y1="0" x2="-4.2" y2="0" stroke="#222" strokeWidth="0.4" />
+          {/* Recycle triangle */}
+          <polygon points="6,-3 9,2 3,2" fill="none" stroke="#22C55E" strokeWidth="0.5" />
+        </g>
+      </g>
+    );
+  };
+
+  // Fallback label art for non-PET items (such as Jar and Tin)
   const printArt = (dx: number) => {
-    const isPet = p.kind === "round-bottle" || p.kind === "bottle";
     const isRound = p.kind === "round-bottle";
     const isTin = p.kind === "tin";
     const isJar = p.kind === "jar";
     const centerX = P.x + P.w / 2;
-
-    if (isPet) {
-      return (
-        <g transform={`translate(${dx} 0)`}>
-          {/* Subtle clear decal sheen & gold foil border (Zero opaque background!) */}
-          <rect
-            x={P.x + 2}
-            y={P.y + 4}
-            width={P.w - 4}
-            height={P.h - 8}
-            rx={3}
-            fill="rgba(255,255,255,0.06)"
-            stroke="rgba(212,175,55,0.45)"
-            strokeWidth={0.6}
-          />
-
-          {/* Brand Header: Authentic RKW Logo & Typography */}
-          <g transform={`translate(${centerX} ${P.y + P.h * 0.14})`}>
-            <circle cx="-13" cy="-1.5" r="3.6" fill="#0E2A47" />
-            <circle cx="-13" cy="-1.5" r="2.6" fill="#D4AF37" />
-            <path d="M-14.2 -1.5 H-11.8 M-13 -2.7 V-0.3" stroke="#0E2A47" strokeWidth="0.6" />
-            <text
-              x="0"
-              y="0.5"
-              fill="#0E2A47"
-              fontSize={Math.min(6.8, P.w * 0.12)}
-              fontWeight="900"
-              letterSpacing="0.08em"
-              textAnchor="middle"
-            >
-              RKW
-            </text>
-            <text x="9.5" y="-1.5" fill="#0E2A47" fontSize="3" fontWeight="bold">®</text>
-          </g>
-
-          {/* Hindi Brand Name */}
-          <text
-            x={centerX}
-            y={P.y + P.h * 0.25}
-            fill="#1C1A16"
-            fontSize={Math.min(4.4, P.w * 0.08)}
-            fontWeight="700"
-            textAnchor="middle"
-          >
-            रमेश कोल्हू वाले
-          </text>
-
-          {/* Product Title (e.g. YELLOW MUSTARD OIL) */}
-          <text
-            x={centerX}
-            y={P.y + P.h * 0.44}
-            fill="#0E2A47"
-            fontSize={Math.min(7.5, (P.w * 0.95) / p.short.length)}
-            fontWeight="800"
-            letterSpacing="-0.05"
-            textAnchor="middle"
-          >
-            {p.short}
-          </text>
-
-          {/* Subtitle / Hindi Name */}
-          {p.sub && (
-            <text
-              x={centerX}
-              y={P.y + P.h * 0.58}
-              fill="#4A3B2C"
-              fontSize={Math.min(4.5, (P.w * 0.9) / (p.sub ?? "").length)}
-              fontWeight="600"
-              textAnchor="middle"
-            >
-              {p.sub}
-            </text>
-          )}
-
-          {/* Trust badge stamp */}
-          <g transform={`translate(${centerX} ${P.y + P.h * 0.72})`}>
-            <rect x="-18" y="-3.5" width="36" height="7" rx="1.5" fill="rgba(255,255,255,0.4)" stroke="#0E2A47" strokeWidth="0.5" strokeOpacity="0.4" />
-            <text x="0" y="1.5" fill="#0E2A47" fontSize="3.2" fontWeight="800" letterSpacing="0.04em" textAnchor="middle">
-              COLD-PRESSED • &lt;38°C
-            </text>
-          </g>
-
-          {/* Bottom row: FSSAI Green Veg Dot & Net Qty */}
-          <g transform={`translate(${centerX} ${P.y + P.h * 0.88})`}>
-            <rect x={-P.w * 0.36} y="-3" width="5.5" height="5.5" fill="#fff" stroke="#138808" strokeWidth="0.5" rx="0.5" />
-            <circle cx={-P.w * 0.36 + 2.75} cy="-0.25" r="1.5" fill="#138808" />
-            <text x="1" y="0.8" fill="#1C1A16" fontSize={Math.min(5, P.w * 0.09)} fontWeight="700" textAnchor="middle">
-              {p.sizes[0]}
-            </text>
-          </g>
-        </g>
-      );
-    }
 
     return (
       <g transform={`translate(${dx} 0)`}>
@@ -963,7 +1444,7 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
           <rect x={-P.w * 0.38} y="-3.5" width="6" height="6" fill="#fff" stroke="#138808" strokeWidth="0.6" rx="0.5" />
           <circle cx={-P.w * 0.38 + 3} cy="-0.5" r="1.8" fill="#138808" />
           <text x="1" y="0.8" fill={p.ink} opacity="0.95" fontSize={Math.min(5.6, P.w * 0.07)} fontWeight="600" textAnchor="middle">
-            {p.sizes[0]}
+            {size ? getDisplayQty(size) : p.sizes[0]}
           </text>
         </g>
       </g>
@@ -1052,6 +1533,18 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
           <stop offset="1" stopColor={css(mixRgb(liq, BLACK, 0.45))} />
         </linearGradient>
 
+        {/* Farm Field Glow Gradient for Sticker Illustration */}
+        <linearGradient id={`${id}-farm-field-glow`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FEF3C7" stopOpacity="0.9" />
+          <stop offset="0.5" stopColor="#FDE68A" stopOpacity="0.95" />
+          <stop offset="1" stopColor="#EAB308" stopOpacity="0.8" />
+        </linearGradient>
+
+        {/* Front Panel Clip to cleanly wrap rotating 3D stickers */}
+        <clipPath id={`${id}-panel-clip`}>
+          <rect x="74" y="91" width="52" height="163" rx="3" />
+        </clipPath>
+
         <filter id={`${id}-soft`} x="-50%" y="-10%" width="200%" height="120%">
           <feGaussianBlur stdDeviation="2.2" />
         </filter>
@@ -1089,88 +1582,93 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
       <g clipPath={`url(#${id}-clip)`}>
         {isPet ? (
           <>
-            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=58 */}
-            <rect x="60" y="58" width="80" height="230" fill={`url(#${id}-pet-oil-grad)`} opacity="0.96" />
+            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=48 */}
+            <rect x="60" y="48" width="80" height="240" fill={`url(#${id}-pet-oil-grad)`} opacity="0.96" />
 
-            {/* 2. Clear PET Neck Headspace above oil (y=38 to 58) */}
-            <rect x="91" y="38" width="18" height="20" fill="rgba(255,255,255,0.06)" />
-            <line x1="93" y1="41" x2="93" y2="58" stroke="#fff" strokeWidth="0.9" strokeOpacity="0.7" />
-            <line x1="107" y1="41" x2="107" y2="58" stroke="#fff" strokeWidth="0.6" strokeOpacity="0.35" />
+            {/* 2. Clear PET Neck Headspace above oil (y=38 to 48) */}
+            <rect x="86" y="38" width="28" height="10" fill="rgba(255,255,255,0.06)" />
+            <line x1="88" y1="40" x2="88" y2="48" stroke="#fff" strokeWidth="0.9" strokeOpacity="0.7" />
+            <line x1="112" y1="40" x2="112" y2="48" stroke="#fff" strokeWidth="0.6" strokeOpacity="0.35" />
 
-            {/* 2b. Protruding Neck Collar / Transfer Ring (y=41 to 45) */}
-            <ellipse cx="100" cy="43" rx="13.5" ry="2" fill="none" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.85" />
-            <ellipse cx="100" cy="43.5" rx="13" ry="1.6" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
+            {/* 2b. Protruding Neck Collar / Transfer Ring (y=40 to 44) */}
+            <ellipse cx="100" cy="42" rx="16.5" ry="2" fill="none" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.85" />
+            <ellipse cx="100" cy="42.5" rx="16" ry="1.6" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
 
-            {/* 3. Liquid Meniscus at y=58 with specular glint */}
-            <path d="M 91 58 Q 100 60.5 109 58" stroke="#FFF9D2" strokeWidth="1.4" strokeOpacity="0.95" fill="none" />
-            <path d="M 91 58.8 Q 100 61.2 109 58.8" stroke="rgba(100,50,0,0.5)" strokeWidth="0.8" fill="none" />
+            {/* 3. Liquid Meniscus at y=48 with specular glint */}
+            <path d="M 86 48 Q 100 50.5 114 48" stroke="#FFF9D2" strokeWidth="1.3" strokeOpacity="0.95" fill="none" />
+            <path d="M 86 48.8 Q 100 51.3 114 48.8" stroke="rgba(100,50,0,0.5)" strokeWidth="0.8" fill="none" />
 
             {/* 4. The 9 Side Grip Ribs (Notches on Left & Right) */}
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
-              const ny = 118.75 + i * 16;
+              const ny = 98 + i * 15.5;
               return (
                 <g key={i}>
                   {/* Left Notch */}
-                  <rect x="67" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
-                  <rect x="67.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
-                  <line x1="67" y1={ny} x2="74" y2={ny} stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
-                  <line x1="67" y1={ny + 8.5} x2="74" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
-                  <ellipse cx="70.5" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.65" />
+                  <rect x="67" y={ny} width="6.5" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
+                  <rect x="67.5" y={ny + 0.5} width="5.5" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
+                  <line x1="67" y1={ny} x2="73.5" y2={ny} stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
+                  <line x1="67" y1={ny + 8.5} x2="73.5" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
+                  <ellipse cx="70.2" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.65" />
 
                   {/* Right Notch */}
-                  <rect x="126" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
-                  <rect x="126.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
-                  <line x1="126" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.7)" strokeWidth="0.8" />
-                  <line x1="126" y1={ny + 8.5} x2="133" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
-                  <ellipse cx="129.5" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.55" />
+                  <rect x="126.5" y={ny} width="6.5" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
+                  <rect x="127" y={ny + 0.5} width="5.5" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
+                  <line x1="126.5" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.7)" strokeWidth="0.8" />
+                  <line x1="126.5" y1={ny + 8.5} x2="133" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
+                  <ellipse cx="129.8" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.55" />
                 </g>
               );
             })}
 
             {/* Vertical Inner Divider Lines between ribs and center window */}
-            <line x1="74.5" y1="108" x2="74.5" y2="256" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
-            <line x1="125.5" y1="108" x2="125.5" y2="256" stroke="rgba(0,0,0,0.2)" strokeWidth="0.8" />
+            <line x1="74" y1="90" x2="74" y2="256" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
+            <line x1="126" y1="90" x2="126" y2="256" stroke="rgba(0,0,0,0.2)" strokeWidth="0.8" />
 
             {/* 5. Shoulder Chamfer Facets */}
-            <line x1="91" y1="74" x2="66" y2="108" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.75" strokeLinecap="round" />
-            <line x1="109" y1="74" x2="134" y2="108" stroke="rgba(0,0,0,0.25)" strokeWidth="1.2" strokeLinecap="round" />
-            <path d="M 74 98 Q 100 96 126 98" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
+            <line x1="86" y1="56" x2="66" y2="90" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.75" strokeLinecap="round" />
+            <line x1="114" y1="56" x2="134" y2="90" stroke="rgba(0,0,0,0.25)" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 74 86 Q 100 84 126 86" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
 
             {/* 6. Front Recessed Panel Bevel Frame */}
             <g>
-              <polygon points="74.5,106 76.5,108 76.5,254 74.5,256" fill="rgba(255,255,255,0.45)" />
-              <polygon points="74.5,106 125.5,106 123.5,108 76.5,108" fill="rgba(255,255,255,0.55)" />
-              <polygon points="125.5,106 125.5,256 123.5,254 123.5,108" fill="rgba(0,0,0,0.22)" />
-              <polygon points="74.5,256 76.5,254 123.5,254 125.5,256" fill="rgba(0,0,0,0.18)" />
-              <line x1="74.5" y1="106" x2="76.5" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
-              <line x1="125.5" y1="106" x2="123.5" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="74.5" y1="256" x2="76.5" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="125.5" y1="256" x2="123.5" y2="254" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
-              <rect x="76.5" y="108" width="47" height="146" rx="2" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.7" />
+              <polygon points="74,91 75.5,93 75.5,253 74,255" fill="rgba(255,255,255,0.45)" />
+              <polygon points="74,91 126,91 124.5,93 75.5,93" fill="rgba(255,255,255,0.55)" />
+              <polygon points="126,91 126,255 124.5,253 124.5,93" fill="rgba(0,0,0,0.22)" />
+              <polygon points="74,255 75.5,253 124.5,253 126,255" fill="rgba(0,0,0,0.18)" />
+              <line x1="74,91" x2="75.5,93" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
+              <line x1="126,91" x2="124.5,93" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="74,255" x2="75.5,253" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="126,255" x2="124.5,253" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
             </g>
 
-            {/* 7. Rotating Transparent Silkscreen Art */}
-            <motion.g style={{ x }}>
-              {printArt(0)}
-              {printArt(period)}
-            </motion.g>
+            {/* 7. Rotating Authentic RKW Sticker Art (Front & Back) */}
+            <g clipPath={`url(#${id}-panel-clip)`}>
+              <motion.g style={{ x }}>
+                {renderFrontSticker(-period)}
+                {renderBackSticker(-period * 0.5)}
+                {renderFrontSticker(0)}
+                {renderBackSticker(period * 0.5)}
+                {renderFrontSticker(period)}
+                {renderBackSticker(period * 1.5)}
+              </motion.g>
+            </g>
 
             {/* 8. Studio Lighting Reflections matching the photo */}
             {/* Left softbox diffuse highlight */}
-            <rect x="76" y="108" width="8" height="146" rx="4" fill="#fff" opacity="0.4" filter={`url(#${id}-soft)`} />
+            <rect x="76" y="93" width="7" height="158" rx="3.5" fill="#fff" opacity="0.32" filter={`url(#${id}-soft)`} />
             {/* Sharp specular pinstripe */}
-            <line x1="78" y1="108" x2="78" y2="254" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.92" />
+            <line x1="77.5" y1="93" x2="77.5" y2="251" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.88" />
             {/* Shoulder specular */}
-            <path d="M 75 97 L 88 84" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.65" strokeLinecap="round" />
+            <path d="M 75 88 L 86 68" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.65" strokeLinecap="round" />
             {/* Right fill light */}
-            <line x1="123" y1="108" x2="123" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.3" />
+            <line x1="123" y1="93" x2="123" y2="251" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.25" />
 
             {/* Base pedestal kick-up arch and thick plastic reflections */}
             <path d="M 66 264 H 134" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
             <path d="M 64 274 H 136" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2" />
             <path d="M 64 280 H 136" stroke="rgba(120,60,0,0.35)" strokeWidth="1" />
-            <path d="M 70 286 Q 100 276 130 286" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.85" fill="none" />
-            <path d="M 72 286 Q 100 278 128 286" stroke="rgba(120,60,0,0.45)" strokeWidth="1" fill="none" />
+            <path d="M 70 286 Q 100 277 130 286" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.85" fill="none" />
+            <path d="M 72 286 Q 100 279 128 286" stroke="rgba(120,60,0,0.45)" strokeWidth="1" fill="none" />
           </>
         ) : (
           <>
@@ -1641,7 +2139,7 @@ function ProductPage({
               exit={{ scale: 1 }}
               transition={SPRING}
             >
-              <ProductArt p={p} spin={spin} className="size-full drop-shadow-2xl" />
+              <ProductArt p={p} spin={spin} size={size} className="size-full drop-shadow-2xl" />
             </motion.div>
           </motion.div>
 
