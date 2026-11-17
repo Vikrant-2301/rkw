@@ -46,7 +46,7 @@ export const PRODUCTS: Product[] = [
       temperature: 'Always kept below 38°C',
       rpm: '12 - 14 RPM (Slow Rotation)',
       seedOrigin: 'Single-source Organic Farms, Alwar (Rajasthan)',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure Virgin Grade',
@@ -100,7 +100,7 @@ export const PRODUCTS: Product[] = [
       temperature: '< 36°C',
       rpm: '14 RPM',
       seedOrigin: 'Bharatpur & Morena certified farms',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Single Origin Black Mustard',
@@ -154,7 +154,7 @@ export const PRODUCTS: Product[] = [
       temperature: 'Slow simmered on traditional chulha',
       rpm: 'Slow manual/bi-directional churn',
       seedOrigin: 'Desi Gir Gaushalas with free-grazing grass feed',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure A2 Cow Ghee',
@@ -207,7 +207,7 @@ export const PRODUCTS: Product[] = [
       temperature: 'Gentle cold-press flame boiling',
       rpm: 'Manual bi-directional rotation',
       seedOrigin: 'Haryana Pasturelands Murrah Cattle',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure Buffalo Milkfat',
@@ -260,7 +260,7 @@ export const PRODUCTS: Product[] = [
       temperature: '< 30°C (Ambient Room Temperature)',
       rpm: '10 RPM',
       seedOrigin: 'Grade-A Mamra & California Sweet Almonds',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure Sweet Almond Oil',
@@ -313,7 +313,7 @@ export const PRODUCTS: Product[] = [
       temperature: '< 35°C',
       rpm: '14 RPM',
       seedOrigin: 'Kozhikode & Malabar Sun-Dried Copra',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Virgin Coconut Oil',
@@ -366,7 +366,7 @@ export const PRODUCTS: Product[] = [
       temperature: '< 36°C',
       rpm: '13 RPM',
       seedOrigin: 'Saurashtra Organic Farming Clusters',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure Virgin White Sesame Oil',
@@ -420,7 +420,7 @@ export const PRODUCTS: Product[] = [
       temperature: '< 38°C',
       rpm: '13 RPM',
       seedOrigin: 'Junagadh & Rajkot Organic Peanut Fields',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Pure Virgin Groundnut Oil',
@@ -472,7 +472,7 @@ export const PRODUCTS: Product[] = [
       temperature: 'Cold extracted below 38°C',
       rpm: 'Slow speed artisanal production',
       seedOrigin: 'Certified Rajasthani Yellow Mustard & Gir Gaushala',
-      cold-pressType: 'Traditional Cold Press'
+      pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
       purity: '100% Guaranteed Zero Chemical Residue',
