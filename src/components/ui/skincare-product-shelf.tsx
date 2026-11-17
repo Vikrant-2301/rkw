@@ -14,9 +14,52 @@
 
 import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
 import { AnimatePresence, LayoutGroup, animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "motion/react";
-import { ChevronDown, ChevronLeft, Minus, Plus, ShoppingBag, Star, ShieldCheck, Check } from "lucide-react";
+import { ChevronDown, ChevronLeft, Minus, Plus, ShoppingBag, Star, ShieldCheck, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { PRODUCTS } from "@/data/products";
+
+// Exact catalog pricing helper
+export function getProductVolumePrice(productId: string, sizeName: string, fallbackPrice: number): number {
+  const cat = PRODUCTS.find((p) => p.id === productId);
+  if (cat && cat.volumes && cat.volumes.length > 0) {
+    const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const target = clean(sizeName);
+    const found = cat.volumes.find((v) => {
+      const vc = clean(v.size);
+      return vc.includes(target) || target.includes(vc);
+    });
+    if (found) return found.price;
+  }
+  if (sizeName.includes("200")) return fallbackPrice;
+  if (sizeName.includes("500")) return Math.round(fallbackPrice * 2.4);
+  if (sizeName.includes("1 L") || sizeName.includes("1L") || sizeName.includes("1 Litre")) return Math.round(fallbackPrice * 4.5);
+  if (sizeName.includes("2 L") || sizeName.includes("2L") || sizeName.includes("2 Litres")) return Math.round(fallbackPrice * 8.8);
+  if (sizeName.includes("5 L") || sizeName.includes("5L") || sizeName.includes("5 Litres")) return Math.round(fallbackPrice * 21.3);
+  if (sizeName.includes("15 kg") || sizeName.includes("15kg")) return Math.round(fallbackPrice * 60);
+  return fallbackPrice;
+}
+
+export function getProductVolumeCompareAt(productId: string, sizeName: string, fallbackCompareAt?: number): number | undefined {
+  const cat = PRODUCTS.find((p) => p.id === productId);
+  if (cat && cat.volumes && cat.volumes.length > 0) {
+    const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const target = clean(sizeName);
+    const found = cat.volumes.find((v) => {
+      const vc = clean(v.size);
+      return vc.includes(target) || target.includes(vc);
+    });
+    if (found && found.originalPrice) return found.originalPrice;
+  }
+  if (!fallbackCompareAt) return undefined;
+  if (sizeName.includes("200")) return fallbackCompareAt;
+  if (sizeName.includes("500")) return Math.round(fallbackCompareAt * 2.4);
+  if (sizeName.includes("1 L") || sizeName.includes("1L") || sizeName.includes("1 Litre")) return Math.round(fallbackCompareAt * 4.5);
+  if (sizeName.includes("2 L") || sizeName.includes("2L") || sizeName.includes("2 Litres")) return Math.round(fallbackCompareAt * 8.8);
+  if (sizeName.includes("5 L") || sizeName.includes("5L") || sizeName.includes("5 Litres")) return Math.round(fallbackCompareAt * 21.3);
+  if (sizeName.includes("15 kg") || sizeName.includes("15kg")) return Math.round(fallbackCompareAt * 60);
+  return fallbackCompareAt;
+}
 
 export type Kind =
   | "bottle"
@@ -79,8 +122,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#fbf6ec",
     glass: true,
     liquid: "#a25f0a",
-    price: 340,
-    compareAt: 420,
+    price: 70,
+    compareAt: 90,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 1420,
@@ -108,8 +151,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#1c1404",
     glass: true,
     liquid: "#eab318",
-    price: 360,
-    compareAt: 450,
+    price: 75,
+    compareAt: 95,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 5.0,
     reviews: 2150,
@@ -195,8 +238,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#faeef8",
     glass: true,
     liquid: "#e8af36",
-    price: 330,
-    compareAt: 410,
+    price: 95,
+    compareAt: 120,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 890,
@@ -224,8 +267,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#fcf8ee",
     glass: true,
     liquid: "#deb15b",
-    price: 420,
-    compareAt: 520,
+    price: 120,
+    compareAt: 150,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 670,
@@ -253,8 +296,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#eefcf3",
     glass: true,
     liquid: "#f5f8f6",
-    price: 380,
-    compareAt: 475,
+    price: 110,
+    compareAt: 140,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 1120,
@@ -340,8 +383,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#f6eee9",
     glass: true,
     liquid: "#ba741c",
-    price: 580,
-    compareAt: 720,
+    price: 280,
+    compareAt: 350,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.8,
     reviews: 410,
@@ -369,8 +412,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#eef4fd",
     glass: true,
     liquid: "#ce9222",
-    price: 390,
-    compareAt: 480,
+    price: 95,
+    compareAt: 120,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.7,
     reviews: 530,
@@ -398,8 +441,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ink: "#eefbee",
     glass: true,
     liquid: "#839328",
-    price: 620,
-    compareAt: 780,
+    price: 220,
+    compareAt: 280,
     sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
     rating: 4.9,
     reviews: 720,
@@ -466,76 +509,77 @@ const ridges = (x: number, y: number, w: number, h: number, step = 2.6) =>
 
 const PET_OIL_BODY_PATH =
   "M91 38 " +
-  "L91 42 " +
-  "L86 42 Q85 44 86 46 L91 46 " +
-  "L91 76 " +
-  "Q90 82 82 86 L66 104 " +
-  "L66 118 " +
-  "Q68 123 66 128 L66 134 " +
-  "Q68 139 66 144 L66 150 " +
-  "Q68 155 66 160 L66 166 " +
-  "Q68 171 66 176 L66 182 " +
-  "Q68 187 66 192 L66 198 " +
-  "Q68 203 66 208 L66 214 " +
-  "Q68 219 66 224 L66 230 " +
-  "Q68 235 66 240 L66 246 " +
-  "Q68 251 66 256 L66 262 " +
-  "Q64 266 64 272 L64 280 Q64 286 70 286 " +
-  "L78 286 Q100 281 122 286 L130 286 " +
-  "Q136 286 136 280 L136 272 Q136 266 134 262 " +
-  "L134 256 Q132 251 134 246 L134 240 " +
-  "Q132 235 134 230 L134 224 " +
-  "Q132 219 134 214 L134 208 " +
-  "Q132 203 134 198 L134 192 " +
-  "Q132 187 134 182 L134 176 " +
-  "Q132 171 134 166 L134 160 " +
-  "Q132 155 134 150 L134 144 " +
-  "Q132 139 134 134 L134 128 " +
-  "Q132 123 134 118 L134 104 " +
-  "L118 86 Q110 82 109 76 " +
-  "L109 46 " +
-  "L114 46 Q115 44 114 42 L109 42 " +
+  "L91 41 " +
+  "L87 41 Q85 43 87 45 L91 45 " +
+  "L91 74 " +
+  "Q91 82 84 88 L68 103 Q66 105 66 108 " +
+  "L66 119 Q68.5 123 66 127 " +
+  "L66 135 Q68.5 139 66 143 " +
+  "L66 151 Q68.5 155 66 159 " +
+  "L66 167 Q68.5 171 66 175 " +
+  "L66 183 Q68.5 187 66 191 " +
+  "L66 199 Q68.5 203 66 207 " +
+  "L66 215 Q68.5 219 66 223 " +
+  "L66 231 Q68.5 235 66 239 " +
+  "L66 247 Q68.5 251 66 255 " +
+  "L66 258 Q64 263 64 270 L64 280 Q64 286 70 286 " +
+  "L74 286 Q100 277 126 286 L130 286 " +
+  "Q136 286 136 280 L136 270 Q136 263 134 258 " +
+  "L134 255 Q131.5 251 134 247 " +
+  "L134 239 Q131.5 235 134 231 " +
+  "L134 223 Q131.5 219 134 215 " +
+  "L134 207 Q131.5 203 134 199 " +
+  "L134 191 Q131.5 187 134 183 " +
+  "L134 175 Q131.5 171 134 167 " +
+  "L134 159 Q131.5 155 134 151 " +
+  "L134 143 Q131.5 139 134 135 " +
+  "L134 127 Q131.5 123 134 119 " +
+  "L134 108 Q134 105 132 103 L116 88 Q109 82 109 74 " +
+  "L109 45 L113 45 Q115 43 113 41 L109 41 " +
   "L109 38 " +
   "Z";
 
 const renderPetOilCap = (id: string) => {
-  const capX = 87.5;
-  const capW = 25;
-  const capTop = 10;
+  const capX = 86;
+  const capW = 28;
+  const capTop = 12;
   return (
     <g id={`${id}-pet-cap-group`}>
-      {/* Upper Cap Body with rounded top */}
+      {/* Soft contact shadow from cap onto neck collar */}
+      <ellipse cx="100" cy="38.5" rx="13" ry="1.2" fill="#000" opacity="0.3" />
+
+      {/* Main Cap Body with rounded top */}
       <path
-        d={`M${capX + 2.5} ${capTop} h${capW - 5} a2.5 2.5 0 0 1 2.5 2.5 v18.5 h-${capW} v-18.5 a2.5 2.5 0 0 1 2.5 -2.5 z`}
+        d={`M${capX + 3} ${capTop} h${capW - 6} a3 3 0 0 1 3 3 v15 h-${capW} v-15 a3 3 0 0 1 3 -3 z`}
         fill={`url(#${id}-yellow-cap)`}
       />
       {/* Top rim highlight */}
-      <ellipse cx="100" cy={capTop + 1.2} rx="10" ry="1.2" fill="#FFF4AA" opacity="0.85" />
-      <path d={`M${capX + 2} ${capTop + 1} h${capW - 4}`} stroke="#FFE875" strokeWidth="1" strokeOpacity="0.9" />
+      <ellipse cx="100" cy={capTop + 1.2} rx="12" ry="1.5" fill="#FFF8C4" opacity="0.9" />
+      <path d={`M${capX + 2} ${capTop + 1} h${capW - 4}`} stroke="#FFE875" strokeWidth="1" strokeOpacity="0.95" />
 
       {/* Fluted Vertical Ridges (Knurling) */}
-      {Array.from({ length: 15 }, (_, i) => {
-        const rx = capX + 2.5 + i * 1.4;
+      {Array.from({ length: 20 }, (_, i) => {
+        const rx = capX + 2.4 + i * 1.22;
         return (
           <g key={i}>
-            <line x1={rx} y1={capTop + 3} x2={rx} y2={capTop + 20} stroke="#B37400" strokeWidth="0.6" strokeOpacity="0.45" />
-            <line x1={rx + 0.6} y1={capTop + 3} x2={rx + 0.6} y2={capTop + 20} stroke="#FFF8C4" strokeWidth="0.6" strokeOpacity="0.75" />
+            <line x1={rx} y1={capTop + 3} x2={rx} y2={capTop + 18} stroke="#9E5400" strokeWidth="0.5" strokeOpacity="0.45" />
+            <line x1={rx + 0.5} y1={capTop + 3} x2={rx + 0.5} y2={capTop + 18} stroke="#FFFAC8" strokeWidth="0.55" strokeOpacity="0.8" />
           </g>
         );
       })}
 
       {/* Separation Groove / Tear Line */}
-      <rect x={capX + 0.5} y={capTop + 21} width={capW - 1} height="1.4" fill="#8A4E00" opacity="0.6" />
+      <rect x={capX + 0.5} y={capTop + 18.2} width={capW - 1} height="1.2" fill="#7A3E00" opacity="0.75" />
 
       {/* Tamper Evident Safety Ring */}
       <path
-        d={`M${capX} ${capTop + 22.4} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
+        d={`M${capX} ${capTop + 19.4} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
         fill={`url(#${id}-yellow-cap)`}
       />
-      {/* Tamper Ring Highlight and Slits */}
-      <line x1={capX + 1} y1={capTop + 28} x2={capX + capW - 1} y2={capTop + 28} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.7" />
-      {[92, 97, 103, 108].map((sx) => (
-        <line key={sx} x1={sx} y1={capTop + 21} x2={sx} y2={capTop + 23.5} stroke="#6B3900" strokeWidth="0.8" strokeOpacity="0.75" />
+      {/* Tamper Ring Highlight and Breakout Slits */}
+      <line x1={capX + 1} y1={capTop + 25.5} x2={capX + capW - 1} y2={capTop + 25.5} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.75" />
+      {[90, 95, 100, 105, 110].map((sx) => (
+        <line key={sx} x1={sx} y1={capTop + 18.2} x2={sx} y2={capTop + 20.8} stroke="#542B00" strokeWidth="0.8" strokeOpacity="0.85" />
       ))}
     </g>
   );
@@ -694,7 +738,7 @@ const EXTENT: Record<Kind, { top: number; w: number }> = {
   lip: { top: 128, w: 34 }
 };
 
-const pageZoom = (k: Kind) => Math.min(2.2, 262 / (290 - EXTENT[k].top), 190 / EXTENT[k].w);
+const pageZoom = (k: Kind) => Math.min(1.45, 230 / (290 - EXTENT[k].top), 170 / EXTENT[k].w);
 
 // ---------- The Product Drawing with Cylinder Shading & Spinning Label ----------
 
@@ -724,71 +768,57 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
     if (isPet) {
       return (
         <g transform={`translate(${dx} 0)`}>
-          {/* Authentic RKW Front Label Sticker */}
+          {/* Subtle clear decal sheen & gold foil border (Zero opaque background!) */}
           <rect
-            x={P.x + 1}
+            x={P.x + 2}
             y={P.y + 4}
-            width={P.w - 2}
+            width={P.w - 4}
             height={P.h - 8}
-            rx={4}
-            fill={css(lab)}
-            stroke={p.ink}
-            strokeWidth={0.8}
-            strokeOpacity={0.25}
-          />
-          {/* Inner gold border */}
-          <rect
-            x={P.x + 3}
-            y={P.y + 6}
-            width={P.w - 6}
-            height={P.h - 12}
             rx={3}
-            fill="none"
-            stroke={p.ink}
+            fill="rgba(255,255,255,0.06)"
+            stroke="rgba(212,175,55,0.45)"
             strokeWidth={0.6}
-            strokeOpacity={0.35}
           />
 
           {/* Brand Header: Authentic RKW Logo & Typography */}
           <g transform={`translate(${centerX} ${P.y + P.h * 0.14})`}>
-            <circle cx="-13" cy="-1.5" r="3.6" fill={p.ink} />
-            <circle cx="-13" cy="-1.5" r="2.6" fill={css(lab)} />
-            <path d="M-14.2 -1.5 H-11.8 M-13 -2.7 V-0.3" stroke={p.ink} strokeWidth="0.6" />
+            <circle cx="-13" cy="-1.5" r="3.6" fill="#0E2A47" />
+            <circle cx="-13" cy="-1.5" r="2.6" fill="#D4AF37" />
+            <path d="M-14.2 -1.5 H-11.8 M-13 -2.7 V-0.3" stroke="#0E2A47" strokeWidth="0.6" />
             <text
               x="0"
               y="0.5"
-              fill={p.ink}
+              fill="#0E2A47"
               fontSize={Math.min(6.8, P.w * 0.12)}
-              fontWeight="800"
+              fontWeight="900"
               letterSpacing="0.08em"
               textAnchor="middle"
             >
               RKW
             </text>
-            <text x="9.5" y="-1.5" fill={p.ink} fontSize="3" fontWeight="bold">®</text>
+            <text x="9.5" y="-1.5" fill="#0E2A47" fontSize="3" fontWeight="bold">®</text>
           </g>
 
           {/* Hindi Brand Name */}
           <text
             x={centerX}
             y={P.y + P.h * 0.25}
-            fill={p.ink}
-            fontSize={Math.min(4.2, P.w * 0.075)}
-            fontWeight="600"
-            opacity="0.9"
+            fill="#1C1A16"
+            fontSize={Math.min(4.4, P.w * 0.08)}
+            fontWeight="700"
             textAnchor="middle"
           >
             रमेश कोल्हू वाले
           </text>
 
-          {/* Product Title (e.g. BLACK MUSTARD OIL) */}
+          {/* Product Title (e.g. YELLOW MUSTARD OIL) */}
           <text
             x={centerX}
             y={P.y + P.h * 0.44}
-            fill={p.ink}
-            fontSize={Math.min(7.8, (P.w * 0.95) / p.short.length)}
-            fontWeight="700"
-            letterSpacing="-0.1"
+            fill="#0E2A47"
+            fontSize={Math.min(7.5, (P.w * 0.95) / p.short.length)}
+            fontWeight="800"
+            letterSpacing="-0.05"
             textAnchor="middle"
           >
             {p.short}
@@ -799,10 +829,9 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
             <text
               x={centerX}
               y={P.y + P.h * 0.58}
-              fill={p.ink}
+              fill="#4A3B2C"
               fontSize={Math.min(4.5, (P.w * 0.9) / (p.sub ?? "").length)}
-              fontWeight="500"
-              opacity="0.85"
+              fontWeight="600"
               textAnchor="middle"
             >
               {p.sub}
@@ -811,8 +840,8 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
 
           {/* Trust badge stamp */}
           <g transform={`translate(${centerX} ${P.y + P.h * 0.72})`}>
-            <rect x="-18" y="-3.5" width="36" height="7" rx="1.5" fill={p.ink} fillOpacity="0.1" />
-            <text x="0" y="1.5" fill={p.ink} fontSize="3.2" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
+            <rect x="-18" y="-3.5" width="36" height="7" rx="1.5" fill="rgba(255,255,255,0.4)" stroke="#0E2A47" strokeWidth="0.5" strokeOpacity="0.4" />
+            <text x="0" y="1.5" fill="#0E2A47" fontSize="3.2" fontWeight="800" letterSpacing="0.04em" textAnchor="middle">
               COLD-PRESSED • &lt;38°C
             </text>
           </g>
@@ -821,7 +850,7 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
           <g transform={`translate(${centerX} ${P.y + P.h * 0.88})`}>
             <rect x={-P.w * 0.36} y="-3" width="5.5" height="5.5" fill="#fff" stroke="#138808" strokeWidth="0.5" rx="0.5" />
             <circle cx={-P.w * 0.36 + 2.75} cy="-0.25" r="1.5" fill="#138808" />
-            <text x="1" y="0.8" fill={p.ink} opacity="0.95" fontSize={Math.min(5, P.w * 0.09)} fontWeight="600" textAnchor="middle">
+            <text x="1" y="0.8" fill="#1C1A16" fontSize={Math.min(5, P.w * 0.09)} fontWeight="700" textAnchor="middle">
               {p.sizes[0]}
             </text>
           </g>
@@ -1011,16 +1040,16 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
           <stop offset="1" stopColor="rgba(255,255,255,0.3)" />
         </linearGradient>
 
-        {/* PET Golden Oil Liquid Gradient */}
+        {/* PET Golden Oil Liquid Gradient matching reference photo */}
         <linearGradient id={`${id}-pet-oil-grad`} x1="0" x2="1">
-          <stop offset="0" stopColor={css(mixRgb(liq, BLACK, 0.28))} />
-          <stop offset="0.08" stopColor={css(mixRgb(liq, BLACK, 0.1))} />
-          <stop offset="0.18" stopColor={css(mixRgb(liq, WHITE, 0.25))} />
-          <stop offset="0.35" stopColor={css(mixRgb(liq, WHITE, 0.5))} />
-          <stop offset="0.55" stopColor={css(mixRgb(liq, WHITE, 0.35))} />
-          <stop offset="0.82" stopColor={css(mixRgb(liq, BLACK, 0.05))} />
-          <stop offset="0.94" stopColor={css(mixRgb(liq, BLACK, 0.2))} />
-          <stop offset="1" stopColor={css(mixRgb(liq, BLACK, 0.35))} />
+          <stop offset="0" stopColor={css(mixRgb(liq, BLACK, 0.45))} />
+          <stop offset="0.06" stopColor={css(mixRgb(liq, BLACK, 0.15))} />
+          <stop offset="0.16" stopColor={css(mixRgb(liq, WHITE, 0.35))} />
+          <stop offset="0.34" stopColor={css(mixRgb(liq, WHITE, 0.65))} />
+          <stop offset="0.52" stopColor={css(mixRgb(liq, WHITE, 0.45))} />
+          <stop offset="0.78" stopColor={css(mixRgb(liq, BLACK, 0.05))} />
+          <stop offset="0.92" stopColor={css(mixRgb(liq, BLACK, 0.22))} />
+          <stop offset="1" stopColor={css(mixRgb(liq, BLACK, 0.45))} />
         </linearGradient>
 
         <filter id={`${id}-soft`} x="-50%" y="-10%" width="200%" height="120%">
@@ -1060,22 +1089,21 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
       <g clipPath={`url(#${id}-clip)`}>
         {isPet ? (
           <>
-            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=62 */}
-            <rect x="60" y="62" width="80" height="225" fill={`url(#${id}-pet-oil-grad)`} opacity="0.95" />
+            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=58 */}
+            <rect x="60" y="58" width="80" height="230" fill={`url(#${id}-pet-oil-grad)`} opacity="0.96" />
 
-            {/* 2. Clear PET Neck Headspace above oil (y=38 to 62) */}
-            <rect x="91" y="38" width="18" height="24" fill="rgba(255,255,255,0.08)" />
-            <line x1="93" y1="44" x2="93" y2="62" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.6" />
-            <line x1="107" y1="44" x2="107" y2="62" stroke="#fff" strokeWidth="0.5" strokeOpacity="0.3" />
+            {/* 2. Clear PET Neck Headspace above oil (y=38 to 58) */}
+            <rect x="91" y="38" width="18" height="20" fill="rgba(255,255,255,0.06)" />
+            <line x1="93" y1="41" x2="93" y2="58" stroke="#fff" strokeWidth="0.9" strokeOpacity="0.7" />
+            <line x1="107" y1="41" x2="107" y2="58" stroke="#fff" strokeWidth="0.6" strokeOpacity="0.35" />
 
-            {/* 2b. Protruding Neck Collar / Transfer Ring (y=42 to 46) */}
-            <path d="M 86 42 H 114 Q 115 44 114 46 H 86 Q 85 44 86 42 Z" fill="rgba(255,255,255,0.18)" />
-            <line x1="86" y1="42.5" x2="114" y2="42.5" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.8" />
-            <line x1="86" y1="45.5" x2="114" y2="45.5" stroke="rgba(0,0,0,0.25)" strokeWidth="0.8" />
+            {/* 2b. Protruding Neck Collar / Transfer Ring (y=41 to 45) */}
+            <ellipse cx="100" cy="43" rx="13.5" ry="2" fill="none" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.85" />
+            <ellipse cx="100" cy="43.5" rx="13" ry="1.6" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
 
-            {/* 3. Liquid Meniscus at y=62 with specular glint */}
-            <ellipse cx="100" cy="62" rx="8.5" ry="2.2" fill={css(mixRgb(liq, BLACK, 0.1))} />
-            <path d="M 92 62 Q 100 63.8 108 62" stroke="#FFF7D0" strokeWidth="1.2" strokeOpacity="0.85" fill="none" />
+            {/* 3. Liquid Meniscus at y=58 with specular glint */}
+            <path d="M 91 58 Q 100 60.5 109 58" stroke="#FFF9D2" strokeWidth="1.4" strokeOpacity="0.95" fill="none" />
+            <path d="M 91 58.8 Q 100 61.2 109 58.8" stroke="rgba(100,50,0,0.5)" strokeWidth="0.8" fill="none" />
 
             {/* 4. The 9 Side Grip Ribs (Notches on Left & Right) */}
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
@@ -1083,41 +1111,45 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
               return (
                 <g key={i}>
                   {/* Left Notch */}
-                  <rect x="67" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.28)" />
-                  <rect x="67.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,215,80,0.22)" />
-                  <line x1="67" y1={ny} x2="74" y2={ny} stroke="rgba(255,255,255,0.75)" strokeWidth="0.8" />
-                  <line x1="67" y1={ny + 8.5} x2="74" y2={ny + 8.5} stroke="rgba(90,40,0,0.45)" strokeWidth="0.8" />
-                  <ellipse cx="70.5" cy={ny + 4.25} rx="1.5" ry="1.8" fill="#FFEAA7" opacity="0.55" />
+                  <rect x="67" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
+                  <rect x="67.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
+                  <line x1="67" y1={ny} x2="74" y2={ny} stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
+                  <line x1="67" y1={ny + 8.5} x2="74" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
+                  <ellipse cx="70.5" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.65" />
 
                   {/* Right Notch */}
-                  <rect x="126" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.28)" />
-                  <rect x="126.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,215,80,0.22)" />
-                  <line x1="126" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-                  <line x1="126" y1={ny + 8.5} x2="133" y2={ny + 8.5} stroke="rgba(90,40,0,0.45)" strokeWidth="0.8" />
-                  <ellipse cx="129.5" cy={ny + 4.25} rx="1.5" ry="1.8" fill="#FFEAA7" opacity="0.45" />
+                  <rect x="126" y={ny} width="7" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
+                  <rect x="126.5" y={ny + 0.5} width="6" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
+                  <line x1="126" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.7)" strokeWidth="0.8" />
+                  <line x1="126" y1={ny + 8.5} x2="133" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
+                  <ellipse cx="129.5" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.55" />
                 </g>
               );
             })}
 
+            {/* Vertical Inner Divider Lines between ribs and center window */}
+            <line x1="74.5" y1="108" x2="74.5" y2="256" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
+            <line x1="125.5" y1="108" x2="125.5" y2="256" stroke="rgba(0,0,0,0.2)" strokeWidth="0.8" />
+
             {/* 5. Shoulder Chamfer Facets */}
-            <line x1="91" y1="76" x2="66" y2="104" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.55" />
-            <line x1="109" y1="76" x2="134" y2="104" stroke="rgba(0,0,0,0.22)" strokeWidth="1" />
-            <path d="M 76 96 H 124" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.35" />
+            <line x1="91" y1="74" x2="66" y2="108" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.75" strokeLinecap="round" />
+            <line x1="109" y1="74" x2="134" y2="108" stroke="rgba(0,0,0,0.25)" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 74 98 Q 100 96 126 98" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
 
             {/* 6. Front Recessed Panel Bevel Frame */}
             <g>
-              <polygon points="73,106 75,108 75,254 73,256" fill="rgba(255,255,255,0.38)" />
-              <polygon points="73,106 127,106 125,108 75,108" fill="rgba(255,255,255,0.45)" />
-              <polygon points="127,106 127,256 125,254 125,108" fill="rgba(0,0,0,0.22)" />
-              <polygon points="73,256 75,254 125,254 127,256" fill="rgba(0,0,0,0.16)" />
-              <line x1="73" y1="106" x2="75" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
-              <line x1="127" y1="106" x2="125" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="73" y1="256" x2="75" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="127" y1="256" x2="125" y2="254" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
-              <rect x="75" y="108" width="50" height="146" rx="2" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.8" />
+              <polygon points="74.5,106 76.5,108 76.5,254 74.5,256" fill="rgba(255,255,255,0.45)" />
+              <polygon points="74.5,106 125.5,106 123.5,108 76.5,108" fill="rgba(255,255,255,0.55)" />
+              <polygon points="125.5,106 125.5,256 123.5,254 123.5,108" fill="rgba(0,0,0,0.22)" />
+              <polygon points="74.5,256 76.5,254 123.5,254 125.5,256" fill="rgba(0,0,0,0.18)" />
+              <line x1="74.5" y1="106" x2="76.5" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
+              <line x1="125.5" y1="106" x2="123.5" y2="108" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="74.5" y1="256" x2="76.5" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
+              <line x1="125.5" y1="256" x2="123.5" y2="254" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
+              <rect x="76.5" y="108" width="47" height="146" rx="2" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.7" />
             </g>
 
-            {/* 7. Rotating Sticker Art */}
+            {/* 7. Rotating Transparent Silkscreen Art */}
             <motion.g style={{ x }}>
               {printArt(0)}
               {printArt(period)}
@@ -1125,17 +1157,20 @@ function ProductArt({ p, spin, className }: { p: Product; spin?: MotionValue<num
 
             {/* 8. Studio Lighting Reflections matching the photo */}
             {/* Left softbox diffuse highlight */}
-            <rect x="69" y="106" width="6" height="152" rx="3" fill="#fff" opacity="0.36" filter={`url(#${id}-soft)`} />
+            <rect x="76" y="108" width="8" height="146" rx="4" fill="#fff" opacity="0.4" filter={`url(#${id}-soft)`} />
             {/* Sharp specular pinstripe */}
-            <line x1="72" y1="106" x2="72" y2="256" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.9" />
+            <line x1="78" y1="108" x2="78" y2="254" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.92" />
             {/* Shoulder specular */}
             <path d="M 75 97 L 88 84" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.65" strokeLinecap="round" />
             {/* Right fill light */}
-            <line x1="129" y1="108" x2="129" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.25" />
+            <line x1="123" y1="108" x2="123" y2="254" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.3" />
+
             {/* Base pedestal kick-up arch and thick plastic reflections */}
-            <path d="M 72 286 Q 100 278 128 286" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.75" fill="none" />
-            <path d="M 74 286 Q 100 279.5 126 286" stroke="rgba(120,60,0,0.4)" strokeWidth="1" fill="none" />
-            <rect x="67" y="275" width="66" height="3" rx="1.5" fill="rgba(255,255,255,0.35)" />
+            <path d="M 66 264 H 134" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
+            <path d="M 64 274 H 136" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2" />
+            <path d="M 64 280 H 136" stroke="rgba(120,60,0,0.35)" strokeWidth="1" />
+            <path d="M 70 286 Q 100 276 130 286" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.85" fill="none" />
+            <path d="M 72 286 Q 100 278 128 286" stroke="rgba(120,60,0,0.45)" strokeWidth="1" fill="none" />
           </>
         ) : (
           <>
@@ -1271,12 +1306,14 @@ export function ProductShelf({
     if (onAddToCart) {
       onAddToCart(product, size, qty);
     } else if (cartContext) {
-      // Connect to existing RKW CartContext
+      // Connect to existing RKW CartContext with exact volume price
+      const volPrice = getProductVolumePrice(product.id, size, product.price);
+      const volCompareAt = getProductVolumeCompareAt(product.id, size, product.compareAt) || Math.round(volPrice * 1.25);
       const vol = {
         size,
-        price: product.price,
-        originalPrice: product.compareAt || Math.round(product.price * 1.25),
-        packaging: product.kind === "jar" ? "Glass Jar" : product.kind === "tin" ? "Eco Tin" : "Glass Bottle"
+        price: volPrice,
+        originalPrice: volCompareAt,
+        packaging: size.includes("Tin") ? "Tin" : product.kind === "jar" ? "Glass Jar" : "PET bottle"
       };
       const cartProduct = {
         id: product.id,
@@ -1286,8 +1323,8 @@ export function ProductShelf({
         category: product.category,
         shortDesc: product.tagline,
         description: product.description,
-        price: product.price,
-        originalPrice: product.compareAt || Math.round(product.price * 1.25),
+        price: volPrice,
+        originalPrice: volCompareAt,
         rating: product.rating,
         reviewsCount: product.reviews,
         inStock: true,
@@ -1320,16 +1357,16 @@ export function ProductShelf({
       )}
     >
       <LayoutGroup>
-        <main className="mx-auto w-full max-w-[1140px] px-4 pt-12 pb-16 sm:px-6">
+        <main className="mx-auto w-full max-w-[1140px] px-3 pt-8 pb-16 sm:px-6 sm:pt-12">
           {/* Section Header */}
-          <div className="mb-14 text-center max-w-2xl mx-auto space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#B8860B]">
+          <div className="mb-8 sm:mb-14 text-center max-w-2xl mx-auto space-y-2 sm:space-y-3 px-2">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#B8860B]">
               Interactive Showcase
             </p>
-            <h1 className="text-3xl sm:text-4xl font-serif text-[#1C1A16] font-normal tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-serif text-[#1C1A16] font-normal tracking-tight">
               {title}
             </h1>
-            <p className="text-sm text-[#8A7E6E] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#8A7E6E] leading-relaxed">
               {subtitle}
             </p>
           </div>
@@ -1339,38 +1376,59 @@ export function ProductShelf({
             <section
               key={r}
               aria-label={["Signature Mustard Oils & Ghee", "Pure Nut & Seed Oils", "Wellness Rogan & Elixirs"][r]}
-              className="relative mb-16"
+              className="relative mb-12 sm:mb-16"
             >
               {/* Shelf Category Header */}
-              <div className="mb-3 px-3 sm:px-8 flex items-center justify-between text-xs font-bold text-stone-500 uppercase tracking-widest">
-                <span>
+              <div className="mb-3 px-2 sm:px-8 flex items-center justify-between text-xs font-bold text-stone-500 uppercase tracking-widest">
+                <span className="text-[11px] sm:text-xs truncate">
                   {[
                     "01. Pure Mustard Oils & Bilona Ghee",
                     "02. Pure Cold-Pressed Nut & Seed Oils",
                     "03. Wellness Rogan, Walnut & Artisanal Oils"
                   ][r]}
                 </span>
-                <span className="text-[11px] font-medium text-sky-800 lowercase">click bottle to rotate 360°</span>
+                <span className="text-[11px] font-medium text-sky-800 lowercase hidden sm:inline">click bottle to rotate 360°</span>
+                <span className="text-[11px] font-medium text-amber-700 lowercase sm:hidden flex-shrink-0">swipe shelf ⇄</span>
               </div>
 
-              {/* Products Row Standing on Shelf */}
-              <div className="relative z-10 grid grid-cols-4 items-end gap-3 px-3 sm:gap-8 sm:px-8">
+              {/* Products Row Standing on Shelf - Mobile Touch Carousel / Desktop 4-Col Grid */}
+              <div className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory px-3 pb-3 no-scrollbar sm:grid sm:grid-cols-4 sm:gap-8 sm:px-8 sm:overflow-visible sm:pb-0 sm:items-end">
                 {row.map((p) => (
-                  <div key={p.id} className="flex flex-col items-center">
+                  <div key={p.id} className="w-[155px] sm:w-auto flex-shrink-0 snap-start flex flex-col items-center">
                     {openId === p.id ? (
-                      <div className="aspect-[2/3] w-full max-w-[160px]" />
+                      <div className="aspect-[2/3] w-full max-w-[155px] sm:max-w-[160px]" />
                     ) : (
                       <motion.button
                         layoutId={`product-${p.id}`}
                         type="button"
                         onClick={() => setOpenId(p.id)}
-                        aria-label={`${p.name}, ${currency}${p.price}`}
+                        aria-label={`${p.name}, From ${currency}${p.price}`}
                         transition={SPRING}
-                        className="group relative aspect-[2/3] w-full max-w-[160px] cursor-pointer rounded-2xl outline-none transition-transform duration-200 hover:-translate-y-2 focus-visible:ring-2 focus-visible:ring-[#0E2A47]"
+                        className="group relative aspect-[2/3] w-full max-w-[155px] sm:max-w-[160px] cursor-pointer rounded-2xl outline-none transition-transform duration-200 hover:-translate-y-2 focus-visible:ring-2 focus-visible:ring-[#0E2A47]"
                       >
                         <ProductArt p={p} className="size-full drop-shadow-sm group-hover:drop-shadow-md transition-all" />
                       </motion.button>
                     )}
+
+                    {/* On mobile: title, Hindi sub & price inline under each bottle */}
+                    <div className="mt-2 w-full text-center sm:hidden cursor-pointer" onClick={() => setOpenId(p.id)}>
+                      <div className="text-[13px] leading-tight font-bold text-stone-900 line-clamp-1">
+                        {p.short}
+                      </div>
+                      {p.sub && (
+                        <div className="text-[10px] text-stone-500 font-sans line-clamp-1">
+                          {p.sub}
+                        </div>
+                      )}
+                      <div className="mt-0.5 text-[12px] font-extrabold text-[#0E2A47]">
+                        From {currency}{p.price}
+                        {p.compareAt && (
+                          <span className="ml-1 text-[10px] font-normal text-stone-400 line-through">
+                            {currency}{p.compareAt}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1382,8 +1440,8 @@ export function ProductShelf({
                 <div className="absolute inset-x-[2%] top-[18px] h-[36px] bg-[radial-gradient(50%_100%_at_50%_0%,rgba(0,0,0,0.14),transparent)]" />
               </div>
 
-              {/* Product Titles & Prices under shelf */}
-              <div className="mt-5 grid grid-cols-4 gap-3 px-3 sm:gap-8 sm:px-8">
+              {/* Product Titles & Prices under shelf on desktop */}
+              <div className="mt-5 hidden sm:grid sm:grid-cols-4 gap-8 px-8">
                 {row.map((p) => (
                   <div key={p.id} className="text-center group cursor-pointer" onClick={() => setOpenId(p.id)}>
                     <div className="text-[13px] leading-snug font-bold text-stone-900 sm:text-[14px] line-clamp-1 group-hover:text-[#0E2A47] transition-colors">
@@ -1395,7 +1453,7 @@ export function ProductShelf({
                       </div>
                     )}
                     <div className="mt-1 text-[13px] font-extrabold text-[#0E2A47] tabular-nums sm:text-[14px]">
-                      {currency}{p.price}
+                      From {currency}{p.price}
                       {p.compareAt && (
                         <span className="ml-1 text-[11px] font-normal text-stone-400 line-through">
                           {currency}{p.compareAt}
@@ -1460,12 +1518,9 @@ function ProductPage({
     return () => c.stop();
   }, [spin, reduce]);
 
-  // Size price multiplier
-  const sizeIdx = p.sizes.indexOf(size);
-  const sizeMultipliers = [1, 1.85, 3.4, 6.2, 14.5];
-  const mult = sizeIdx >= 0 && sizeIdx < sizeMultipliers.length ? sizeMultipliers[sizeIdx] : 1;
-  const computedPrice = Math.round(p.price * mult);
-  const computedCompareAt = p.compareAt ? Math.round(p.compareAt * mult) : undefined;
+  // Exact volume pricing lookup
+  const computedPrice = getProductVolumePrice(p.id, size, p.price);
+  const computedCompareAt = getProductVolumeCompareAt(p.id, size, p.compareAt);
 
   const handleAdd = () => {
     onAdd(p, size, qty);
@@ -1534,9 +1589,9 @@ function ProductPage({
   ];
 
   return (
-    <motion.div role="dialog" aria-modal="true" aria-label={p.name} className="fixed inset-0 z-40 overflow-y-auto">
+    <motion.div role="dialog" aria-modal="true" aria-label={p.name} className="fixed inset-0 z-50 overflow-y-auto">
       <motion.div
-        className="fixed inset-0 bg-stone-950/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-stone-950/75 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -1544,13 +1599,35 @@ function ProductPage({
         onClick={onClose}
       />
 
-      <div className="relative mx-auto grid min-h-full max-w-[1100px] grid-cols-1 items-center gap-8 px-4 pt-16 pb-12 md:grid-cols-[1.05fr_1fr] md:gap-14 sm:px-8">
+      {/* Mobile Sticky Top Header */}
+      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-stone-950/85 px-4 py-2.5 backdrop-blur-md md:hidden">
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white bg-white/15 hover:bg-white/25 active:scale-95 transition-all cursor-pointer"
+        >
+          <ChevronLeft className="size-4" strokeWidth={2.4} /> Back
+        </button>
+        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300 bg-amber-950/70 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+          {p.category}
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close dialog"
+          className="grid size-8 place-items-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+
+      <div className="relative mx-auto flex min-h-full max-w-[1140px] flex-col justify-center px-3 pt-4 pb-12 sm:px-6 md:grid md:grid-cols-[1fr_1.1fr] md:items-center md:gap-10 md:pt-10">
         {/* Left Column: 3D interactive bottle display */}
-        <div className="relative flex flex-col items-center justify-center md:h-[calc(100dvh-6rem)]">
+        <div className="relative flex flex-col items-center justify-center pt-2 pb-6 md:py-0 md:h-[calc(100dvh-5rem)]">
           <motion.div
             layoutId={`product-${p.id}`}
             transition={SPRING}
-            className="relative z-10 aspect-[2/3] h-[46vh] cursor-grab touch-none select-none active:cursor-grabbing md:h-[64vh]"
+            className="relative z-10 aspect-[2/3] h-[34vh] sm:h-[40vh] md:h-[60vh] cursor-grab touch-none select-none active:cursor-grabbing"
             onPointerDown={onDown}
             onPointerMove={onMove}
             onPointerUp={onUp}
@@ -1571,26 +1648,27 @@ function ProductPage({
           {/* Pedestal surface & reflection shadow */}
           <motion.div
             aria-hidden
-            className="relative -mt-[1.5%] h-[18px] w-[86%] rounded-[4px] bg-gradient-to-b from-white to-[#e5e0d4] shadow-[0_20px_45px_-10px_rgba(0,0,0,0.3)]"
+            className="relative -mt-[1.5%] h-[14px] sm:h-[18px] w-[75%] sm:w-[86%] rounded-[4px] bg-gradient-to-b from-white to-[#e5e0d4] shadow-[0_20px_45px_-10px_rgba(0,0,0,0.3)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           />
-          <p className="mt-5 text-xs font-semibold text-stone-500 uppercase tracking-widest">
-            ⇄ Drag horizontally to spin 360°
+          <p className="mt-3 text-[11px] sm:text-xs font-semibold text-stone-300 sm:text-stone-400 uppercase tracking-widest flex items-center gap-1.5">
+            <span>⇄</span> Swipe bottle to rotate 360°
           </p>
         </div>
 
         {/* Right Column: Product Details, Sizes & Add to Bag */}
         <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 24 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 24 }}
           transition={{ ...SPRING, delay: 0.05 }}
-          className="relative z-20 rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-stone-200/90 text-stone-900"
+          className="relative z-20 rounded-3xl bg-white p-5 sm:p-8 shadow-2xl border border-stone-200/90 text-stone-900 md:max-h-[calc(100dvh-5rem)] md:overflow-y-auto"
         >
-          <div className="flex items-center justify-between mb-4">
+          {/* Desktop header with Back to Shelves & Category */}
+          <div className="hidden md:flex items-center justify-between mb-4">
             <button
               ref={closeRef}
               type="button"
@@ -1604,15 +1682,15 @@ function ProductPage({
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 font-serif leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-stone-900 font-serif leading-tight">
             {p.name}
           </h2>
           {p.sub && (
-            <p className="mt-1 text-sm font-bold text-[#0E2A47]">
+            <p className="mt-1 text-xs sm:text-sm font-bold text-[#0E2A47]">
               {p.sub}
             </p>
           )}
-          <p className="mt-2 text-sm leading-relaxed text-stone-600">
+          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-stone-600">
             {p.tagline}
           </p>
 
@@ -1626,42 +1704,41 @@ function ProductPage({
             <span>({p.reviews.toLocaleString()} verified buyers)</span>
           </div>
 
-          {/* Price display */}
-          <div className="mt-5 flex items-baseline gap-3 tabular-nums">
+          {/* Price display with exact volume price */}
+          <div className="mt-4 sm:mt-5 flex items-baseline gap-2.5 sm:gap-3 tabular-nums">
             <span className="text-2xl sm:text-3xl font-black text-[#0E2A47]">
               {currency}{computedPrice}
             </span>
             {computedCompareAt && (
-              <span className="text-base text-stone-400 line-through">
+              <span className="text-sm sm:text-base text-stone-400 line-through">
                 {currency}{computedCompareAt}
               </span>
             )}
-            <span className="text-xs font-bold text-[#0E2A47] bg-[#EBF2F8] px-2 py-0.5 rounded-md border border-[#163A60]/20">
+            <span className="text-[11px] sm:text-xs font-bold text-[#0E2A47] bg-[#EBF2F8] px-2 py-0.5 rounded-md border border-[#163A60]/20">
               100% Tax Included
             </span>
           </div>
 
-          <p className="mt-3 text-xs sm:text-sm leading-relaxed text-stone-700">
+          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm leading-relaxed text-stone-700">
             {p.description}
           </p>
 
-          {/* Size Selector */}
-          <fieldset className="mt-6">
+          {/* Size Selector with exact prices for every volume */}
+          <fieldset className="mt-5 sm:mt-6">
             <legend className="mb-2 text-xs font-black uppercase tracking-wider text-stone-800">
               Select Volume / Packaging Size:
             </legend>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {p.sizes.map((sz, i) => {
+              {p.sizes.map((sz) => {
                 const on = size === sz;
-                const optMult = i < sizeMultipliers.length ? sizeMultipliers[i] : 1;
-                const optPrice = Math.round(p.price * optMult);
+                const optPrice = getProductVolumePrice(p.id, sz, p.price);
                 return (
                   <label
                     key={sz}
                     className={cn(
                       "flex cursor-pointer flex-col justify-between rounded-xl border p-2.5 transition-all",
                       on
-                        ? "border-[#0E2A47] bg-[#EBF2F8] shadow-xs ring-1 ring-[#0E2A47]"
+                        ? "border-[#0E2A47] bg-[#EBF2F8] shadow-xs ring-2 ring-[#0E2A47]"
                         : "border-stone-200 hover:border-stone-400 bg-white"
                     )}
                   >
@@ -1673,8 +1750,8 @@ function ProductPage({
                       onChange={() => setSize(sz)}
                       className="sr-only"
                     />
-                    <span className="font-bold text-xs text-stone-900">{sz}</span>
-                    <span className="text-xs font-extrabold text-[#0E2A47] tabular-nums">
+                    <span className="font-bold text-[11px] sm:text-xs text-stone-900 leading-tight">{sz}</span>
+                    <span className="mt-1 text-xs font-black text-[#0E2A47] tabular-nums">
                       {currency}{optPrice}
                     </span>
                   </label>
@@ -1684,23 +1761,23 @@ function ProductPage({
           </fieldset>
 
           {/* Quantity & Add to Cart button */}
-          <div className="mt-6 flex items-stretch gap-3">
+          <div className="mt-5 sm:mt-6 flex items-stretch gap-2 sm:gap-3">
             <div className="flex items-center rounded-xl border border-stone-200 bg-stone-50">
               <button
                 type="button"
                 aria-label="Decrease quantity"
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="grid h-full w-10 place-items-center rounded-l-xl text-stone-700 transition-colors hover:bg-stone-200 disabled:opacity-40 cursor-pointer"
+                className="grid h-full w-9 sm:w-10 place-items-center rounded-l-xl text-stone-700 transition-colors hover:bg-stone-200 disabled:opacity-40 cursor-pointer"
                 disabled={qty === 1}
               >
                 <Minus className="size-3.5" />
               </button>
-              <span className="w-8 text-center text-sm font-black tabular-nums">{qty}</span>
+              <span className="w-7 sm:w-8 text-center text-sm font-black tabular-nums">{qty}</span>
               <button
                 type="button"
                 aria-label="Increase quantity"
                 onClick={() => setQty((q) => Math.min(10, q + 1))}
-                className="grid h-full w-10 place-items-center rounded-r-xl text-stone-700 transition-colors hover:bg-stone-200 cursor-pointer"
+                className="grid h-full w-9 sm:w-10 place-items-center rounded-r-xl text-stone-700 transition-colors hover:bg-stone-200 cursor-pointer"
               >
                 <Plus className="size-3.5" />
               </button>
@@ -1709,10 +1786,10 @@ function ProductPage({
               type="button"
               onClick={handleAdd}
               className={cn(
-                "h-12 flex-1 rounded-xl text-sm font-extrabold tracking-wide uppercase shadow-md transition-all cursor-pointer flex items-center justify-center gap-2",
+                "h-12 flex-1 rounded-xl text-xs sm:text-sm font-extrabold tracking-wide uppercase shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98",
                 added
-                  ? "bg-[#0E2A47] text-white"
-                  : "bg-[#0E2A47] hover:bg-[#163A60] text-amber-200 hover:text-white"
+                  ? "bg-emerald-700 text-white"
+                  : "bg-[#0E2A47] hover:bg-[#163A60] text-amber-300 hover:text-white"
               )}
             >
               {added ? (
@@ -1730,7 +1807,7 @@ function ProductPage({
           </div>
 
           {/* Delivery & Live Extraction Highlights */}
-          <dl className="mt-5 grid grid-cols-2 gap-2 text-xs bg-stone-50 p-3 rounded-xl border border-stone-200/80">
+          <dl className="mt-4 sm:mt-5 grid grid-cols-2 gap-2 text-xs bg-stone-50 p-2.5 sm:p-3 rounded-xl border border-stone-200/80">
             <div>
               <dt className="font-bold text-stone-900">Delhi NCR Dispatch:</dt>
               <dd className="text-stone-500">Same / Next Day Fresh Extraction</dd>
@@ -1742,7 +1819,7 @@ function ProductPage({
           </dl>
 
           {/* Accordion Details */}
-          <div className="mt-6 border-t border-stone-200">
+          <div className="mt-5 sm:mt-6 border-t border-stone-200">
             {sections.map(([stitle, sbody]) => {
               const isOpen = section === stitle;
               return (
@@ -1751,7 +1828,7 @@ function ProductPage({
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => setSection(isOpen ? null : stitle)}
-                    className="flex w-full items-center justify-between py-3.5 text-left text-xs font-bold uppercase tracking-wider text-stone-900 cursor-pointer"
+                    className="flex w-full items-center justify-between py-3 sm:py-3.5 text-left text-xs font-bold uppercase tracking-wider text-stone-900 cursor-pointer"
                   >
                     <span>{stitle}</span>
                     <ChevronDown
