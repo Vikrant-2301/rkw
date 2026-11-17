@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/yellow-mustard/showcase.png',
     bottleImage: '/mockups/yellow-mustard/bottle.png',
     showcaseImage: '/mockups/yellow-mustard/showcase.png',
-    additionalImages: ['/mockups/yellow-mustard/bottle.png', '/images/yellow_mustard.jpg'],
+    additionalImages: ['/mockups/yellow-mustard/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 75, originalPrice: 95, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 180, originalPrice: 220, packaging: 'PET bottle' },
@@ -78,7 +78,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/black-mustard/showcase.png',
     bottleImage: '/mockups/black-mustard/bottle.png',
     showcaseImage: '/mockups/black-mustard/showcase.png',
-    additionalImages: ['/mockups/black-mustard/bottle.png', '/images/black_mustard.jpg'],
+    additionalImages: ['/mockups/black-mustard/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 70, originalPrice: 90, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 170, originalPrice: 210, packaging: 'PET bottle' },
@@ -348,7 +348,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/groundnut-oil/showcase.png',
     bottleImage: '/mockups/groundnut-oil/bottle.png',
     showcaseImage: '/mockups/groundnut-oil/showcase.png',
-    additionalImages: ['/mockups/groundnut-oil/bottle.png', '/images/groundnut_oil.jpg'],
+    additionalImages: ['/mockups/groundnut-oil/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 80, originalPrice: 105, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 190, originalPrice: 240, packaging: 'PET bottle' },
@@ -406,7 +406,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/coconut-oil/showcase.png',
     bottleImage: '/mockups/coconut-oil/bottle.png',
     showcaseImage: '/mockups/coconut-oil/showcase.png',
-    additionalImages: ['/mockups/coconut-oil/bottle.png', '/images/coconut_oil.jpg'],
+    additionalImages: ['/mockups/coconut-oil/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 110, originalPrice: 140, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 260, originalPrice: 320, packaging: 'PET bottle' },
@@ -522,7 +522,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/white-sesame-oil/showcase.png',
     bottleImage: '/mockups/white-sesame-oil/bottle.png',
     showcaseImage: '/mockups/white-sesame-oil/showcase.png',
-    additionalImages: ['/mockups/white-sesame-oil/bottle.png', '/images/sesame_oil.jpg'],
+    additionalImages: ['/mockups/white-sesame-oil/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 120, originalPrice: 150, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 275, originalPrice: 340, packaging: 'PET bottle' },
@@ -640,7 +640,7 @@ export const PRODUCTS: Product[] = [
     image: '/mockups/mamra-almond-oil/showcase.png',
     bottleImage: '/mockups/mamra-almond-oil/bottle.png',
     showcaseImage: '/mockups/mamra-almond-oil/showcase.png',
-    additionalImages: ['/mockups/mamra-almond-oil/bottle.png', '/images/badam_rogan.jpg'],
+    additionalImages: ['/mockups/mamra-almond-oil/bottle.png'],
     volumes: [
       { size: '200ml (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 1250, originalPrice: 1550, packaging: 'PET bottle' },

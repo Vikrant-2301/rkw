@@ -317,7 +317,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     id: "extra-virgin-coconut-oil",
     kind: "round-bottle",
     name: "Cold-Pressed Extra Virgin Coconut Oil",
-    short: "Extra Virgin Coconut",
+    short: "Extra Virgin Coconut Oil",
     sub: "गोले का तेल",
     category: "Nut & Seed Oils",
     color: "#eaf1fa",
@@ -960,6 +960,16 @@ const pageZoom = (k: Kind) => Math.min(1.45, 230 / (290 - EXTENT[k].top), 170 / 
 
 const getStickerTitle = (short: string) => {
   const clean = short.replace(/\s*\([^)]*\)/g, "").trim();
+  const upper = clean.toUpperCase();
+  if (upper.includes("EXTRA VIRGIN COCONUT")) {
+    return { line1: "EXTRA VIRGIN", line2: "COCONUT OIL" };
+  }
+  if (upper.includes("EXTRA VIRGIN OLIVE")) {
+    return { line1: "EXTRA VIRGIN", line2: "OLIVE OIL" };
+  }
+  if (upper.includes("MUSTARD 5L")) {
+    return { line1: "MUSTARD OIL", line2: "5L ECO CAN" };
+  }
   const words = clean.split(/\s+/);
   if (words.length <= 1) return { line1: words[0].toUpperCase(), line2: "" };
   if (words.length === 2) return { line1: words[0].toUpperCase(), line2: words[1].toUpperCase() };
@@ -968,10 +978,420 @@ const getStickerTitle = (short: string) => {
 };
 
 const getDisplayQty = (raw?: string) => {
-  if (!raw) return "500ml";
+  if (!raw) return "500 ml";
   const match = raw.match(/(\d+)\s*(ml|l|kg)/i);
-  if (match) return `${match[1]}${match[2].toLowerCase()}`;
+  if (match) {
+    const unit = match[2].toLowerCase() === "l" ? "L" : match[2].toLowerCase() === "kg" ? "kg" : "ml";
+    return `${match[1]} ${unit}`;
+  }
   return raw.split(" ")[0];
+};
+
+const getNutritionFacts = (p: Product) => {
+  const id = p.id.toLowerCase();
+  if (id.includes("coconut")) {
+    return [
+      ["ENERGY", "892 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "99.2 g"],
+      ["SATURATED FAT", "86 g"],
+      ["LAURIC ACID (MCT)", "50 g"],
+      ["MONO UNSATURATED", "6 g"],
+      ["POLY UNSATURATED", "2 g"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("almond") || id.includes("badam")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "9 g"],
+      ["MONO UNSATURATED", "70 g"],
+      ["POLY UNSATURATED", "21 g"],
+      ["VITAMIN E", "26 mg"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("walnut")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "9 g"],
+      ["MONO UNSATURATED", "16 g"],
+      ["POLY UNSATURATED", "63 g"],
+      ["OMEGA-3 (ALA)", "14 g"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("flax")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "9 g"],
+      ["MONO UNSATURATED", "18 g"],
+      ["POLY UNSATURATED", "70 g"],
+      ["OMEGA-3 (ALA)", "55 g"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("olive")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "14 g"],
+      ["MONO UNSATURATED", "73 g"],
+      ["POLY UNSATURATED", "11 g"],
+      ["POLYPHENOLS", "High"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("sunflower")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "10 g"],
+      ["MONO UNSATURATED", "23 g"],
+      ["POLY UNSATURATED", "65 g"],
+      ["VITAMIN E", "41 mg"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("sesame")) {
+    return [
+      ["ENERGY", "884 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "14 g"],
+      ["MONO UNSATURATED", "40 g"],
+      ["POLY UNSATURATED", "42 g"],
+      ["NATURAL SESAMIN", "Present"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("groundnut")) {
+    return [
+      ["ENERGY", "900 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["TOTAL FAT", "100 g"],
+      ["SATURATED FAT", "17 g"],
+      ["MONO UNSATURATED", "48 g"],
+      ["POLY UNSATURATED", "34 g"],
+      ["RESVERATROL", "Active"],
+      ["CHOLESTEROL", "0 g"]
+    ];
+  }
+  if (id.includes("ghee")) {
+    return [
+      ["ENERGY", "897 KCAL"],
+      ["PROTIEN", "0 g"],
+      ["CARBOHYDRATE", "0 g"],
+      ["MILK FAT", "99.7 g"],
+      ["SATURATED FAT", "65 g"],
+      ["MONO UNSATURATED", "28 g"],
+      ["POLY UNSATURATED", "4 g"],
+      ["BUTYRIC ACID", "3.5 g"],
+      ["CHOLESTEROL", "256 mg"]
+    ];
+  }
+  return [
+    ["ENERGY", "900 KCAL"],
+    ["PROTIEN", "0 g"],
+    ["CARBOHYDRATE", "0 g"],
+    ["TOTAL FAT", "100 g"],
+    ["SATURATED FAT", "12 g"],
+    ["TRANS FAT", "0 g"],
+    ["MONO UNSATURATED", "60 g"],
+    ["POLY UNSATURATED", "21 g"],
+    ["CHOLESTEROL", "0 g"]
+  ];
+};
+
+function renderBotanicalArt(p: Product) {
+  const id = p.id.toLowerCase();
+  const liquidColor = p.liquid || "#D97706";
+
+  if (id.includes("mustard")) {
+    const isBlack = id.includes("black");
+    const seedColor = isBlack ? "#1C1917" : "#EAB308";
+    const seedHighlight = isBlack ? "#44403C" : "#FDE047";
+    return (
+      <g>
+        <ellipse cx="-12" cy="30" rx="9" ry="6" fill="#15803D" opacity="0.8" />
+        <ellipse cx="-11" cy="27" rx="8" ry="5" fill="#EAB308" opacity="0.9" />
+        <circle cx="-15" cy="25" r="2.2" fill="#FACC15" />
+        <circle cx="-12" cy="23" r="2" fill="#FDE047" />
+        <circle cx="-8" cy="24" r="1.8" fill="#FACC15" />
+        <circle cx="-13" cy="28" r="2" fill="#EAB308" />
+
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <ellipse cx="0" cy="1" rx="7.5" ry="3" fill={seedColor} />
+          <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill={seedHighlight} />
+          <circle cx="-3" cy="0.5" r="0.6" fill={seedColor} />
+          <circle cx="0" cy="0" r="0.6" fill={seedHighlight} />
+          <circle cx="3" cy="0.8" r="0.6" fill={seedColor} />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("coconut")) {
+    return (
+      <g>
+        <path d="M -20 32 Q -12 20 -2 24 Q -10 28 -18 34 Z" fill="#15803D" opacity="0.85" />
+        <path d="M -18 26 Q -10 16 0 18 Q -8 24 -16 30 Z" fill="#166534" opacity="0.8" />
+
+        <g transform="translate(-11 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.8" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 21)">
+          <circle cx="-6" cy="1" r="5" fill="#582900" stroke="#381a00" strokeWidth="0.5" />
+          <circle cx="-7" cy="0" r="0.7" fill="#2d1400" />
+          <circle cx="-5" cy="0.5" r="0.7" fill="#2d1400" />
+          <ellipse cx="4" cy="2" rx="7" ry="5.5" fill="#582900" stroke="#381a00" strokeWidth="0.5" />
+          <ellipse cx="4" cy="1.5" rx="5.8" ry="4.2" fill="#FFFFFF" />
+          <ellipse cx="4" cy="2" rx="4" ry="2.8" fill="#E0F2FE" opacity="0.9" />
+          <path d="M 2 1.5 Q 4 1 6 1.8" stroke="#FFF" strokeWidth="0.6" strokeLinecap="round" fill="none" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("almond") || id.includes("badam")) {
+    return (
+      <g>
+        <path d="M -18 28 Q -12 20 -4 25 Q -10 28 -16 32 Z" fill="#15803D" opacity="0.8" />
+        <circle cx="-14" cy="24" r="2" fill="#FBCFE8" opacity="0.9" />
+        <circle cx="-14" cy="24" r="0.8" fill="#F43F5E" />
+
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <ellipse cx="-3" cy="0.5" rx="3.5" ry="1.8" fill="#B45309" transform="rotate(-15 -3 0.5)" />
+          <ellipse cx="2" cy="0" rx="3.8" ry="1.9" fill="#D97706" transform="rotate(20 2 0)" />
+          <ellipse cx="-0.5" cy="-1.5" rx="3.6" ry="1.8" fill="#92400E" transform="rotate(5 -0.5 -1.5)" />
+          <line x1="-5" y1="0.5" x2="-1" y2="0.5" stroke="#78350F" strokeWidth="0.4" />
+          <line x1="0" y1="0" x2="4" y2="0" stroke="#78350F" strokeWidth="0.4" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("walnut")) {
+    return (
+      <g>
+        <path d="M -18 30 Q -10 22 -3 26 Q -10 30 -16 34 Z" fill="#15803D" opacity="0.85" />
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#5A3A1A" stroke="#3A220F" strokeWidth="0.5" />
+          <path d="M -4 1 C -5 -1 -3 -3 -1 -2 C 0 -3 2 -3 3 -1 C 4 1 2 2 0 1 C -2 2 -3 2 -4 1 Z" fill="#D97706" stroke="#92400E" strokeWidth="0.4" />
+          <circle cx="-1" cy="0" r="0.8" fill="#B45309" />
+          <circle cx="2" cy="0.5" r="0.7" fill="#B45309" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("groundnut")) {
+    return (
+      <g>
+        <ellipse cx="-13" cy="28" rx="7" ry="5" fill="#15803D" opacity="0.8" />
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 21)">
+          <path d="M -6 0 C -7 -2 -4 -4 -2 -2 C -1 -3 2 -3 4 -1 C 5 1 3 3 1 2 C 0 3 -4 3 -6 0 Z" fill="#D4A373" stroke="#A66A38" strokeWidth="0.4" />
+          <ellipse cx="2" cy="3" rx="2.8" ry="1.6" fill="#991B1B" />
+          <ellipse cx="-2" cy="3.5" rx="2.5" ry="1.5" fill="#C2410C" />
+          <circle cx="1.8" cy="2.8" r="0.6" fill="#FCA5A5" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("sesame")) {
+    const isBlack = id.includes("black");
+    const seedColor = isBlack ? "#18181B" : "#F5F5DC";
+    const seedStroke = isBlack ? "#09090B" : "#D4D4D8";
+    return (
+      <g>
+        <ellipse cx="-13" cy="28" rx="8" ry="5" fill="#15803D" opacity="0.8" />
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <ellipse cx="0" cy="1" rx="7.5" ry="3" fill={seedColor} stroke={seedStroke} strokeWidth="0.3" />
+          <circle cx="-3" cy="0.8" r="0.6" fill={seedStroke} />
+          <circle cx="0" cy="0.4" r="0.6" fill={seedStroke} />
+          <circle cx="3" cy="0.8" r="0.6" fill={seedStroke} />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("flax")) {
+    return (
+      <g>
+        <ellipse cx="-13" cy="28" rx="8" ry="5" fill="#15803D" opacity="0.8" />
+        <circle cx="-14" cy="22" r="2.2" fill="#3B82F6" />
+        <circle cx="-11" cy="20" r="1.8" fill="#60A5FA" />
+        <circle cx="-13" cy="21" r="0.6" fill="#FDE047" />
+
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <ellipse cx="0" cy="1" rx="7.5" ry="3" fill="#B45309" />
+          <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill="#92400E" />
+          <circle cx="-2" cy="0.5" r="0.6" fill="#F59E0B" />
+          <circle cx="2" cy="0.6" r="0.6" fill="#F59E0B" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("olive")) {
+    return (
+      <g>
+        <path d="M -18 30 Q -11 20 -2 24 Q -9 27 -16 33 Z" fill="#4D7C0F" opacity="0.85" />
+        <circle cx="-13" cy="24" r="2.2" fill="#65A30D" />
+        <circle cx="-9" cy="22" r="2" fill="#365314" />
+
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 22)">
+          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#365314" stroke="#1A2E05" strokeWidth="0.5" />
+          <ellipse cx="-2.5" cy="0.5" rx="3.5" ry="2.2" fill="#65A30D" transform="rotate(-10 -2.5 0.5)" />
+          <ellipse cx="2.5" cy="0.8" rx="3.2" ry="2.1" fill="#4D7C0F" transform="rotate(15 2.5 0.8)" />
+          <circle cx="-3" cy="0" r="0.6" fill="#BEF264" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("onion")) {
+    return (
+      <g>
+        <ellipse cx="-13" cy="28" rx="8" ry="5" fill="#15803D" opacity="0.8" />
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 21)">
+          <circle cx="-1" cy="1" r="5" fill="#BE185D" stroke="#831843" strokeWidth="0.5" />
+          <circle cx="-1" cy="1" r="3.8" fill="#FDF2F8" />
+          <circle cx="-1" cy="1" r="2.8" fill="#DB2777" />
+          <circle cx="-1" cy="1" r="1.6" fill="#FDF2F8" />
+          <circle cx="5" cy="2" r="0.7" fill="#111827" />
+          <circle cx="4" cy="4" r="0.6" fill="#111827" />
+          <circle cx="6" cy="3.5" r="0.6" fill="#111827" />
+        </g>
+      </g>
+    );
+  }
+
+  if (id.includes("sunflower")) {
+    return (
+      <g>
+        <g transform="translate(-10 6)">
+          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
+          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+        </g>
+
+        <g transform="translate(6 20)">
+          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
+            <ellipse
+              key={deg}
+              cx="0"
+              cy="0"
+              rx="6"
+              ry="1.8"
+              fill="#F59E0B"
+              transform={`rotate(${deg})`}
+            />
+          ))}
+          <circle cx="0" cy="0" r="3" fill="#451A03" stroke="#78350F" strokeWidth="0.4" />
+          <circle cx="0" cy="0" r="1.8" fill="#291201" />
+        </g>
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <g transform="translate(-9 12)">
+        <ellipse cx="0" cy="0" rx="6" ry="2" fill="#B45309" />
+        <path d="M -5.5 0 Q -8 7 -6 12 Q 0 15 6 12 Q 8 7 5.5 0 Z" fill="#92400E" stroke="#78350F" strokeWidth="0.5" />
+        <line x1="0" y1="-6" x2="0" y2="4" stroke="#D97706" strokeWidth="1.2" strokeLinecap="round" />
+      </g>
+      <g transform="translate(6 21)">
+        <path d="M -7 2 Q 0 9 7 2 Q 7 -1 -7 -1 Z" fill="#D97706" stroke="#92400E" strokeWidth="0.5" />
+        <ellipse cx="0" cy="1" rx="6.5" ry="2.6" fill="#FACC15" />
+        <circle cx="-2" cy="0.6" r="0.6" fill="#FEF08A" />
+        <circle cx="2" cy="0.8" r="0.6" fill="#FEF08A" />
+      </g>
+    </g>
+  );
 };
 
 function ProductArt({
@@ -1206,38 +1626,8 @@ function ProductArt({
           {/* Background farm glow */}
           <rect x="-22" y="0" width="44" height="38" rx="2" fill={`url(#${id}-farm-field-glow)`} />
 
-          {/* Yellow mustard field flowers & greenery */}
-          <ellipse cx="-12" cy="30" rx="9" ry="6" fill="#15803D" opacity="0.8" />
-          <ellipse cx="-11" cy="27" rx="8" ry="5" fill="#EAB308" opacity="0.9" />
-          <circle cx="-15" cy="25" r="2.2" fill="#FACC15" />
-          <circle cx="-12" cy="23" r="2" fill="#FDE047" />
-          <circle cx="-8" cy="24" r="1.8" fill="#FACC15" />
-          <circle cx="-13" cy="28" r="2" fill="#EAB308" />
-
-          {/* Traditional Glass Cruet Bottle */}
-          <g transform="translate(-10 6)">
-            {/* Wooden cork stopper */}
-            <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-            {/* Glass neck */}
-            <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-            {/* Golden oil inside cruet */}
-            <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill="#D97706" opacity="0.92" />
-            {/* Glass specular highlight */}
-            <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-          </g>
-
-          {/* Wooden Bowl of Pure Mustard Seeds */}
-          <g transform="translate(6 22)">
-            {/* Wooden bowl */}
-            <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
-            {/* Mound of black seeds */}
-            <ellipse cx="0" cy="1" rx="7.5" ry="3" fill="#1C1917" />
-            <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill="#292524" />
-            {/* Tiny seed textures */}
-            <circle cx="-3" cy="0.5" r="0.6" fill="#444" />
-            <circle cx="0" cy="0" r="0.6" fill="#555" />
-            <circle cx="3" cy="0.8" r="0.6" fill="#444" />
-          </g>
+          {/* Botanical Art Tailored to Ingredient */}
+          {renderBotanicalArt(p)}
 
           {/* Quality Badges on Right */}
           <g transform="translate(10 6)">
@@ -1404,17 +1794,7 @@ function ProductArt({
           <rect x="-22" y="4.5" width="44" height="28" fill="#FFF" stroke="#333" strokeWidth="0.4" />
           <line x1="8" y1="4.5" x2="8" y2="32.5" stroke="#333" strokeWidth="0.3" />
 
-          {[
-            ["ENERGY", "900 KCAL"],
-            ["PROTIEN", "0 g"],
-            ["CARBOHYDRATE", "0 g"],
-            ["TOTAL FAT", "100 g"],
-            ["SATURATED FAT", "12 g"],
-            ["TRANS FAT", "0 g"],
-            ["MONO UNSATURATED", "58 g"],
-            ["POLY UNSATURATED", "16 g"],
-            ["CHOLESTEROL", "0 g"]
-          ].map(([label, val], idx) => {
+          {getNutritionFacts(p).map(([label, val], idx) => {
             const rowY = 7.5 + idx * 3;
             return (
               <g key={idx}>
@@ -1433,7 +1813,7 @@ function ProductArt({
         {/* 4. Ingredients & Declarations */}
         <g transform={`translate(${cx} ${sy + 53})`}>
           <text x="0" y="0" fill="#111" fontSize="2.1" fontWeight="800" textAnchor="middle">
-            Ingredients: 100% Pure Cold-Pressed Oil
+            Ingredients: 100% Pure Cold-Pressed {p.short}
           </text>
           <text x="0" y="3.2" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">
             Free From Argemone Oil Representative
@@ -2183,20 +2563,10 @@ export function ProductShelf({
                         >
                           {/* Ambient golden glow behind bottle on hover */}
                           <div className="absolute inset-0 bg-radial from-amber-400/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full" />
-                          {p.bottleImage ? (
-                            <div className="relative h-full w-full flex items-end justify-center pb-1">
-                              <img
-                                src={p.bottleImage}
-                                alt={p.name}
-                                className="h-full w-auto object-contain max-h-[285px] sm:max-h-[325px] md:max-h-[355px] drop-shadow-xl group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
-                              />
-                            </div>
-                          ) : (
-                            <ProductArt
-                              p={p}
-                              className="h-full w-auto max-w-full drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300"
-                            />
-                          )}
+                          <ProductArt
+                            p={p}
+                            className="h-full w-auto max-w-full drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300"
+                          />
                           {/* Floating 360 badge on hover */}
                           <span className="absolute top-2 px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black text-[#0E2A47] shadow-sm border border-stone-200/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none tracking-wider">
                             360° ⇄
@@ -2334,7 +2704,6 @@ function ProductPage({
   const [size, setSize] = useState(p.sizes[0]);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
-  const [viewMode, setViewMode] = useState<'3d' | 'mockup'>('3d');
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const drag = useRef<{ x: number; v: number; samples: { x: number; t: number }[] } | null>(null);
 
@@ -2401,68 +2770,27 @@ function ProductPage({
 
       {/* Main Dialog Container */}
       <div className="relative mx-auto flex min-h-full max-w-[1100px] flex-col justify-center px-3 py-4 sm:px-6 md:grid md:grid-cols-[1.05fr_1fr] md:items-center md:gap-8 md:py-8">
-        {/* Left Column: Big 3D interactive bottle display / Studio Mockup toggle */}
+        {/* Left Column: Big 3D interactive bottle on wooden turntable */}
         <div className="relative flex flex-col items-center justify-center pt-2 pb-4 md:py-0">
-          {p.showcaseImage && (
-            <div className="mb-3 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-full border border-white/20 shadow-md">
-              <button
-                type="button"
-                onClick={() => setViewMode("3d")}
-                className={cn(
-                  "px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer",
-                  viewMode === "3d"
-                    ? "bg-[#FAB800] text-stone-950 shadow-sm"
-                    : "text-white/80 hover:text-white"
-                )}
-              >
-                ⇄ 360° 3D Bottle
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("mockup")}
-                className={cn(
-                  "px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer",
-                  viewMode === "mockup"
-                    ? "bg-[#FAB800] text-stone-950 shadow-sm"
-                    : "text-white/80 hover:text-white"
-                )}
-              >
-                📸 Studio Mockup
-              </button>
-            </div>
-          )}
+          <motion.div
+            layoutId={`product-${p.id}`}
+            transition={SPRING}
+            className="relative z-10 w-[200px] sm:w-[250px] md:w-[290px] h-[44vh] sm:h-[52vh] md:h-[65vh] max-h-[580px] flex items-center justify-center cursor-grab touch-none select-none active:cursor-grabbing"
+            onPointerDown={onDown}
+            onPointerMove={onMove}
+            onPointerUp={onUp}
+            onPointerCancel={onUp}
+          >
+            <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
+          </motion.div>
 
-          {viewMode === "mockup" && p.showcaseImage ? (
-            <div className="relative z-10 w-[240px] sm:w-[300px] md:w-[350px] aspect-square rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40">
-              <img
-                src={p.showcaseImage}
-                alt={p.name}
-                className="h-full w-full object-cover"
-              />
+          {/* Wooden Turntable Plinth under bottle */}
+          <div className="relative -mt-2 sm:-mt-3 flex flex-col items-center">
+            <div className="h-4 sm:h-5 w-44 sm:w-56 rounded-[50%] bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-[#FDE68A]/40" />
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold text-amber-200 tracking-wider uppercase shadow-sm">
+              <span className="text-xs">⇄</span> Drag horizontally to rotate 360°
             </div>
-          ) : (
-            <>
-              <motion.div
-                layoutId={`product-${p.id}`}
-                transition={SPRING}
-                className="relative z-10 w-[200px] sm:w-[250px] md:w-[290px] h-[44vh] sm:h-[52vh] md:h-[65vh] max-h-[580px] flex items-center justify-center cursor-grab touch-none select-none active:cursor-grabbing"
-                onPointerDown={onDown}
-                onPointerMove={onMove}
-                onPointerUp={onUp}
-                onPointerCancel={onUp}
-              >
-                <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
-              </motion.div>
-
-              {/* Wooden Turntable Plinth under bottle */}
-              <div className="relative -mt-2 sm:-mt-3 flex flex-col items-center">
-                <div className="h-4 sm:h-5 w-44 sm:w-56 rounded-[50%] bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-[#FDE68A]/40" />
-                <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold text-amber-200 tracking-wider uppercase shadow-sm">
-                  <span className="text-xs">⇄</span> Drag horizontally to rotate 360°
-                </div>
-              </div>
-            </>
-          )}
+          </div>
         </div>
 
         {/* Right Column: Product Details, Volume Selector & CTA - Compact Single-Screen Layout (NO SCROLLING NEEDED!) */}
