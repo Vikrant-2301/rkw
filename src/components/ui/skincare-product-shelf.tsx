@@ -1,65 +1,95 @@
 "use client";
 
 /**
- * Product Shelf. Originally designed by Aakash Mehra.
- * Adapted & Customized for Ramesh Kolhu Wale (RKW) Pure Cold-Pressed Oils & Vedic Bilona Ghee.
+ * RKW Shop Experience (complete single-file version)
+ * Ramesh Kolhu Wale: Pure Cold-Pressed Oils & Vedic Bilona Ghee.
  *
- * A store wall of three floating shelves with twelve authentic cold-pressed oils & Vedic ghee,
- * drawn to look like studio product shots: cylinder shading with softbox reflections, printed type,
- * ridged caps, transparent glass with visible golden mustard/seed oil liquid and thick glass bases.
- * Click one and it moves from its place on the shelf to the left of a product page and turns once,
- * its authentic RKW sticker wrapping round the body. Drag it to turn it yourself; let go and it
- * carries your speed, then settles facing front.
+ * Scroll-driven store walkthrough:
+ *   storefront with rolling shutter -> step inside -> four lit aisles
+ *   (bottles rise onto planks under pendant lamps) -> billing counter.
+ * Click a bottle for the 360° product dialog (drag to spin, inertia, sticker wrap).
+ *
+ * Usage: <ShopExperience />   (or <ProductShelf />, same component)
  */
 
 import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode, type RefObject } from "react";
-import { AnimatePresence, LayoutGroup, animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "motion/react";
-import { ChevronDown, ChevronLeft, Minus, Plus, ShoppingBag, Star, ShieldCheck, Check, X } from "lucide-react";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue
+} from "motion/react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  Minus,
+  Plus,
+  ShoppingBag,
+  Star,
+  Check,
+  X,
+  RotateCw,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  ShieldCheck,
+  Leaf,
+  Sparkles,
+  Store,
+  Flame,
+  Award,
+  Heart
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { PRODUCTS } from "@/data/products";
 
-// Exact catalog pricing helper
-export function getProductVolumePrice(productId: string, sizeName: string, fallbackPrice: number): number {
+// ---------------------------------------------------------------- pricing
+
+const sizeFactor = (sizeName: string): number => {
+  if (sizeName.includes("200")) return 1;
+  if (sizeName.includes("500")) return 2.4;
+  if (sizeName.includes("1 L") || sizeName.includes("1L") || sizeName.includes("1 Litre")) return 4.5;
+  if (sizeName.includes("2 L") || sizeName.includes("2L") || sizeName.includes("2 Litres")) return 8.8;
+  if (sizeName.includes("5 L") || sizeName.includes("5L") || sizeName.includes("5 Litres")) return 21.3;
+  if (sizeName.includes("15 kg") || sizeName.includes("15kg")) return 60;
+  return 1;
+};
+
+const findCatalogVolume = (productId: string, sizeName: string) => {
   const cat = PRODUCTS.find((p) => p.id === productId);
-  if (cat && cat.volumes && cat.volumes.length > 0) {
-    const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const target = clean(sizeName);
-    const found = cat.volumes.find((v) => {
-      const vc = clean(v.size);
-      return vc.includes(target) || target.includes(vc);
-    });
-    if (found) return found.price;
-  }
-  if (sizeName.includes("200")) return fallbackPrice;
-  if (sizeName.includes("500")) return Math.round(fallbackPrice * 2.4);
-  if (sizeName.includes("1 L") || sizeName.includes("1L") || sizeName.includes("1 Litre")) return Math.round(fallbackPrice * 4.5);
-  if (sizeName.includes("2 L") || sizeName.includes("2L") || sizeName.includes("2 Litres")) return Math.round(fallbackPrice * 8.8);
-  if (sizeName.includes("5 L") || sizeName.includes("5L") || sizeName.includes("5 Litres")) return Math.round(fallbackPrice * 21.3);
-  if (sizeName.includes("15 kg") || sizeName.includes("15kg")) return Math.round(fallbackPrice * 60);
-  return fallbackPrice;
+  if (!cat || !cat.volumes || cat.volumes.length === 0) return undefined;
+  const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const target = clean(sizeName);
+  return cat.volumes.find((v) => {
+    const vc = clean(v.size);
+    return vc.includes(target) || target.includes(vc);
+  });
+};
+
+export function getProductVolumePrice(productId: string, sizeName: string, fallbackPrice: number): number {
+  const found = findCatalogVolume(productId, sizeName);
+  if (found) return found.price;
+  const f = sizeFactor(sizeName);
+  return f === 1 ? fallbackPrice : Math.round(fallbackPrice * f);
 }
 
 export function getProductVolumeCompareAt(productId: string, sizeName: string, fallbackCompareAt?: number): number | undefined {
-  const cat = PRODUCTS.find((p) => p.id === productId);
-  if (cat && cat.volumes && cat.volumes.length > 0) {
-    const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const target = clean(sizeName);
-    const found = cat.volumes.find((v) => {
-      const vc = clean(v.size);
-      return vc.includes(target) || target.includes(vc);
-    });
-    if (found && found.originalPrice) return found.originalPrice;
-  }
+  const found = findCatalogVolume(productId, sizeName);
+  if (found && found.originalPrice) return found.originalPrice;
   if (!fallbackCompareAt) return undefined;
-  if (sizeName.includes("200")) return fallbackCompareAt;
-  if (sizeName.includes("500")) return Math.round(fallbackCompareAt * 2.4);
-  if (sizeName.includes("1 L") || sizeName.includes("1L") || sizeName.includes("1 Litre")) return Math.round(fallbackCompareAt * 4.5);
-  if (sizeName.includes("2 L") || sizeName.includes("2L") || sizeName.includes("2 Litres")) return Math.round(fallbackCompareAt * 8.8);
-  if (sizeName.includes("5 L") || sizeName.includes("5L") || sizeName.includes("5 Litres")) return Math.round(fallbackCompareAt * 21.3);
-  if (sizeName.includes("15 kg") || sizeName.includes("15kg")) return Math.round(fallbackCompareAt * 60);
-  return fallbackCompareAt;
+  const f = sizeFactor(sizeName);
+  return f === 1 ? fallbackCompareAt : Math.round(fallbackCompareAt * f);
 }
+
+// ---------------------------------------------------------------- types & data
 
 export type Kind =
   | "bottle"
@@ -78,16 +108,13 @@ export type Product = {
   id: string;
   kind: Kind;
   name: string;
-  /** Name printed on the pack, with an optional second line. */
   short: string;
   sub?: string;
   category: string;
-  /** Body colour, cap colour, label colour, print colour. */
   color: string;
   cap: string;
   label: string;
   ink: string;
-  /** See-through glass, and the colour of what is inside. */
   glass?: boolean;
   liquid?: string;
   price: number;
@@ -107,13 +134,10 @@ export type Product = {
   showcaseImage?: string;
 };
 
-/**
- * Default RKW Product Catalog
- * Configured with authentic bottle stickers, volume sizes (200ml, 500ml, 1L, 2L, 5L)
- * from OIL STICKER 500 ML.pdf and FINAL OIL STICKER ROUND BOTTLE.pdf.
- */
+const PET_SIZES = ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"];
+
 export const DEFAULT_PRODUCTS: Product[] = [
-  // --- ROW 1: Signature Mustard Oils & Vedic Bilona Ghee ---
+  // --- AISLE 1: Signature Mustard Oils & Vedic Bilona Ghee ---
   {
     id: "yellow-mustard-oil",
     kind: "round-bottle",
@@ -134,7 +158,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 95,
     bottleImage: "/mockups/yellow-mustard/bottle.png",
     showcaseImage: "/mockups/yellow-mustard/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 5.0,
     reviews: 2150,
     tagline: "Naturally sweeter with mild golden aroma for everyday healthy curries.",
@@ -168,7 +192,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 90,
     bottleImage: "/mockups/black-mustard/bottle.png",
     showcaseImage: "/mockups/black-mustard/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 1420,
     tagline: "Authentic pungent jhal, single cold-pressed in traditional Cold Press Kolhu.",
@@ -244,7 +268,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Pull up the spout ring, decant into your daily glass kitchen cruet, and close the cap tightly."
   },
 
-  // --- ROW 2: Nut & Coconut Cold-Pressed Range ---
+  // --- AISLE 2: Nut & Coconut Cold-Pressed Range ---
   {
     id: "cold-pressed-groundnut-oil",
     kind: "round-bottle",
@@ -265,7 +289,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 105,
     bottleImage: "/mockups/groundnut-oil/bottle.png",
     showcaseImage: "/mockups/groundnut-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.8,
     reviews: 890,
     tagline: "Cold pressed from Saurashtra red-skin peanuts. High 225°C smoke point.",
@@ -299,7 +323,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 140,
     bottleImage: "/mockups/coconut-oil/bottle.png",
     showcaseImage: "/mockups/coconut-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 1120,
     tagline: "Sulfur-free sun-dried Kerala copra pressed at <35°C in neem ghani.",
@@ -333,7 +357,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 165,
     bottleImage: "/mockups/extra-virgin-coconut-oil/bottle.png",
     showcaseImage: "/mockups/extra-virgin-coconut-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 5.0,
     reviews: 780,
     tagline: "Single-pressed from fresh organic Tiptur coconuts. Superior crystal clarity.",
@@ -367,7 +391,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 150,
     bottleImage: "/mockups/white-sesame-oil/bottle.png",
     showcaseImage: "/mockups/white-sesame-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 670,
     tagline: "Ayurveda supreme king of oils (Sarva Taila Pravara) for bones & joints.",
@@ -382,7 +406,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Swish 1 tablespoon in mouth for 5 minutes in the morning, or warm gently for soothing full-body Abhyanga massage."
   },
 
-  // --- ROW 3: Wellness Rogan, Walnut & Artisanal Oils ---
+  // --- AISLE 3: Wellness Rogan, Walnut & Artisanal Oils ---
   {
     id: "pure-badam-rogan-almond-oil",
     kind: "round-bottle",
@@ -403,7 +427,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 650,
     bottleImage: "/mockups/mamra-almond-oil/bottle.png",
     showcaseImage: "/mockups/mamra-almond-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 5.0,
     reviews: 1580,
     tagline: "Single-press extra-virgin sweet almond elixir from Kashmiri Mamra almonds.",
@@ -437,7 +461,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 480,
     bottleImage: "/mockups/gurbandi-almond-oil/bottle.png",
     showcaseImage: "/mockups/gurbandi-almond-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 640,
     tagline: "Cold pressed from high-altitude Kashmiri Gurbandi almonds. High natural oil density.",
@@ -471,7 +495,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 350,
     bottleImage: "/mockups/walnut-oil/bottle.png",
     showcaseImage: "/mockups/walnut-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.8,
     reviews: 410,
     tagline: "Cold pressed from high-altitude whole Kashmiri walnut kernels.",
@@ -505,7 +529,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 120,
     bottleImage: "/mockups/flax-seed-oil/bottle.png",
     showcaseImage: "/mockups/flax-seed-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.7,
     reviews: 530,
     tagline: "Mother Nature richest plant source of Alpha-Linolenic Acid (ALA).",
@@ -520,7 +544,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Take 1 tablespoon daily with morning meals, blend into fresh smoothies, or drizzle over dal. Do not heat."
   },
 
-  // --- ROW 4: Specialty & Daily Kitchen Cold-Pressed Oils ---
+  // --- AISLE 4: Specialty & Daily Kitchen Cold-Pressed Oils ---
   {
     id: "cold-pressed-black-sesame-oil",
     kind: "round-bottle",
@@ -541,7 +565,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 170,
     bottleImage: "/mockups/black-sesame-oil/bottle.png",
     showcaseImage: "/mockups/black-sesame-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 480,
     tagline: "Potent mineral-dense black sesame oil from Bengal organic heirloom seeds.",
@@ -575,7 +599,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 280,
     bottleImage: "/mockups/olive-oil/bottle.png",
     showcaseImage: "/mockups/olive-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 720,
     tagline: "Single-estate cold pressed from Rajasthan & Mediterranean olive groves.",
@@ -609,7 +633,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 180,
     bottleImage: "/mockups/onion-oil/bottle.png",
     showcaseImage: "/mockups/onion-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.9,
     reviews: 620,
     tagline: "Pure cold-pressed onion seed oil (Kalonji) for follicular vitality and hair density.",
@@ -643,7 +667,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     compareAt: 115,
     bottleImage: "/mockups/sunflower-oil/bottle.png",
     showcaseImage: "/mockups/sunflower-oil/showcase.png",
-    sizes: ["200 ml (PET bottle)", "500 ml (PET bottle)", "1 L (PET bottle)", "2 L (PET bottle)", "5 L (PET bottle)", "15 kg (Tin)"],
+    sizes: PET_SIZES,
     rating: 4.8,
     reviews: 510,
     tagline: "Light golden, non-greasy cooking oil cold pressed from Karnataka sunflower seeds.",
@@ -659,7 +683,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
   }
 ];
 
-// ---------- colour helpers ----------
+// ---------------------------------------------------------------- colour helpers
 
 type RGB = [number, number, number];
 const hexRgb = (h: string): RGB => [
@@ -678,7 +702,7 @@ const WHITE: RGB = [255, 255, 255];
 const BLACK: RGB = [0, 0, 0];
 const lum = (c: RGB) => c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11;
 
-// ---------- packaging shapes (viewBox 200 x 300, stands on y = 286) ----------
+// ---------------------------------------------------------------- packaging shapes (viewBox 200 x 300, stands on y = 286)
 
 type Box = { x: number; y: number; w: number; h: number };
 type Shape = {
@@ -708,16 +732,11 @@ const ridges = (x: number, y: number, w: number, h: number, step = 2.6) =>
   ));
 
 const PET_OIL_BODY_PATH =
-  // Top of neck cylinder (thick diameter: width 28, x = 86 to 114)
   "M 86 38 " +
   "L 86 40 " +
-  // Left collar flange (transfer ring)
   "L 83 40 Q 82 42 83 44 L 86 44 " +
-  // Short thick neck cylinder (small height: only y=44 to 56)
   "L 86 56 " +
-  // Left shoulder sloping smoothly down to body
   "C 86 68 76 80 66 90 " +
-  // Left side with 9 grip ribs (notches)
   "L 66 98 Q 69.5 102.25 66 106.5 " +
   "L 66 113.5 Q 69.5 117.75 66 122 " +
   "L 66 129 Q 69.5 133.25 66 137.5 " +
@@ -728,13 +747,9 @@ const PET_OIL_BODY_PATH =
   "L 66 206.5 Q 69.5 210.75 66 215 " +
   "L 66 222 Q 69.5 226.25 66 230.5 " +
   "L 66 256 " +
-  // Left base pedestal flare and corner
   "Q 64 262 64 270 L 64 280 Q 64 286 70 286 " +
-  // Bottom kick-up arch
   "L 74 286 Q 100 277 126 286 L 130 286 " +
-  // Right base corner and pedestal flare
   "Q 136 286 136 280 L 136 270 Q 136 262 134 256 " +
-  // Right side with 9 grip ribs (going upwards)
   "L 134 230.5 Q 130.5 226.25 134 222 " +
   "L 134 215 Q 130.5 210.75 134 206.5 " +
   "L 134 199.5 Q 130.5 195.25 134 191 " +
@@ -745,13 +760,9 @@ const PET_OIL_BODY_PATH =
   "L 134 122 Q 130.5 117.75 134 113.5 " +
   "L 134 106.5 Q 130.5 102.25 134 98 " +
   "L 134 90 " +
-  // Right shoulder sloping in to neck
   "C 124 80 114 68 114 56 " +
-  // Short thick neck cylinder
   "L 114 44 " +
-  // Right collar flange
   "L 117 44 Q 118 42 117 40 L 114 40 " +
-  // Top right of neck
   "L 114 38 " +
   "Z";
 
@@ -761,19 +772,13 @@ const renderPetOilCap = (id: string) => {
   const capTop = 15;
   return (
     <g id={`${id}-pet-cap-group`}>
-      {/* Soft contact shadow from cap onto neck collar */}
       <ellipse cx="100" cy="39" rx="16" ry="1.5" fill="#000" opacity="0.32" />
-
-      {/* Main Cap Body with rounded top */}
       <path
         d={`M${capX + 3} ${capTop} h${capW - 6} a3 3 0 0 1 3 3 v15 h-${capW} v-15 a3 3 0 0 1 3 -3 z`}
         fill={`url(#${id}-yellow-cap)`}
       />
-      {/* Top rim highlight */}
       <ellipse cx="100" cy={capTop + 1.2} rx="14" ry="1.6" fill="#FFF8C4" opacity="0.9" />
       <path d={`M${capX + 2} ${capTop + 1} h${capW - 4}`} stroke="#FFE875" strokeWidth="1" strokeOpacity="0.95" />
-
-      {/* Fluted Vertical Ridges (Knurling) */}
       {Array.from({ length: 22 }, (_, i) => {
         const rx = capX + 2.5 + i * 1.25;
         return (
@@ -783,16 +788,11 @@ const renderPetOilCap = (id: string) => {
           </g>
         );
       })}
-
-      {/* Separation Groove / Tear Line */}
       <rect x={capX + 0.5} y={capTop + 18} width={capW - 1} height="1.2" fill="#7A3E00" opacity="0.75" />
-
-      {/* Tamper Evident Safety Ring */}
       <path
         d={`M${capX} ${capTop + 19.2} h${capW} v5.6 a1.2 1.2 0 0 1 -1.2 1.2 h-${capW - 2.4} a1.2 1.2 0 0 1 -1.2 -1.2 z`}
         fill={`url(#${id}-yellow-cap)`}
       />
-      {/* Tamper Ring Highlight and Breakout Slits */}
       <line x1={capX + 1} y1={capTop + 25.4} x2={capX + capW - 1} y2={capTop + 25.4} stroke="#FFE875" strokeWidth="0.8" strokeOpacity="0.75" />
       {[88, 93, 98, 103, 108, 112].map((sx) => (
         <line key={sx} x1={sx} y1={capTop + 18} x2={sx} y2={capTop + 20.6} stroke="#542B00" strokeWidth="0.8" strokeOpacity="0.85" />
@@ -802,46 +802,36 @@ const renderPetOilCap = (id: string) => {
 };
 
 const SHAPES: Record<Kind, Shape> = {
-  // 1. Signature Square PET Cold-Pressed Oil Bottle (Square with Side Grip Ribs & Yellow Cap)
   "round-bottle": {
     body: PET_OIL_BODY_PATH,
     box: { x: 64, y: 38, w: 72, h: 248 },
     print: { x: 75.5, y: 93, w: 49, h: 159, paper: true },
     fill: 48,
-    cap: (id) => renderPetOilCap(id),
+    cap: (id) => renderPetOilCap(id)
   },
-
-  // 2. Standard PET Cold Pressed Oil Bottle
   bottle: {
     body: PET_OIL_BODY_PATH,
     box: { x: 64, y: 38, w: 72, h: 248 },
     print: { x: 75.5, y: 93, w: 49, h: 159, paper: true },
     fill: 48,
-    cap: (id) => renderPetOilCap(id),
+    cap: (id) => renderPetOilCap(id)
   },
-
-  // 3. Heritage 2L & 5L Oil Can / Metal Tin
   tin: {
     body: rr(48, 102, 104, 184, 8),
     box: { x: 48, y: 102, w: 104, h: 184 },
     print: { x: 52, y: 126, w: 96, h: 142, paper: true },
     cap: (id) => (
       <>
-        {/* Metal curved wire handle */}
         <path d="M70 102 C70 56 130 56 130 102" fill="none" stroke="#555" strokeWidth="6.5" strokeLinecap="round" />
         <path d="M70 102 C70 56 130 56 130 102" fill="none" stroke="#e0e0e0" strokeWidth="3.5" strokeLinecap="round" />
-        {/* Top nozzle & pour spout cap */}
         <rect x="54" y="80" width="18" height="22" rx="3" fill={`url(#${id}-cap)`} />
         <path d={rr(52, 74, 22, 10, 2)} fill={`url(#${id}-cap)`} />
         <g>{ridges(52, 76, 22, 7, 2)}</g>
-        {/* Tin crimped top seam */}
         <path d="M50 104 H150" stroke="#fff" strokeOpacity="0.8" strokeWidth="1.6" />
         <path d="M48 106.5 H152" stroke="#000" strokeOpacity="0.25" strokeWidth="1" />
       </>
     )
   },
-
-  // 4. Vedic Bilona Desi Ghee Heritage Glass Jar
   jar: {
     body: "M42 192 H158 Q164 192 164 200 V276 Q164 286 150 286 H50 Q36 286 36 276 V200 Q36 192 42 192 Z",
     box: { x: 36, y: 192, w: 128, h: 94 },
@@ -849,7 +839,6 @@ const SHAPES: Record<Kind, Shape> = {
     fill: 198,
     cap: (id) => (
       <>
-        {/* Golden Brass / Metallic Churn Jar Lid */}
         <path d={rr(34, 160, 132, 34, 6)} fill={`url(#${id}-cap)`} />
         <g>{ridges(34, 166, 132, 26, 2.5)}</g>
         <path d={rr(34, 160, 132, 34, 6)} fill={`url(#${id}-capv)`} />
@@ -858,8 +847,6 @@ const SHAPES: Record<Kind, Shape> = {
       </>
     )
   },
-
-  // 5. Amber Glass Precision Dropper for Badam Rogan
   dropper: {
     body: "M64 165 Q64 148 86 146 L86 138 L114 138 L114 146 Q136 148 136 165 L136 272 Q136 286 122 286 L78 286 Q64 286 64 272 Z",
     box: { x: 64, y: 138, w: 72, h: 148 },
@@ -867,18 +854,14 @@ const SHAPES: Record<Kind, Shape> = {
     fill: 160,
     cap: (id) => (
       <>
-        {/* Rubber Bulb for Dropper */}
         <path d="M86 116 V84 Q86 60 100 60 Q114 60 114 84 V116 Z" fill={`url(#${id}-bulb)`} />
         <path d="M91 72 Q93 64 100 63" stroke="#fff" strokeOpacity="0.45" strokeWidth="2" fill="none" strokeLinecap="round" />
-        {/* Ribbed Dropper Collar */}
         <path d={rr(80, 114, 40, 26, 3)} fill={`url(#${id}-cap)`} />
         <g>{ridges(80, 114, 40, 26, 2.2)}</g>
         <path d={rr(80, 114, 40, 26, 3)} fill={`url(#${id}-capv)`} />
       </>
     )
   },
-
-  // Fallbacks for cosmetic kinds to preserve complete backwards compatibility
   tube: {
     body: "M80 250 L67 74 Q66 60 74 58 L126 58 Q134 60 133 74 L120 250 Z",
     box: { x: 66, y: 58, w: 68, h: 192 },
@@ -940,36 +923,14 @@ const SHAPES: Record<Kind, Shape> = {
   }
 };
 
-const EXTENT: Record<Kind, { top: number; w: number }> = {
-  jar: { top: 160, w: 132 },
-  bottle: { top: 14, w: 76 },
-  "round-bottle": { top: 14, w: 76 },
-  tin: { top: 60, w: 106 },
-  dropper: { top: 60, w: 72 },
-  tube: { top: 37, w: 76 },
-  pump: { top: 50, w: 101 },
-  perfume: { top: 96, w: 116 },
-  mist: { top: 80, w: 76 },
-  stick: { top: 166, w: 38 },
-  lip: { top: 128, w: 34 }
-};
-
-const pageZoom = (k: Kind) => Math.min(1.45, 230 / (290 - EXTENT[k].top), 170 / EXTENT[k].w);
-
-// ---------- The Product Drawing with Cylinder Shading & Spinning Label ----------
+// ---------------------------------------------------------------- sticker text helpers
 
 const getStickerTitle = (short: string) => {
   const clean = short.replace(/\s*\([^)]*\)/g, "").trim();
   const upper = clean.toUpperCase();
-  if (upper.includes("EXTRA VIRGIN COCONUT")) {
-    return { line1: "EXTRA VIRGIN", line2: "COCONUT OIL" };
-  }
-  if (upper.includes("EXTRA VIRGIN OLIVE")) {
-    return { line1: "EXTRA VIRGIN", line2: "OLIVE OIL" };
-  }
-  if (upper.includes("MUSTARD 5L")) {
-    return { line1: "MUSTARD OIL", line2: "5L ECO CAN" };
-  }
+  if (upper.includes("EXTRA VIRGIN COCONUT")) return { line1: "EXTRA VIRGIN", line2: "COCONUT OIL" };
+  if (upper.includes("EXTRA VIRGIN OLIVE")) return { line1: "EXTRA VIRGIN", line2: "OLIVE OIL" };
+  if (upper.includes("MUSTARD 5L")) return { line1: "MUSTARD OIL", line2: "5L ECO CAN" };
   const words = clean.split(/\s+/);
   if (words.length <= 1) return { line1: words[0].toUpperCase(), line2: "" };
   if (words.length === 2) return { line1: words[0].toUpperCase(), line2: words[1].toUpperCase() };
@@ -987,7 +948,22 @@ const getDisplayQty = (raw?: string) => {
   return raw.split(" ")[0];
 };
 
-const getNutritionFacts = (p: Product) => {
+type NF = [string, string][];
+
+// Standard oil table: energy, sat, mono, poly, one highlighted extra row
+const oilFacts = (energy: string, sat: string, mono: string, poly: string, extra: [string, string]): NF => [
+  ["ENERGY", energy],
+  ["PROTIEN", "0 g"],
+  ["CARBOHYDRATE", "0 g"],
+  ["TOTAL FAT", "100 g"],
+  ["SATURATED FAT", sat],
+  ["MONO UNSATURATED", mono],
+  ["POLY UNSATURATED", poly],
+  extra,
+  ["CHOLESTEROL", "0 g"]
+];
+
+const getNutritionFacts = (p: Product): NF => {
   const id = p.id.toLowerCase();
   if (id.includes("coconut")) {
     return [
@@ -1002,97 +978,13 @@ const getNutritionFacts = (p: Product) => {
       ["CHOLESTEROL", "0 g"]
     ];
   }
-  if (id.includes("almond") || id.includes("badam")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "9 g"],
-      ["MONO UNSATURATED", "70 g"],
-      ["POLY UNSATURATED", "21 g"],
-      ["VITAMIN E", "26 mg"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("walnut")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "9 g"],
-      ["MONO UNSATURATED", "16 g"],
-      ["POLY UNSATURATED", "63 g"],
-      ["OMEGA-3 (ALA)", "14 g"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("flax")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "9 g"],
-      ["MONO UNSATURATED", "18 g"],
-      ["POLY UNSATURATED", "70 g"],
-      ["OMEGA-3 (ALA)", "55 g"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("olive")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "14 g"],
-      ["MONO UNSATURATED", "73 g"],
-      ["POLY UNSATURATED", "11 g"],
-      ["POLYPHENOLS", "High"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("sunflower")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "10 g"],
-      ["MONO UNSATURATED", "23 g"],
-      ["POLY UNSATURATED", "65 g"],
-      ["VITAMIN E", "41 mg"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("sesame")) {
-    return [
-      ["ENERGY", "884 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "14 g"],
-      ["MONO UNSATURATED", "40 g"],
-      ["POLY UNSATURATED", "42 g"],
-      ["NATURAL SESAMIN", "Present"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
-  if (id.includes("groundnut")) {
-    return [
-      ["ENERGY", "900 KCAL"],
-      ["PROTIEN", "0 g"],
-      ["CARBOHYDRATE", "0 g"],
-      ["TOTAL FAT", "100 g"],
-      ["SATURATED FAT", "17 g"],
-      ["MONO UNSATURATED", "48 g"],
-      ["POLY UNSATURATED", "34 g"],
-      ["RESVERATROL", "Active"],
-      ["CHOLESTEROL", "0 g"]
-    ];
-  }
+  if (id.includes("almond") || id.includes("badam")) return oilFacts("884 KCAL", "9 g", "70 g", "21 g", ["VITAMIN E", "26 mg"]);
+  if (id.includes("walnut")) return oilFacts("884 KCAL", "9 g", "16 g", "63 g", ["OMEGA-3 (ALA)", "14 g"]);
+  if (id.includes("flax")) return oilFacts("884 KCAL", "9 g", "18 g", "70 g", ["OMEGA-3 (ALA)", "55 g"]);
+  if (id.includes("olive")) return oilFacts("884 KCAL", "14 g", "73 g", "11 g", ["POLYPHENOLS", "High"]);
+  if (id.includes("sunflower")) return oilFacts("884 KCAL", "10 g", "23 g", "65 g", ["VITAMIN E", "41 mg"]);
+  if (id.includes("sesame")) return oilFacts("884 KCAL", "14 g", "40 g", "42 g", ["NATURAL SESAMIN", "Present"]);
+  if (id.includes("groundnut")) return oilFacts("900 KCAL", "17 g", "48 g", "34 g", ["RESVERATROL", "Active"]);
   if (id.includes("ghee")) {
     return [
       ["ENERGY", "897 KCAL"],
@@ -1119,6 +1011,23 @@ const getNutritionFacts = (p: Product) => {
   ];
 };
 
+// ---------------------------------------------------------------- botanical illustration on the sticker
+
+function Cruet({ liquid, tx = -10, opacity = 0.92 }: { liquid: string; tx?: number; opacity?: number }) {
+  return (
+    <g transform={`translate(${tx} 6)`}>
+      <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
+      <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
+      <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquid} opacity={opacity} />
+      <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
+    </g>
+  );
+}
+
+const Bowl = ({ fill = "#78350F", stroke = "#451A03" }: { fill?: string; stroke?: string }) => (
+  <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill={fill} stroke={stroke} strokeWidth="0.5" />
+);
+
 function renderBotanicalArt(p: Product) {
   const id = p.id.toLowerCase();
   const liquidColor = p.liquid || "#D97706";
@@ -1135,16 +1044,9 @@ function renderBotanicalArt(p: Product) {
         <circle cx="-12" cy="23" r="2" fill="#FDE047" />
         <circle cx="-8" cy="24" r="1.8" fill="#FACC15" />
         <circle cx="-13" cy="28" r="2" fill="#EAB308" />
-
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <Bowl />
           <ellipse cx="0" cy="1" rx="7.5" ry="3" fill={seedColor} />
           <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill={seedHighlight} />
           <circle cx="-3" cy="0.5" r="0.6" fill={seedColor} />
@@ -1160,14 +1062,7 @@ function renderBotanicalArt(p: Product) {
       <g>
         <path d="M -20 32 Q -12 20 -2 24 Q -10 28 -18 34 Z" fill="#15803D" opacity="0.85" />
         <path d="M -18 26 Q -10 16 0 18 Q -8 24 -16 30 Z" fill="#166534" opacity="0.8" />
-
-        <g transform="translate(-11 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.8" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} tx={-11} opacity={0.8} />
         <g transform="translate(6 21)">
           <circle cx="-6" cy="1" r="5" fill="#582900" stroke="#381a00" strokeWidth="0.5" />
           <circle cx="-7" cy="0" r="0.7" fill="#2d1400" />
@@ -1187,16 +1082,9 @@ function renderBotanicalArt(p: Product) {
         <path d="M -18 28 Q -12 20 -4 25 Q -10 28 -16 32 Z" fill="#15803D" opacity="0.8" />
         <circle cx="-14" cy="24" r="2" fill="#FBCFE8" opacity="0.9" />
         <circle cx="-14" cy="24" r="0.8" fill="#F43F5E" />
-
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <Bowl />
           <ellipse cx="-3" cy="0.5" rx="3.5" ry="1.8" fill="#B45309" transform="rotate(-15 -3 0.5)" />
           <ellipse cx="2" cy="0" rx="3.8" ry="1.9" fill="#D97706" transform="rotate(20 2 0)" />
           <ellipse cx="-0.5" cy="-1.5" rx="3.6" ry="1.8" fill="#92400E" transform="rotate(5 -0.5 -1.5)" />
@@ -1211,15 +1099,9 @@ function renderBotanicalArt(p: Product) {
     return (
       <g>
         <path d="M -18 30 Q -10 22 -3 26 Q -10 30 -16 34 Z" fill="#15803D" opacity="0.85" />
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#5A3A1A" stroke="#3A220F" strokeWidth="0.5" />
+          <Bowl fill="#5A3A1A" stroke="#3A220F" />
           <path d="M -4 1 C -5 -1 -3 -3 -1 -2 C 0 -3 2 -3 3 -1 C 4 1 2 2 0 1 C -2 2 -3 2 -4 1 Z" fill="#D97706" stroke="#92400E" strokeWidth="0.4" />
           <circle cx="-1" cy="0" r="0.8" fill="#B45309" />
           <circle cx="2" cy="0.5" r="0.7" fill="#B45309" />
@@ -1232,13 +1114,7 @@ function renderBotanicalArt(p: Product) {
     return (
       <g>
         <ellipse cx="-13" cy="28" rx="7" ry="5" fill="#15803D" opacity="0.8" />
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 21)">
           <path d="M -6 0 C -7 -2 -4 -4 -2 -2 C -1 -3 2 -3 4 -1 C 5 1 3 3 1 2 C 0 3 -4 3 -6 0 Z" fill="#D4A373" stroke="#A66A38" strokeWidth="0.4" />
           <ellipse cx="2" cy="3" rx="2.8" ry="1.6" fill="#991B1B" />
@@ -1256,15 +1132,9 @@ function renderBotanicalArt(p: Product) {
     return (
       <g>
         <ellipse cx="-13" cy="28" rx="8" ry="5" fill="#15803D" opacity="0.8" />
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <Bowl />
           <ellipse cx="0" cy="1" rx="7.5" ry="3" fill={seedColor} stroke={seedStroke} strokeWidth="0.3" />
           <circle cx="-3" cy="0.8" r="0.6" fill={seedStroke} />
           <circle cx="0" cy="0.4" r="0.6" fill={seedStroke} />
@@ -1281,16 +1151,9 @@ function renderBotanicalArt(p: Product) {
         <circle cx="-14" cy="22" r="2.2" fill="#3B82F6" />
         <circle cx="-11" cy="20" r="1.8" fill="#60A5FA" />
         <circle cx="-13" cy="21" r="0.6" fill="#FDE047" />
-
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#78350F" stroke="#451A03" strokeWidth="0.5" />
+          <Bowl />
           <ellipse cx="0" cy="1" rx="7.5" ry="3" fill="#B45309" />
           <ellipse cx="0" cy="0" rx="6.5" ry="2.2" fill="#92400E" />
           <circle cx="-2" cy="0.5" r="0.6" fill="#F59E0B" />
@@ -1306,16 +1169,9 @@ function renderBotanicalArt(p: Product) {
         <path d="M -18 30 Q -11 20 -2 24 Q -9 27 -16 33 Z" fill="#4D7C0F" opacity="0.85" />
         <circle cx="-13" cy="24" r="2.2" fill="#65A30D" />
         <circle cx="-9" cy="22" r="2" fill="#365314" />
-
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 22)">
-          <path d="M -8 2 Q 0 10 8 2 Q 8 -1 -8 -1 Z" fill="#365314" stroke="#1A2E05" strokeWidth="0.5" />
+          <Bowl fill="#365314" stroke="#1A2E05" />
           <ellipse cx="-2.5" cy="0.5" rx="3.5" ry="2.2" fill="#65A30D" transform="rotate(-10 -2.5 0.5)" />
           <ellipse cx="2.5" cy="0.8" rx="3.2" ry="2.1" fill="#4D7C0F" transform="rotate(15 2.5 0.8)" />
           <circle cx="-3" cy="0" r="0.6" fill="#BEF264" />
@@ -1328,13 +1184,7 @@ function renderBotanicalArt(p: Product) {
     return (
       <g>
         <ellipse cx="-13" cy="28" rx="8" ry="5" fill="#15803D" opacity="0.8" />
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 21)">
           <circle cx="-1" cy="1" r="5" fill="#BE185D" stroke="#831843" strokeWidth="0.5" />
           <circle cx="-1" cy="1" r="3.8" fill="#FDF2F8" />
@@ -1351,24 +1201,10 @@ function renderBotanicalArt(p: Product) {
   if (id.includes("sunflower")) {
     return (
       <g>
-        <g transform="translate(-10 6)">
-          <rect x="-2" y="0" width="4" height="3" rx="0.5" fill="#A0522D" />
-          <path d="M -1.8 3 L -1.8 7 L -4 14 Q -7 20 -7 24 Q -7 28 0 28 Q 7 28 7 24 Q 7 20 4 14 L 1.8 7 L 1.8 3 Z" fill="rgba(255,255,255,0.7)" stroke="#A0522D" strokeWidth="0.5" />
-          <path d="M -3.6 14 Q -6.5 19 -6.5 23.5 Q -6.5 27.5 0 27.5 Q 6.5 27.5 6.5 23.5 Q 6.5 19 3.6 14 Z" fill={liquidColor} opacity="0.92" />
-          <path d="M -4.5 16 Q -5.5 20 -4.5 24" stroke="#FFF" strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.85" />
-        </g>
-
+        <Cruet liquid={liquidColor} />
         <g transform="translate(6 20)">
           {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-            <ellipse
-              key={deg}
-              cx="0"
-              cy="0"
-              rx="6"
-              ry="1.8"
-              fill="#F59E0B"
-              transform={`rotate(${deg})`}
-            />
+            <ellipse key={deg} cx="0" cy="0" rx="6" ry="1.8" fill="#F59E0B" transform={`rotate(${deg})`} />
           ))}
           <circle cx="0" cy="0" r="3" fill="#451A03" stroke="#78350F" strokeWidth="0.4" />
           <circle cx="0" cy="0" r="1.8" fill="#291201" />
@@ -1392,9 +1228,11 @@ function renderBotanicalArt(p: Product) {
       </g>
     </g>
   );
-};
+}
 
-function ProductArt({
+// ---------------------------------------------------------------- the product drawing (cylinder shading + spinning label)
+
+export function ProductArt({
   p,
   spin,
   size,
@@ -1414,13 +1252,12 @@ function ProductArt({
   const a = p.glass ? (lum(c) > 200 ? 0.32 : 0.78) : 1;
   const liq = hexRgb(p.liquid ?? p.color);
   const { print: P, box: B } = s;
-  const period = isPet ? 136 : P.w * 2.6; // Wrap period for 360-degree rotation
+  const period = isPet ? 136 : P.w * 2.6;
   const fallback = useMotionValue(0);
   const x = useTransform(spin ?? fallback, (v) => -((((v * period) % period) + period) % period));
   const nameSize = Math.min(9.5, P.w * 0.11, (P.w * 1.1) / p.short.length);
-  const subSize = Math.min(6.2, P.w * 0.075, (P.w * 1.2) / (p.sub ?? "").length);
+  const subSize = Math.min(6.2, P.w * 0.075, (P.w * 1.2) / Math.max(1, (p.sub ?? "").length));
 
-  // Dynamic front sticker matching authentic RKW label (media_1794909193509_b2918e2a.jpg)
   const renderFrontSticker = (dx: number) => {
     const cx = 100 + dx;
     const sx = 75.5 + dx;
@@ -1440,260 +1277,81 @@ function ProductArt({
 
     return (
       <g key={`front-${dx}`}>
-        {/* 1. White Sticker Base with Rich Maroon Border */}
-        <rect
-          x={sx}
-          y={sy}
-          width={sw}
-          height={sh}
-          rx={3.5}
-          fill="#FFFFFF"
-          stroke={maroon}
-          strokeWidth={1.2}
-        />
-        {/* Inner thin maroon decorative pinstripe */}
-        <rect
-          x={sx + 1.2}
-          y={sy + 1.2}
-          width={sw - 2.4}
-          height={sh - 2.4}
-          rx={2.5}
-          fill="none"
-          stroke={maroon}
-          strokeWidth={0.35}
-          strokeOpacity={0.5}
-        />
+        <rect x={sx} y={sy} width={sw} height={sh} rx={3.5} fill="#FFFFFF" stroke={maroon} strokeWidth={1.2} />
+        <rect x={sx + 1.2} y={sy + 1.2} width={sw - 2.4} height={sh - 2.4} rx={2.5} fill="none" stroke={maroon} strokeWidth={0.35} strokeOpacity={0.5} />
 
-        {/* 2. Top Circular RKW Logo Emblem */}
         <g transform={`translate(${cx} ${sy + 9.5})`}>
           <circle cx="0" cy="0" r="5.8" fill="#FFF" stroke={navy} strokeWidth="0.8" />
           <circle cx="0" cy="0" r="5" fill="none" stroke={gold} strokeWidth="0.4" />
-          {/* Swirling stylized R design */}
-          <path
-            d="M -3.2 -2.8 C -1 -4.2 2.8 -4.2 3.8 -2 C 4.5 -0.5 4 1.5 2.5 2.6 C 1 3.5 -0.8 4 -2.8 3.5 C -0.8 3 1.2 2.2 2 -0.2 C 2.5 -1.8 1.2 -3 -1.2 -2.5 Z"
-            fill="#D62828"
-          />
-          <path
-            d="M -3.2 -1.2 C -1.5 -2.4 1.8 -2.2 2.4 -0.6 C 3 1 1.8 2.4 0.2 3 C -1.5 3.6 -2.8 2.8 -3.2 1.5 C -2.4 2 -1 2.2 0.2 1.6 C 1.2 1.1 1.6 0.2 1 -0.8 C 0.4 -1.6 -1.8 -1.5 -3.2 -1.2 Z"
-            fill={navy}
-          />
+          <path d="M -3.2 -2.8 C -1 -4.2 2.8 -4.2 3.8 -2 C 4.5 -0.5 4 1.5 2.5 2.6 C 1 3.5 -0.8 4 -2.8 3.5 C -0.8 3 1.2 2.2 2 -0.2 C 2.5 -1.8 1.2 -3 -1.2 -2.5 Z" fill="#D62828" />
+          <path d="M -3.2 -1.2 C -1.5 -2.4 1.8 -2.2 2.4 -0.6 C 3 1 1.8 2.4 0.2 3 C -1.5 3.6 -2.8 2.8 -3.2 1.5 C -2.4 2 -1 2.2 0.2 1.6 C 1.2 1.1 1.6 0.2 1 -0.8 C 0.4 -1.6 -1.8 -1.5 -3.2 -1.2 Z" fill={navy} />
           <circle cx="0" cy="0.2" r="1.1" fill={gold} />
-          {/* Registered symbol ® */}
           <text x="6.8" y="-3.2" fill={navy} fontSize="2.2" fontWeight="bold">®</text>
         </g>
 
-        {/* 3. Brand Name "RKW" + Veg Dot */}
-        <text
-          x={cx}
-          y={sy + 20}
-          fill={navy}
-          fontSize="6.8"
-          fontWeight="900"
-          letterSpacing="0.06em"
-          textAnchor="middle"
-        >
-          RKW
-        </text>
-        {/* Veg Stamp */}
+        <text x={cx} y={sy + 20} fill={navy} fontSize="6.8" fontWeight="900" letterSpacing="0.06em" textAnchor="middle">RKW</text>
         <g transform={`translate(${cx + 15} ${sy + 16})`}>
           <rect x="0" y="0" width="3.8" height="3.8" rx="0.5" fill="#FFF" stroke="#138808" strokeWidth="0.5" />
           <circle cx="1.9" cy="1.9" r="1.1" fill="#138808" />
         </g>
 
-        {/* 4. Hindi Brand Name: रमेश कोल्हू वाले */}
-        <text
-          x={cx}
-          y={sy + 25.5}
-          fill={navy}
-          fontSize="4.2"
-          fontWeight="800"
-          textAnchor="middle"
-        >
-          रमेश कोल्हू वाले
-        </text>
+        <text x={cx} y={sy + 25.5} fill={navy} fontSize="4.2" fontWeight="800" textAnchor="middle">रमेश कोल्हू वाले</text>
 
-        {/* Golden Drop Accent Underline */}
         <line x1={cx - 16} y1={sy + 27.2} x2={cx - 2} y2={sy + 27.2} stroke="#E5A812" strokeWidth="0.6" strokeLinecap="round" />
         <line x1={cx + 2} y1={sy + 27.2} x2={cx + 16} y2={sy + 27.2} stroke="#E5A812" strokeWidth="0.6" strokeLinecap="round" />
-        <path
-          d={`M ${cx} ${sy + 26.4} Q ${cx - 1.2} ${sy + 28} ${cx} ${sy + 28.8} Q ${cx + 1.2} ${sy + 28} ${cx} ${sy + 26.4} Z`}
-          fill="#E5A812"
-        />
+        <path d={`M ${cx} ${sy + 26.4} Q ${cx - 1.2} ${sy + 28} ${cx} ${sy + 28.8} Q ${cx + 1.2} ${sy + 28} ${cx} ${sy + 26.4} Z`} fill="#E5A812" />
 
-        {/* Cursive Tagline: पीढ़ियों का विश्वास */}
-        <text
-          x={cx}
-          y={sy + 32.5}
-          fill={maroon}
-          fontSize="3.4"
-          fontWeight="700"
-          fontStyle="italic"
-          textAnchor="middle"
-        >
-          पीढ़ियों का विश्वास
-        </text>
+        <text x={cx} y={sy + 32.5} fill={maroon} fontSize="3.4" fontWeight="700" fontStyle="italic" textAnchor="middle">पीढ़ियों का विश्वास</text>
 
-        {/* 5. Maroon Pill: COLD PRESSED */}
         <g transform={`translate(${cx} ${sy + 37.5})`}>
           <rect x="-17" y="-3" width="34" height="6" rx="3" fill={maroon} />
-          <text x="0" y="1.2" fill="#FFF" fontSize="3.1" fontWeight="900" letterSpacing="0.08em" textAnchor="middle">
-            COLD PRESSED
-          </text>
+          <text x="0" y="1.2" fill="#FFF" fontSize="3.1" fontWeight="900" letterSpacing="0.08em" textAnchor="middle">COLD PRESSED</text>
         </g>
 
-        {/* 6. Product Title in Bold Maroon (Line 1 & Line 2) */}
-        <text
-          x={cx}
-          y={sy + 46.5}
-          fill={maroon}
-          fontSize={title2 ? "5.4" : "6"}
-          fontWeight="900"
-          letterSpacing="0.02em"
-          textAnchor="middle"
-        >
-          {title1}
-        </text>
+        <text x={cx} y={sy + 46.5} fill={maroon} fontSize={title2 ? "5.4" : "6"} fontWeight="900" letterSpacing="0.02em" textAnchor="middle">{title1}</text>
         {title2 && (
-          <text
-            x={cx}
-            y={sy + 52.5}
-            fill={maroon}
-            fontSize="5.2"
-            fontWeight="900"
-            letterSpacing="0.02em"
-            textAnchor="middle"
-          >
-            {title2}
-          </text>
+          <text x={cx} y={sy + 52.5} fill={maroon} fontSize="5.2" fontWeight="900" letterSpacing="0.02em" textAnchor="middle">{title2}</text>
         )}
 
-        {/* Subtitle / Hindi Name in Italic Serif */}
         {cleanHindiSub && (
-          <text
-            x={cx}
-            y={sy + (title2 ? 57.5 : 53.5)}
-            fill={maroon}
-            fontSize="3.6"
-            fontWeight="600"
-            fontStyle="italic"
-            textAnchor="middle"
-          >
-            {cleanHindiSub}
-          </text>
+          <text x={cx} y={sy + (title2 ? 57.5 : 53.5)} fill={maroon} fontSize="3.6" fontWeight="600" fontStyle="italic" textAnchor="middle">{cleanHindiSub}</text>
         )}
 
-        {/* 7. Maroon Pill: SINGLE PRESSED */}
         <g transform={`translate(${cx} ${sy + (title2 ? 63 : 59)})`}>
           <rect x="-15" y="-2.6" width="30" height="5.2" rx="2.6" fill={maroon} />
-          <text x="0" y="1.1" fill="#FFF" fontSize="2.7" fontWeight="800" letterSpacing="0.06em" textAnchor="middle">
-            SINGLE PRESSED
-          </text>
+          <text x="0" y="1.1" fill="#FFF" fontSize="2.7" fontWeight="800" letterSpacing="0.06em" textAnchor="middle">SINGLE PRESSED</text>
         </g>
 
-        {/* 8. Sourcing Callout: Dynamic Origin */}
-        <text
-          x={cx}
-          y={sy + (title2 ? 70 : 66)}
-          fill="#555"
-          fontSize="2.4"
-          fontWeight="600"
-          textAnchor="middle"
-        >
-          {sourceType}
-        </text>
-        <text
-          x={cx}
-          y={sy + (title2 ? 74.2 : 70.2)}
-          fill={themeColor}
-          fontSize={origin.length > 14 ? "2.4" : "3.1"}
-          fontWeight="900"
-          letterSpacing="0.05em"
-          textAnchor="middle"
-        >
-          {origin}
-        </text>
-        <line
-          x1={cx - 10}
-          y1={sy + (title2 ? 75.5 : 71.5)}
-          x2={cx + 10}
-          y2={sy + (title2 ? 75.5 : 71.5)}
-          stroke={maroon}
-          strokeWidth="0.5"
-        />
+        <text x={cx} y={sy + (title2 ? 70 : 66)} fill="#555" fontSize="2.4" fontWeight="600" textAnchor="middle">{sourceType}</text>
+        <text x={cx} y={sy + (title2 ? 74.2 : 70.2)} fill={themeColor} fontSize={origin.length > 14 ? "2.4" : "3.1"} fontWeight="900" letterSpacing="0.05em" textAnchor="middle">{origin}</text>
+        <line x1={cx - 10} y1={sy + (title2 ? 75.5 : 71.5)} x2={cx + 10} y2={sy + (title2 ? 75.5 : 71.5)} stroke={maroon} strokeWidth="0.5" />
 
-        {/* 9. Farm, Flowers & Cruet Illustration Section */}
         <g transform={`translate(${cx} ${sy + 77})`}>
-          {/* Background farm glow */}
           <rect x="-22" y="0" width="44" height="38" rx="2" fill={`url(#${id}-farm-field-glow)`} />
-
-          {/* Botanical Art Tailored to Ingredient */}
           {renderBotanicalArt(p)}
-
-          {/* Quality Badges on Right */}
           <g transform="translate(10 6)">
-            <text x="0" y="0" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
-              Premium Quality
-            </text>
-            <text x="0" y="4" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
-              No Preservatives
-            </text>
-            <text x="0" y="8" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">
-              No Added Colour
-            </text>
+            <text x="0" y="0" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">Premium Quality</text>
+            <text x="0" y="4" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">No Preservatives</text>
+            <text x="0" y="8" fill="#262626" fontSize="2.2" fontWeight="800" fontStyle="italic" textAnchor="middle">No Added Colour</text>
           </g>
         </g>
 
-        {/* 10. Maroon Bottom Banner with White Ornate Filigree Scrolls */}
         <g>
-          {/* Maroon shaped bottom background */}
-          <path
-            d={`M ${sx + 1.2} ${sy + 118} Q ${cx} ${sy + 115} ${sx + sw - 1.2} ${sy + 118} L ${sx + sw - 1.2} ${sy + sh - 2.5} Q ${cx} ${sy + sh - 1} ${sx + 1.2} ${sy + sh - 2.5} Z`}
-            fill={maroon}
-          />
-
-          {/* Ornate White Floral Filigree Scrolls on Left & Right */}
-          {/* Left Scroll */}
+          <path d={`M ${sx + 1.2} ${sy + 118} Q ${cx} ${sy + 115} ${sx + sw - 1.2} ${sy + 118} L ${sx + sw - 1.2} ${sy + sh - 2.5} Q ${cx} ${sy + sh - 1} ${sx + 1.2} ${sy + sh - 2.5} Z`} fill={maroon} />
           <g transform={`translate(${sx + 7} ${sy + 135})`} stroke="#FFF" fill="none" strokeWidth="0.5" strokeLinecap="round">
             <path d="M 0 0 C -4 -4 -6 2 -2 5 C 1 7 -2 10 -5 9" />
             <circle cx="-3.5" cy="4" r="0.8" fill="#FFF" stroke="none" />
             <path d="M -1 2 C -3 0 -5 1 -4 3" />
             <circle cx="-1" cy="7" r="0.6" fill="#FFF" stroke="none" />
           </g>
-          {/* Right Scroll (Mirrored) */}
           <g transform={`translate(${sx + sw - 7} ${sy + 135}) scale(-1 1)`} stroke="#FFF" fill="none" strokeWidth="0.5" strokeLinecap="round">
             <path d="M 0 0 C -4 -4 -6 2 -2 5 C 1 7 -2 10 -5 9" />
             <circle cx="-3.5" cy="4" r="0.8" fill="#FFF" stroke="none" />
             <path d="M -1 2 C -3 0 -5 1 -4 3" />
             <circle cx="-1" cy="7" r="0.6" fill="#FFF" stroke="none" />
           </g>
-
-          {/* Net Qty Header */}
-          <text
-            x={cx}
-            y={sy + 124}
-            fill="#FFFFFF"
-            fontSize="3.2"
-            fontWeight="600"
-            letterSpacing="0.04em"
-            textAnchor="middle"
-          >
-            Net Qty.
-          </text>
-
-          {/* Big Bold Volume Display: e.g. 500ml */}
-          <text
-            x={cx}
-            y={sy + 136}
-            fill="#FFFFFF"
-            fontSize="9.2"
-            fontWeight="900"
-            letterSpacing="-0.02em"
-            textAnchor="middle"
-          >
-            {displayQty}
-          </text>
-
-          {/* Recycling Emblem Icon at bottom */}
+          <text x={cx} y={sy + 124} fill="#FFFFFF" fontSize="3.2" fontWeight="600" letterSpacing="0.04em" textAnchor="middle">Net Qty.</text>
+          <text x={cx} y={sy + 136} fill="#FFFFFF" fontSize="9.2" fontWeight="900" letterSpacing="-0.02em" textAnchor="middle">{displayQty}</text>
           <g transform={`translate(${cx} ${sy + 148})`}>
             <polygon points="0,-4.5 4,2 -4,2" fill="none" stroke="#FACC15" strokeWidth="0.6" strokeLinejoin="round" />
             <path d="M 0 -4.5 L 1 -3" stroke="#FACC15" strokeWidth="0.5" />
@@ -1706,217 +1364,110 @@ function ProductArt({
     );
   };
 
-  // Dynamic back sticker matching authentic RKW label (media_1794909193509_b2918e2a.jpg)
   const renderBackSticker = (dx: number) => {
     const cx = 100 + dx;
     const sx = 75.5 + dx;
     const sy = 93;
     const sw = 49;
     const sh = 159;
-    const themeColor = p.stickerColor || p.label || "#7A1426";
-    const maroon = themeColor;
+    const maroon = p.stickerColor || p.label || "#7A1426";
     const navy = "#0B2545";
+    const qty = getDisplayQty(size || p.sizes[0]);
 
     return (
       <g key={`back-${dx}`}>
-        {/* 1. White Base Card with Maroon Border */}
-        <rect
-          x={sx}
-          y={sy}
-          width={sw}
-          height={sh}
-          rx={3.5}
-          fill="#FFFFFF"
-          stroke={maroon}
-          strokeWidth={1.2}
-        />
-        <rect
-          x={sx + 1.2}
-          y={sy + 1.2}
-          width={sw - 2.4}
-          height={sh - 2.4}
-          rx={2.5}
-          fill="none"
-          stroke={maroon}
-          strokeWidth="0.35"
-          strokeOpacity={0.5}
-        />
+        <rect x={sx} y={sy} width={sw} height={sh} rx={3.5} fill="#FFFFFF" stroke={maroon} strokeWidth={1.2} />
+        <rect x={sx + 1.2} y={sy + 1.2} width={sw - 2.4} height={sh - 2.4} rx={2.5} fill="none" stroke={maroon} strokeWidth="0.35" strokeOpacity={0.5} />
 
-        {/* 2. Top Header: RKW Logo + Ramesh Kolhu Wale */}
         <g transform={`translate(${cx - 10} ${sy + 7.5})`}>
           <circle cx="0" cy="0" r="4.2" fill="#FFF" stroke={navy} strokeWidth="0.6" />
           <circle cx="0" cy="0" r="3.2" fill="#FFF" stroke="#D97706" strokeWidth="0.4" />
           <text x="0" y="1" fill={navy} fontSize="3" fontWeight="bold" textAnchor="middle">R</text>
           <text x="5.2" y="-2" fill={navy} fontSize="1.8" fontWeight="bold">®</text>
         </g>
-        <text
-          x={cx + 6}
-          y={sy + 6.2}
-          fill={navy}
-          fontSize="4.2"
-          fontWeight="900"
-          letterSpacing="0.05em"
-          textAnchor="middle"
-        >
-          RKW
-        </text>
+        <text x={cx + 6} y={sy + 6.2} fill={navy} fontSize="4.2" fontWeight="900" letterSpacing="0.05em" textAnchor="middle">RKW</text>
         <g transform={`translate(${cx + 17} ${sy + 3.8})`}>
           <rect x="0" y="0" width="3.2" height="3.2" rx="0.4" fill="#FFF" stroke="#138808" strokeWidth="0.4" />
           <circle cx="1.6" cy="1.6" r="0.9" fill="#138808" />
         </g>
+        <text x={cx} y={sy + 11.8} fill={navy} fontSize="3.8" fontWeight="800" textAnchor="middle">Ramesh Kolhu Wale</text>
+        <path d={`M ${cx} ${sy + 13} Q ${cx - 0.9} ${sy + 14.5} ${cx} ${sy + 15.2} Q ${cx + 0.9} ${sy + 14.5} ${cx} ${sy + 13} Z`} fill="#E5A812" />
 
-        <text
-          x={cx}
-          y={sy + 11.8}
-          fill={navy}
-          fontSize="3.8"
-          fontWeight="800"
-          textAnchor="middle"
-        >
-          Ramesh Kolhu Wale
-        </text>
-
-        {/* Golden drop */}
-        <path
-          d={`M ${cx} ${sy + 13} Q ${cx - 0.9} ${sy + 14.5} ${cx} ${sy + 15.2} Q ${cx + 0.9} ${sy + 14.5} ${cx} ${sy + 13} Z`}
-          fill="#E5A812"
-        />
-
-        {/* 3. Nutrition Facts Box with Yellow Header */}
         <g transform={`translate(${cx} ${sy + 17.5})`}>
-          {/* Yellow header banner */}
           <rect x="-22" y="0" width="44" height="4.5" fill="#FDE047" stroke="#333" strokeWidth="0.4" />
-          <text x="0" y="3.2" fill="#1C1917" fontSize="2.2" fontWeight="900" textAnchor="middle">
-            Nutrition Facts (Per 100g)
-          </text>
-
-          {/* Nutrition Table Grid */}
+          <text x="0" y="3.2" fill="#1C1917" fontSize="2.2" fontWeight="900" textAnchor="middle">Nutrition Facts (Per 100g)</text>
           <rect x="-22" y="4.5" width="44" height="28" fill="#FFF" stroke="#333" strokeWidth="0.4" />
           <line x1="8" y1="4.5" x2="8" y2="32.5" stroke="#333" strokeWidth="0.3" />
-
           {getNutritionFacts(p).map(([label, val], idx) => {
             const rowY = 7.5 + idx * 3;
             return (
               <g key={idx}>
                 {idx > 0 && <line x1="-22" y1={4.5 + idx * 3} x2="22" y2={4.5 + idx * 3} stroke="#E5E7EB" strokeWidth="0.3" />}
-                <text x="-20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="700">
-                  {label}
-                </text>
-                <text x="20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="800" textAnchor="end">
-                  {val}
-                </text>
+                <text x="-20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="700">{label}</text>
+                <text x="20" y={rowY} fill="#1F2937" fontSize="1.8" fontWeight="800" textAnchor="end">{val}</text>
               </g>
             );
           })}
         </g>
 
-        {/* 4. Ingredients & Declarations */}
         <g transform={`translate(${cx} ${sy + 53})`}>
-          <text x="0" y="0" fill="#111" fontSize="2.1" fontWeight="800" textAnchor="middle">
-            Ingredients: 100% Pure Cold-Pressed {p.short}
-          </text>
-          <text x="0" y="3.2" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">
-            Free From Argemone Oil Representative
-          </text>
-          <text x="0" y="6.8" fill="#111" fontSize="2.2" fontWeight="800" textAnchor="middle">
-            NET QUANTITY : 500 ML (450 g)
-          </text>
+          <text x="0" y="0" fill="#111" fontSize="2.1" fontWeight="800" textAnchor="middle">Ingredients: 100% Pure Cold-Pressed {p.short}</text>
+          <text x="0" y="3.2" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">Free From Argemone Oil Representative</text>
+          <text x="0" y="6.8" fill="#111" fontSize="2.2" fontWeight="800" textAnchor="middle">NET QUANTITY : {qty.toUpperCase()}</text>
         </g>
 
-        {/* 5. Free Delivery Scooter & Contact Callout */}
         <g transform={`translate(${cx} ${sy + 68})`}>
-          {/* Red delivery scooter */}
           <g transform="translate(-16 -2) scale(0.65)">
             <circle cx="3" cy="11" r="2.5" fill="#333" />
             <circle cx="15" cy="11" r="2.5" fill="#333" />
             <path d="M 3 11 L 8 11 L 10 5 L 14 5 L 15 11" fill="none" stroke="#DC2626" strokeWidth="2.2" strokeLinecap="round" />
             <rect x="5" y="3" width="5" height="5" rx="0.5" fill="#DC2626" />
           </g>
-          <text x="-3" y="1" fill="#DC2626" fontSize="2.5" fontWeight="900">
-            FREE DELIVERY
-          </text>
-          <text x="-3" y="4.2" fill="#444" fontSize="1.8" fontWeight="700">
-            Delhi NCR &bull; Min. ₹799
-          </text>
-
-          {/* WhatsApp & Phones */}
+          <text x="-3" y="1" fill="#DC2626" fontSize="2.5" fontWeight="900">FREE DELIVERY</text>
+          <text x="-3" y="4.2" fill="#444" fontSize="1.8" fontWeight="700">Delhi NCR &bull; Min. ₹799</text>
           <g transform="translate(0 9)">
             <circle cx="-14" cy="0" r="2.6" fill="#22C55E" />
             <path d="M -15 -1 Q -14 -2 -13 -1 L -12.5 0 Q -13 1 -14 1 Q -15 0 -15 -1 Z" fill="#FFF" />
-            <text x="-8" y="0.8" fill="#111" fontSize="2.1" fontWeight="800">
-              +91 9217744378 / 79
-            </text>
+            <text x="-8" y="0.8" fill="#111" fontSize="2.1" fontWeight="800">+91 9217744378 / 79</text>
           </g>
         </g>
 
-        {/* 6. Factory Address & FSSAI */}
         <g transform={`translate(${cx} ${sy + 89})`}>
-          <text x="0" y="0" fill="#666" fontSize="1.7" fontWeight="600" textAnchor="middle">
-            Mfg. &amp; Pkd. By:
-          </text>
-          <text x="0" y="3.2" fill="#111" fontSize="2.3" fontWeight="900" textAnchor="middle">
-            VINAYAK UDYOG GLOBAL PVT. LTD.
-          </text>
-          <text x="0" y="6.4" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">
-            Plot No. 100, Pocket A, Sector 1, DSIIDC, Bawana, Delhi-39
-          </text>
-
-          {/* FSSAI Logo & Lic No */}
+          <text x="0" y="0" fill="#666" fontSize="1.7" fontWeight="600" textAnchor="middle">Mfg. &amp; Pkd. By:</text>
+          <text x="0" y="3.2" fill="#111" fontSize="2.3" fontWeight="900" textAnchor="middle">VINAYAK UDYOG GLOBAL PVT. LTD.</text>
+          <text x="0" y="6.4" fill="#444" fontSize="1.8" fontWeight="600" textAnchor="middle">Plot No. 100, Pocket A, Sector 1, DSIIDC, Bawana, Delhi-39</text>
           <g transform="translate(0 12)">
-            <text x="-12" y="1.8" fill="#1E3A8A" fontSize="3.6" fontWeight="900" fontStyle="italic">
-              fssai
-            </text>
-            <text x="2" y="1.8" fill="#111" fontSize="2" fontWeight="800">
-              Lic. No. 10018011004919
-            </text>
+            <text x="-12" y="1.8" fill="#1E3A8A" fontSize="3.6" fontWeight="900" fontStyle="italic">fssai</text>
+            <text x="2" y="1.8" fill="#111" fontSize="2" fontWeight="800">Lic. No. 10018011004919</text>
           </g>
-          <text x="0" y="18" fill="#2563EB" fontSize="2" fontWeight="700" textAnchor="middle">
-            www.rameshkolhuwale.com
-          </text>
+          <text x="0" y="18" fill="#2563EB" fontSize="2" fontWeight="700" textAnchor="middle">www.rameshkolhuwale.com</text>
         </g>
 
-        {/* 7. Barcode & QR Code */}
         <g transform={`translate(${cx} ${sy + 120})`}>
-          {/* QR Code Simulation */}
           <rect x="-18" y="0" width="12" height="12" fill="#FFF" stroke="#222" strokeWidth="0.5" />
           <rect x="-16.5" y="1.5" width="3.5" height="3.5" fill="#222" />
           <rect x="-10" y="1.5" width="2" height="2" fill="#222" />
           <rect x="-16.5" y="7" width="2" height="2" fill="#222" />
           <rect x="-11.5" y="5.5" width="3.5" height="3.5" fill="#222" />
-
-          {/* Barcode Simulation */}
           <g transform="translate(-1 0)">
             {[0, 2, 3, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19].map((bx, i) => (
-              <line
-                key={i}
-                x1={bx}
-                y1="0"
-                x2={bx}
-                y2="10"
-                stroke="#111"
-                strokeWidth={i % 3 === 0 ? "0.9" : "0.5"}
-              />
+              <line key={i} x1={bx} y1="0" x2={bx} y2="10" stroke="#111" strokeWidth={i % 3 === 0 ? "0.9" : "0.5"} />
             ))}
-            <text x="9.5" y="13.5" fill="#111" fontSize="1.8" fontWeight="bold" letterSpacing="0.08em" textAnchor="middle">
-              8 906225 820923
-            </text>
+            <text x="9.5" y="13.5" fill="#111" fontSize="1.8" fontWeight="bold" letterSpacing="0.08em" textAnchor="middle">8 906225 820923</text>
           </g>
         </g>
 
-        {/* 8. Bottom Swachh Bharat & Recycling Marks */}
         <g transform={`translate(${cx} ${sy + 144})`}>
-          {/* Chashma logo */}
           <circle cx="-8" cy="0" r="2.2" fill="none" stroke="#222" strokeWidth="0.4" />
           <circle cx="-2" cy="0" r="2.2" fill="none" stroke="#222" strokeWidth="0.4" />
           <line x1="-5.8" y1="0" x2="-4.2" y2="0" stroke="#222" strokeWidth="0.4" />
-          {/* Recycle triangle */}
           <polygon points="6,-3 9,2 3,2" fill="none" stroke="#22C55E" strokeWidth="0.5" />
         </g>
       </g>
     );
   };
 
-  // Fallback label art for non-PET items (such as Jar and Tin)
+  // Label art for non-PET items (jar, tin, etc.)
   const printArt = (dx: number) => {
     const isRound = p.kind === "round-bottle";
     const isTin = p.kind === "tin";
@@ -1926,96 +1477,28 @@ function ProductArt({
     return (
       <g transform={`translate(${dx} 0)`}>
         {P.paper && (
-          <rect
-            x={P.x}
-            y={P.y}
-            width={P.w}
-            height={P.h}
-            rx={isRound ? 6 : 3}
-            fill={css(lab)}
-            stroke={p.ink}
-            strokeWidth={0.8}
-            strokeOpacity={0.25}
-          />
+          <rect x={P.x} y={P.y} width={P.w} height={P.h} rx={isRound ? 6 : 3} fill={css(lab)} stroke={p.ink} strokeWidth={0.8} strokeOpacity={0.25} />
         )}
-
-        {/* Decorative inner border matching RKW stickers */}
         {P.paper && (
-          <rect
-            x={P.x + 2}
-            y={P.y + 2}
-            width={P.w - 4}
-            height={P.h - 4}
-            rx={isRound ? 4 : 2}
-            fill="none"
-            stroke={p.ink}
-            strokeWidth={0.6}
-            strokeOpacity={0.35}
-            strokeDasharray={isTin ? "3 1.5" : undefined}
-          />
+          <rect x={P.x + 2} y={P.y + 2} width={P.w - 4} height={P.h - 4} rx={isRound ? 4 : 2} fill="none" stroke={p.ink} strokeWidth={0.6} strokeOpacity={0.35} strokeDasharray={isTin ? "3 1.5" : undefined} />
         )}
 
-        {/* Brand Header: Authentic RKW Logo & Typography */}
         <g transform={`translate(${centerX} ${P.y + P.h * 0.16})`}>
           <circle cx="-16" cy="-2" r="4.2" fill={p.ink} />
           <circle cx="-16" cy="-2" r="3" fill={css(lab)} />
           <path d="M-17.5 -2 H-14.5 M-16 -3.5 V-0.5" stroke={p.ink} strokeWidth="0.8" />
-          <text
-            x="0"
-            y="0.5"
-            fill={p.ink}
-            fontSize={Math.min(7.5, P.w * 0.09)}
-            fontWeight="800"
-            letterSpacing="0.08em"
-            textAnchor="middle"
-          >
-            RKW
-          </text>
+          <text x="0" y="0.5" fill={p.ink} fontSize={Math.min(7.5, P.w * 0.09)} fontWeight="800" letterSpacing="0.08em" textAnchor="middle">RKW</text>
           <text x="11.5" y="-2" fill={p.ink} fontSize="3.5" fontWeight="bold">®</text>
         </g>
 
-        {/* Hindi Brand Name */}
-        <text
-          x={centerX}
-          y={P.y + P.h * 0.28}
-          fill={p.ink}
-          fontSize={Math.min(4.8, P.w * 0.055)}
-          fontWeight="600"
-          opacity="0.9"
-          textAnchor="middle"
-        >
-          रमेश कोल्हू वाले
-        </text>
+        <text x={centerX} y={P.y + P.h * 0.28} fill={p.ink} fontSize={Math.min(4.8, P.w * 0.055)} fontWeight="600" opacity="0.9" textAnchor="middle">रमेश कोल्हू वाले</text>
 
-        {/* Product Title (e.g. BLACK MUSTARD OIL) */}
-        <text
-          x={centerX}
-          y={P.y + P.h * 0.46}
-          fill={p.ink}
-          fontSize={nameSize}
-          fontWeight="700"
-          letterSpacing="-0.15"
-          textAnchor="middle"
-        >
-          {p.short}
-        </text>
+        <text x={centerX} y={P.y + P.h * 0.46} fill={p.ink} fontSize={nameSize} fontWeight="700" letterSpacing="-0.15" textAnchor="middle">{p.short}</text>
 
-        {/* Subtitle / Hindi Name */}
         {p.sub && (
-          <text
-            x={centerX}
-            y={P.y + P.h * 0.61}
-            fill={p.ink}
-            fontSize={subSize}
-            fontWeight="500"
-            opacity="0.85"
-            textAnchor="middle"
-          >
-            {p.sub}
-          </text>
+          <text x={centerX} y={P.y + P.h * 0.61} fill={p.ink} fontSize={subSize} fontWeight="500" opacity="0.85" textAnchor="middle">{p.sub}</text>
         )}
 
-        {/* Trust badge stamp */}
         <g transform={`translate(${centerX} ${P.y + P.h * 0.74})`}>
           <rect x="-24" y="-4" width="48" height="8" rx="2" fill={p.ink} fillOpacity="0.1" />
           <text x="0" y="1.8" fill={p.ink} fontSize="3.5" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
@@ -2023,7 +1506,6 @@ function ProductArt({
           </text>
         </g>
 
-        {/* Bottom row: FSSAI Green Veg Dot & Net Qty */}
         <g transform={`translate(${centerX} ${P.y + P.h * 0.89})`}>
           <rect x={-P.w * 0.38} y="-3.5" width="6" height="6" fill="#fff" stroke="#138808" strokeWidth="0.6" rx="0.5" />
           <circle cx={-P.w * 0.38 + 3} cy="-0.5" r="1.8" fill="#138808" />
@@ -2038,15 +1520,14 @@ function ProductArt({
   const svgViewBox = isPet
     ? "46 10 108 284"
     : p.kind === "jar"
-    ? "24 140 152 150"
-    : p.kind === "tin"
-    ? "36 45 128 248"
-    : "0 0 200 300";
+      ? "24 140 152 150"
+      : p.kind === "tin"
+        ? "36 45 128 248"
+        : "0 0 200 300";
 
   return (
     <svg viewBox={svgViewBox} className={className} aria-hidden overflow="visible">
       <defs>
-        {/* Softbox cylinder studio lighting */}
         <linearGradient id={`${id}-body`} x1="0" x2="1">
           <stop offset="0" stopColor={css(c, 0.42, a)} />
           <stop offset="0.06" stopColor={css(c, 0.64, a)} />
@@ -2092,8 +1573,6 @@ function ProductArt({
           <stop offset="0.7" stopColor={css(liq, 0.94)} />
           <stop offset="1" stopColor={css(liq, 0.72)} />
         </linearGradient>
-
-        {/* PET Yellow Cap Gradient matching uploaded photo */}
         <linearGradient id={`${id}-yellow-cap`} x1="0" x2="1">
           <stop offset="0" stopColor="#D98A00" />
           <stop offset="0.08" stopColor="#FAB800" />
@@ -2103,8 +1582,6 @@ function ProductArt({
           <stop offset="0.88" stopColor="#E09200" />
           <stop offset="1" stopColor="#BA7200" />
         </linearGradient>
-
-        {/* PET Plastic Sheen Gradient */}
         <linearGradient id={`${id}-pet-plastic`} x1="0" x2="1">
           <stop offset="0" stopColor="rgba(255,255,255,0.4)" />
           <stop offset="0.08" stopColor="rgba(255,255,255,0.12)" />
@@ -2112,8 +1589,6 @@ function ProductArt({
           <stop offset="0.92" stopColor="rgba(255,255,255,0.12)" />
           <stop offset="1" stopColor="rgba(255,255,255,0.3)" />
         </linearGradient>
-
-        {/* PET Golden Oil Liquid Gradient matching reference photo */}
         <linearGradient id={`${id}-pet-oil-grad`} x1="0" x2="1">
           <stop offset="0" stopColor={css(mixRgb(liq, BLACK, 0.42))} />
           <stop offset="0.08" stopColor={css(mixRgb(liq, BLACK, 0.12))} />
@@ -2124,19 +1599,14 @@ function ProductArt({
           <stop offset="0.9" stopColor={css(mixRgb(liq, BLACK, 0.2))} />
           <stop offset="1" stopColor={css(mixRgb(liq, BLACK, 0.42))} />
         </linearGradient>
-
-        {/* Farm Field Glow Gradient for Sticker Illustration */}
         <linearGradient id={`${id}-farm-field-glow`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FEF3C7" stopOpacity="0.9" />
           <stop offset="0.5" stopColor="#FDE68A" stopOpacity="0.95" />
           <stop offset="1" stopColor="#EAB308" stopOpacity="0.8" />
         </linearGradient>
-
-        {/* Front Panel Clip to cleanly wrap rotating 3D stickers */}
         <clipPath id={`${id}-panel-clip`}>
           <rect x="74" y="91" width="52" height="163" rx="3" />
         </clipPath>
-
         <filter id={`${id}-soft`} x="-50%" y="-10%" width="200%" height="120%">
           <feGaussianBlur stdDeviation="2.2" />
         </filter>
@@ -2167,42 +1637,33 @@ function ProductArt({
         </>
       )}
 
-      {/* Body background */}
       <path d={s.body} fill={isPet ? `url(#${id}-pet-plastic)` : `url(#${id}-body)`} />
 
-      {/* Liquid & Glass Layer */}
       <g clipPath={`url(#${id}-clip)`}>
         {isPet ? (
           <>
-            {/* 1. Golden Oil Liquid Fill up to neck meniscus at y=48 */}
             <rect x="60" y="48" width="80" height="240" fill={`url(#${id}-pet-oil-grad)`} opacity="0.96" />
 
-            {/* 2. Clear PET Neck Headspace above oil (y=38 to 48) */}
             <rect x="86" y="38" width="28" height="10" fill="rgba(255,255,255,0.06)" />
             <line x1="88" y1="40" x2="88" y2="48" stroke="#fff" strokeWidth="0.9" strokeOpacity="0.7" />
             <line x1="112" y1="40" x2="112" y2="48" stroke="#fff" strokeWidth="0.6" strokeOpacity="0.35" />
 
-            {/* 2b. Protruding Neck Collar / Transfer Ring (y=40 to 44) */}
             <ellipse cx="100" cy="42" rx="16.5" ry="2" fill="none" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.85" />
             <ellipse cx="100" cy="42.5" rx="16" ry="1.6" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
 
-            {/* 3. Liquid Meniscus at y=48 with specular glint */}
             <path d="M 86 48 Q 100 50.5 114 48" stroke="#FFF9D2" strokeWidth="1.3" strokeOpacity="0.95" fill="none" />
             <path d="M 86 48.8 Q 100 51.3 114 48.8" stroke="rgba(100,50,0,0.5)" strokeWidth="0.8" fill="none" />
 
-            {/* 4. The 9 Side Grip Ribs (Notches on Left & Right) */}
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
               const ny = 98 + i * 15.5;
               return (
                 <g key={i}>
-                  {/* Left Notch */}
                   <rect x="67" y={ny} width="6.5" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
                   <rect x="67.5" y={ny + 0.5} width="5.5" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
                   <line x1="67" y1={ny} x2="73.5" y2={ny} stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
                   <line x1="67" y1={ny + 8.5} x2="73.5" y2={ny + 8.5} stroke="rgba(100,45,0,0.5)" strokeWidth="0.8" />
                   <ellipse cx="70.2" cy={ny + 4.25} rx="1.8" ry="2" fill="#FFEAA7" opacity="0.65" />
 
-                  {/* Right Notch */}
                   <rect x="126.5" y={ny} width="6.5" height="8.5" rx="1.8" fill="rgba(60,25,0,0.32)" />
                   <rect x="127" y={ny + 0.5} width="5.5" height="7.5" rx="1.2" fill="rgba(255,225,90,0.28)" />
                   <line x1="126.5" y1={ny} x2="133" y2={ny} stroke="rgba(255,255,255,0.7)" strokeWidth="0.8" />
@@ -2212,28 +1673,20 @@ function ProductArt({
               );
             })}
 
-            {/* Vertical Inner Divider Lines between ribs and center window */}
             <line x1="74" y1="90" x2="74" y2="256" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
             <line x1="126" y1="90" x2="126" y2="256" stroke="rgba(0,0,0,0.2)" strokeWidth="0.8" />
 
-            {/* 5. Shoulder Chamfer Facets */}
             <line x1="86" y1="56" x2="66" y2="90" stroke="#fff" strokeWidth="1.6" strokeOpacity="0.75" strokeLinecap="round" />
             <line x1="114" y1="56" x2="134" y2="90" stroke="rgba(0,0,0,0.25)" strokeWidth="1.2" strokeLinecap="round" />
             <path d="M 74 86 Q 100 84 126 86" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
 
-            {/* 6. Front Recessed Panel Bevel Frame */}
             <g>
               <polygon points="74,91 75.5,93 75.5,253 74,255" fill="rgba(255,255,255,0.45)" />
               <polygon points="74,91 126,91 124.5,93 75.5,93" fill="rgba(255,255,255,0.55)" />
               <polygon points="126,91 126,255 124.5,253 124.5,93" fill="rgba(0,0,0,0.22)" />
               <polygon points="74,255 75.5,253 124.5,253 126,255" fill="rgba(0,0,0,0.18)" />
-              <line x1="74,91" x2="75.5,93" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.7" />
-              <line x1="126,91" x2="124.5,93" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="74,255" x2="75.5,253" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="126,255" x2="124.5,253" stroke="#000" strokeWidth="0.8" strokeOpacity="0.25" />
             </g>
 
-            {/* 7. Rotating Authentic RKW Sticker Art (Front & Back) */}
             <g clipPath={`url(#${id}-panel-clip)`}>
               <motion.g style={{ x }}>
                 {renderFrontSticker(-period)}
@@ -2245,17 +1698,11 @@ function ProductArt({
               </motion.g>
             </g>
 
-            {/* 8. Studio Lighting Reflections matching the photo */}
-            {/* Left softbox diffuse highlight */}
             <rect x="76" y="93" width="7" height="158" rx="3.5" fill="#fff" opacity="0.32" filter={`url(#${id}-soft)`} />
-            {/* Sharp specular pinstripe */}
             <line x1="77.5" y1="93" x2="77.5" y2="251" stroke="#fff" strokeWidth="1.2" strokeOpacity="0.88" />
-            {/* Shoulder specular */}
             <path d="M 75 88 L 86 68" stroke="#fff" strokeWidth="1.4" strokeOpacity="0.65" strokeLinecap="round" />
-            {/* Right fill light */}
             <line x1="123" y1="93" x2="123" y2="251" stroke="#fff" strokeWidth="0.8" strokeOpacity="0.25" />
 
-            {/* Base pedestal kick-up arch and thick plastic reflections */}
             <path d="M 66 264 H 134" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
             <path d="M 64 274 H 136" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2" />
             <path d="M 64 280 H 136" stroke="rgba(120,60,0,0.35)" strokeWidth="1" />
@@ -2266,68 +1713,28 @@ function ProductArt({
           <>
             {p.glass && s.fill !== undefined && (
               <>
-                <rect
-                  x={B.x + 3}
-                  y={s.fill}
-                  width={B.w - 6}
-                  height={286 - s.fill - 8}
-                  fill={`url(#${id}-liquid)`}
-                  opacity="0.82"
-                />
-                {/* Liquid surface meniscus highlight */}
+                <rect x={B.x + 3} y={s.fill} width={B.w - 6} height={286 - s.fill - 8} fill={`url(#${id}-liquid)`} opacity="0.82" />
                 <rect x={B.x + 3} y={s.fill} width={B.w - 6} height="1.8" fill="#fff" opacity="0.5" />
-                {s.tube && (
-                  <rect x="98.6" y={B.y - 4} width="2.8" height={286 - B.y - 4} fill="#fff" opacity="0.4" />
-                )}
-                {/* Thick studio glass base */}
+                {s.tube && <rect x="98.6" y={B.y - 4} width="2.8" height={286 - B.y - 4} fill="#fff" opacity="0.4" />}
                 <rect x={B.x} y="274" width={B.w} height="12" fill={css(c, 0.5, 0.55)} />
                 <path d={`M${B.x + 6} 275 H${B.x + B.w - 6}`} stroke="#fff" strokeOpacity="0.55" strokeWidth="0.8" />
               </>
             )}
 
-            {/* 360-Degree Rotating Sticker Art */}
             <motion.g style={{ x }}>
               {printArt(0)}
               {printArt(period)}
             </motion.g>
 
-            {/* Shadow gradient wrap & vertical reflections */}
             <rect x={B.x} y={P.y - 2} width={B.w} height={P.h + 4} fill={`url(#${id}-wrap)`} opacity="0.5" />
             <rect x={B.x} y={B.y} width={B.w} height={B.h} fill={`url(#${id}-shade)`} />
-            {/* Softbox reflection highlights */}
-            <rect
-              x={B.x + B.w * 0.07}
-              y={B.y + 4}
-              width={B.w * 0.11}
-              height={B.h - 8}
-              rx="3"
-              fill="#fff"
-              opacity={lum(c) > 200 ? 0.45 : 0.3}
-              filter={`url(#${id}-soft)`}
-            />
-            <rect
-              x={B.x + B.w * 0.11}
-              y={B.y + 6}
-              width={B.w * 0.028}
-              height={B.h - 12}
-              rx="1"
-              fill="#fff"
-              opacity="0.85"
-            />
-            <rect
-              x={B.x + B.w * 0.86}
-              y={B.y + 8}
-              width={B.w * 0.025}
-              height={B.h - 16}
-              rx="1"
-              fill="#fff"
-              opacity="0.3"
-            />
+            <rect x={B.x + B.w * 0.07} y={B.y + 4} width={B.w * 0.11} height={B.h - 8} rx="3" fill="#fff" opacity={lum(c) > 200 ? 0.45 : 0.3} filter={`url(#${id}-soft)`} />
+            <rect x={B.x + B.w * 0.11} y={B.y + 6} width={B.w * 0.028} height={B.h - 12} rx="1" fill="#fff" opacity="0.85" />
+            <rect x={B.x + B.w * 0.86} y={B.y + 8} width={B.w * 0.025} height={B.h - 16} rx="1" fill="#fff" opacity="0.3" />
           </>
         )}
       </g>
 
-      {/* Glass outer contour stroke */}
       {isPet ? (
         <>
           <path d={s.body} fill="none" stroke="rgba(255,200,50,0.4)" strokeWidth="0.8" />
@@ -2341,369 +1748,130 @@ function ProductArt({
   );
 }
 
-// ---------- Main Product Shelf Component ----------
+// ---------------------------------------------------------------- procedural sound effects
 
-export type ProductShelfProps = {
-  products?: Product[];
-  currency?: string;
-  className?: string;
-  children?: ReactNode;
-  title?: string;
-  subtitle?: string;
-  onAddToCart?: (product: Product, size: string, quantity: number) => void;
-};
+export class ShelfSoundSystem {
+  private ctx: AudioContext | null = null;
+  private enabled: boolean = false;
 
-const SPRING = { type: "spring" as const, bounce: 0, duration: 0.55 };
-
-export function ProductShelf({
-  products = DEFAULT_PRODUCTS,
-  currency = "₹",
-  className,
-  children,
-  title = "3D Kolhu Cellar & Virtual Shelves",
-  subtitle = "Touch any bottle to inspect in 360° 3D, verify the Agmark & FSSAI purity labels, and order live cold-pressed oil.",
-  onAddToCart
-}: ProductShelfProps) {
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [bag, setBag] = useState(0);
-  const [bump, setBump] = useState(0);
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const bagRef = useRef<HTMLButtonElement | null>(null);
-
-  // Cart integration
-  const cartContext = useCart();
-  const effectiveBagCount = cartContext ? cartContext.totalItems : bag;
-
-  // Split into 4 shelves
-  const rows = [
-    products.slice(0, 4),
-    products.slice(4, 8),
-    products.slice(8, 12),
-    products.slice(12, 16)
-  ];
-
-  const shelfTitles = [
-    { title: "01. Signature Mustard Oils & Vedic Bilona Ghee", sub: "Traditional cold-press Kolhu & hand-churned Vedic curd ghee" },
-    { title: "02. Pure Nut & Coconut Cold-Pressed Oils", sub: "Saurashtra peanuts, Kerala copra, Tiptur extra virgin & Gujarat sesame" },
-    { title: "03. Wellness Rogans & Exotic Seeds", sub: "Kashmir Mamra & Gurbandi almonds, wild walnut & organic flaxseed" },
-    { title: "04. Specialty & Daily Kitchen Cold-Pressed Oils", sub: "West Bengal black sesame, cold-pressed olive, Maharashtra onion & Karnataka sunflower" }
-  ];
-
-  const open = products.find((p) => p.id === openId) ?? null;
-
-  useEffect(() => {
-    if (!openId) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenId(null);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [openId]);
-
-  const handleAddToBag = (product: Product, size: string, qty: number) => {
-    setBag((b) => b + qty);
-    setBump((n) => n + 1);
-
-    if (onAddToCart) {
-      onAddToCart(product, size, qty);
-    } else if (cartContext) {
-      const volPrice = getProductVolumePrice(product.id, size, product.price);
-      const volCompareAt = getProductVolumeCompareAt(product.id, size, product.compareAt) || Math.round(volPrice * 1.25);
-      const vol = {
-        size,
-        price: volPrice,
-        originalPrice: volCompareAt,
-        packaging: size.includes("Tin") ? "Tin" : product.kind === "jar" ? "Glass Jar" : "PET bottle"
-      };
-      const cartProduct = {
-        id: product.id,
-        name: product.name,
-        hindiName: product.sub || product.name,
-        slug: product.id,
-        category: product.category,
-        shortDesc: product.tagline,
-        description: product.description,
-        price: volPrice,
-        originalPrice: volCompareAt,
-        rating: product.rating,
-        reviewsCount: product.reviews,
-        inStock: true,
-        featured: true,
-        bestSeller: false,
-        image: "/images/yellow_mustard.jpg",
-        volumes: [vol],
-        benefits: product.benefits,
-        processHighlight: product.tagline,
-        smokePoint: "250°C",
-        nutritionalInfo: { energy: "884 kcal / 100g" },
-        extractionDetails: { method: "Traditional Cold Press (<38°C)" },
-        labReportSummary: { purity: "100% Pure Virgin Grade" }
-      };
-      cartContext.addToCart(cartProduct as any, vol as any, qty);
+  public setEnabled(val: boolean) {
+    this.enabled = val;
+    if (val && !this.ctx && typeof window !== "undefined") {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioCtx) {
+        try {
+          this.ctx = new AudioCtx();
+        } catch {
+          // ignore
+        }
+      }
     }
-  };
+    if (this.ctx && this.ctx.state === "suspended" && val) {
+      this.ctx.resume().catch(() => {});
+    }
+  }
 
-  return (
-    <div
-      className={cn(
-        "relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-b from-[#F7F3EB] via-[#F2EDE3] to-[#EAE2D5] font-sans text-[#1C1A16] antialiased",
-        className
-      )}
-    >
-      {/* Top Cellar Spotlight Glow */}
-      <div className="absolute top-0 inset-x-0 h-[480px] bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(245,158,11,0.12),transparent_70%)] pointer-events-none" />
+  public getEnabled() {
+    return this.enabled;
+  }
 
-      <LayoutGroup>
-        <main className="relative mx-auto w-full max-w-[1200px] px-3 pt-6 pb-20 sm:px-6 sm:pt-10">
-          {/* Top Heritage Badge & Cellar Header */}
-          <div className="mb-8 text-center max-w-3xl mx-auto space-y-2.5 px-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-900/10 border border-amber-800/20 text-[#8C4318] text-[11px] sm:text-xs font-black uppercase tracking-widest shadow-2xs">
-              <span>★ SINCE 1981</span>
-              <span>&bull;</span>
-              <span>RAMESH KOLHU WALE</span>
-              <span>&bull;</span>
-              <span>LIVE COLD PRESS</span>
-            </div>
+  public playWoodClick() {
+    if (!this.enabled || !this.ctx) return;
+    try {
+      if (this.ctx.state === "suspended") this.ctx.resume().catch(() => {});
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(280, t);
+      osc.frequency.exponentialRampToValueAtTime(70, t + 0.04);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.04);
+    } catch {
+      // ignore
+    }
+  }
 
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif text-[#1C1A16] font-extrabold tracking-tight">
-              {title}
-            </h1>
-            <p className="text-xs sm:text-sm text-[#786C5E] leading-relaxed max-w-xl mx-auto font-medium">
-              {subtitle}
-            </p>
+  public playChime() {
+    if (!this.enabled || !this.ctx) return;
+    try {
+      if (this.ctx.state === "suspended") this.ctx.resume().catch(() => {});
+      const t = this.ctx.currentTime;
+      [587.33, 880, 1174.66].forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, t + idx * 0.05);
+        gain.gain.setValueAtTime(0.06, t + idx * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.05 + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t + idx * 0.05);
+        osc.stop(t + idx * 0.05 + 0.35);
+      });
+    } catch {
+      // ignore
+    }
+  }
 
-            {/* Quick Trust Highlights Banner */}
-            <div className="pt-2 flex items-center justify-center flex-wrap gap-2 text-[11px] sm:text-xs font-bold text-stone-700">
-              <span className="inline-flex items-center gap-1 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-stone-200/80 shadow-2xs">
-                <span>❄️</span> Cold-Pressed &lt;38°C
-              </span>
-              <span className="inline-flex items-center gap-1 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-stone-200/80 shadow-2xs">
-                <span>🚚</span> Free Delhi NCR Delivery &gt;₹799
-              </span>
-              <span className="inline-flex items-center gap-1 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-stone-200/80 shadow-2xs">
-                <span>⏰</span> Unit Hours: 10:00 AM – 10:00 PM
-              </span>
-              <a
-                href="https://wa.me/919217744378"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 bg-[#25D366]/15 text-[#137A37] px-3 py-1 rounded-full border border-[#25D366]/30 hover:bg-[#25D366]/25 transition-colors cursor-pointer"
-              >
-                <span>💬</span> WhatsApp: +91 9217744378
-              </a>
-            </div>
-
-            {/* Category Jump Tabs */}
-            <div className="pt-3 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
-              {[
-                "All 4 Shelves (16 Items)",
-                "01. Mustard & Ghee (4)",
-                "02. Nut & Coconut (4)",
-                "03. Wellness Rogans (4)",
-                "04. Daily & Specialty (4)"
-              ].map((tabLabel, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setActiveTab(idx)}
-                  className={cn(
-                    "px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-2xs",
-                    activeTab === idx
-                      ? "bg-[#0E2A47] text-white shadow-sm ring-2 ring-[#0E2A47]/30"
-                      : "bg-white/80 hover:bg-white text-stone-700 border border-stone-200"
-                  )}
-                >
-                  {tabLabel}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Shelves Wall */}
-          {rows.map((row, r) => {
-            if (activeTab !== 0 && activeTab !== r + 1) return null;
-            return (
-              <section
-                key={r}
-                id={`shelf-${r + 1}`}
-                aria-label={shelfTitles[r].title}
-                className="relative mb-14 sm:mb-20"
-              >
-                {/* Shelf Category Header Plaque */}
-                <div className="mb-4 px-2 sm:px-6 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 sm:gap-3 truncate">
-                    <span className="px-2.5 py-0.5 rounded-md bg-[#8C4318] text-amber-200 text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-2xs">
-                      Shelf 0{r + 1}
-                    </span>
-                    <h2 className="text-sm sm:text-base font-black text-stone-900 tracking-tight truncate">
-                      {shelfTitles[r].title}
-                    </h2>
-                  </div>
-                  <span className="text-[11px] font-bold text-amber-800 bg-amber-100/70 border border-amber-300/60 px-3 py-1 rounded-full uppercase tracking-wider flex-shrink-0">
-                    <span className="hidden sm:inline">⇄ Click bottle to rotate 360°</span>
-                    <span className="sm:hidden">Swipe shelf ⇄</span>
-                  </span>
-                </div>
-
-                {/* Big Bottles Row Standing on Shelf - Mobile Touch Carousel / Desktop 4-Col Grid */}
-                <div className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory px-3 pb-3 no-scrollbar sm:grid sm:grid-cols-4 sm:gap-6 md:gap-8 sm:px-6 sm:overflow-visible sm:pb-0 sm:items-end">
-                  {row.map((p) => (
-                    <div
-                      key={p.id}
-                      className="w-[72vw] max-w-[240px] sm:w-auto flex-shrink-0 snap-center flex flex-col items-center group"
-                    >
-                      {openId === p.id ? (
-                        <div className="h-[290px] sm:h-[330px] md:h-[360px] w-full" />
-                      ) : (
-                        <motion.button
-                          layoutId={`product-${p.id}`}
-                          type="button"
-                          onClick={() => setOpenId(p.id)}
-                          aria-label={`${p.name}, From ${currency}${p.price}`}
-                          transition={SPRING}
-                          className="relative h-[290px] sm:h-[330px] md:h-[360px] w-full flex items-end justify-center cursor-pointer outline-none transition-transform duration-300 group-hover:-translate-y-2.5 focus-visible:ring-2 focus-visible:ring-[#0E2A47] rounded-2xl"
-                        >
-                          {/* Ambient golden glow behind bottle on hover */}
-                          <div className="absolute inset-0 bg-radial from-amber-400/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full" />
-                          <ProductArt
-                            p={p}
-                            className="h-full w-auto max-w-full drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300"
-                          />
-                          {/* Floating 360 badge on hover */}
-                          <span className="absolute top-2 px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black text-[#0E2A47] shadow-sm border border-stone-200/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none tracking-wider">
-                            360° ⇄
-                          </span>
-                        </motion.button>
-                      )}
-
-                      {/* On mobile: title, Hindi sub & price inline under each bottle */}
-                      <div
-                        className="mt-2 w-full text-center sm:hidden cursor-pointer bg-white/60 backdrop-blur-xs p-2.5 rounded-xl border border-stone-200/60 shadow-2xs"
-                        onClick={() => setOpenId(p.id)}
-                      >
-                        <div className="text-[13px] leading-tight font-black text-stone-900 line-clamp-1">
-                          {p.short}
-                        </div>
-                        {p.sub && (
-                          <div className="text-[10px] text-stone-500 font-sans line-clamp-1">
-                            {p.sub}
-                          </div>
-                        )}
-                        <div className="mt-1 flex items-center justify-center gap-2">
-                          <span className="text-[13px] font-black text-[#0E2A47]">
-                            From {currency}{p.price}
-                          </span>
-                          {p.compareAt && (
-                            <span className="text-[10px] font-normal text-stone-400 line-through">
-                              {currency}{p.compareAt}
-                            </span>
-                          )}
-                        </div>
-                        <button
-                          type="button"
-                          className="mt-1.5 w-full py-1 rounded-lg bg-[#0E2A47] text-amber-300 text-[10px] font-black uppercase tracking-wider shadow-2xs"
-                        >
-                          Tap to Rotate 360° ⇄
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 3D Handcrafted Sheesham / Teak Wood Shelf Plinth */}
-                <div aria-hidden className="relative -mt-2 w-full">
-                  {/* Top shelf surface with wood grain & golden reflection highlight */}
-                  <div className="h-6 sm:h-8 w-full rounded-t-sm bg-gradient-to-b from-[#A45A2A] via-[#8C4318] to-[#6A2E0A] shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(0,0,0,0.15)_40px,rgba(0,0,0,0.15)_42px)]" />
-                    <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#FDE68A]/60 to-transparent" />
-                  </div>
-                  {/* Shelf front face with thickness & engraved brass plaque */}
-                  <div className="h-5 sm:h-6 w-full bg-gradient-to-b from-[#562205] to-[#3B1501] shadow-[0_6px_12px_rgba(0,0,0,0.35)] flex items-center justify-between px-3 sm:px-8 border-t border-[#3B1501]">
-                    {/* Left brass screw stud */}
-                    <div className="size-2 sm:size-2.5 rounded-full bg-gradient-to-tr from-[#92400E] via-[#FBBF24] to-[#FEF3C7] shadow-sm border border-[#78350F]" />
-                    {/* Center engraved brass brand plaque */}
-                    <div className="px-2.5 sm:px-4 py-0.5 rounded bg-gradient-to-r from-[#92400E] via-[#FBBF24] to-[#92400E] text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-[#451A03] shadow-sm border border-[#78350F]/50 truncate">
-                      RAMESH KOLHU WALE &bull; LIVE COLD-PRESSED KACHI GHANI &bull; SINCE 1981
-                    </div>
-                    {/* Right brass screw stud */}
-                    <div className="size-2 sm:size-2.5 rounded-full bg-gradient-to-tr from-[#92400E] via-[#FBBF24] to-[#FEF3C7] shadow-sm border border-[#78350F]" />
-                  </div>
-                  {/* Deep cast shadow under wooden shelf */}
-                  <div className="h-10 sm:h-14 w-full bg-gradient-to-b from-black/25 via-black/10 to-transparent pointer-events-none" />
-                </div>
-
-                {/* Product Titles & Prices under shelf on desktop */}
-                <div className="mt-3 hidden sm:grid sm:grid-cols-4 gap-6 md:gap-8 px-6">
-                  {row.map((p) => (
-                    <div
-                      key={p.id}
-                      className="text-center group cursor-pointer bg-white/70 hover:bg-white p-3 rounded-2xl border border-stone-200/80 shadow-2xs hover:shadow-md transition-all"
-                      onClick={() => setOpenId(p.id)}
-                    >
-                      <div className="text-[13px] leading-snug font-black text-stone-900 sm:text-[14px] line-clamp-1 group-hover:text-[#0E2A47] transition-colors">
-                        {p.short}
-                      </div>
-                      {p.sub && (
-                        <div className="text-[11px] text-stone-500 font-sans line-clamp-1">
-                          {p.sub}
-                        </div>
-                      )}
-                      <div className="mt-1 text-[13px] font-black text-[#0E2A47] tabular-nums sm:text-[14px]">
-                        From {currency}{p.price}
-                        {p.compareAt && (
-                          <span className="ml-1 text-[11px] font-normal text-stone-400 line-through">
-                            {currency}{p.compareAt}
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-[#0E2A47] bg-[#EBF2F8] px-2.5 py-0.5 rounded-full group-hover:bg-[#0E2A47] group-hover:text-amber-300 transition-colors">
-                        Inspect 360° ⇄
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </main>
-
-        {/* 3D Product Interactive Modal Page with 360 Drag & Rotate */}
-        <AnimatePresence>
-          {open && (
-            <ProductPage
-              key={open.id}
-              p={open}
-              currency={currency}
-              onClose={() => setOpenId(null)}
-              onAdd={handleAddToBag}
-              bagRef={bagRef}
-            />
-          )}
-        </AnimatePresence>
-      </LayoutGroup>
-      {children}
-    </div>
-  );
+  public playShutter() {
+    if (!this.enabled || !this.ctx) return;
+    try {
+      if (this.ctx.state === "suspended") this.ctx.resume().catch(() => {});
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(120, t);
+      osc.frequency.linearRampToValueAtTime(240, t + 0.2);
+      gain.gain.setValueAtTime(0.06, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.2);
+    } catch {
+      // ignore
+    }
+  }
 }
 
-// ---------- 3D Product Detail Modal with Touch/Mouse 360 Spin ----------
+// ---------------------------------------------------------------- 360° product dialog
 
-function ProductPage({
+const SPRING = { type: "spring" as const, bounce: 0, duration: 0.55 };
+const WA = "919217744378";
+
+export function ProductPage({
   p,
   currency,
   onClose,
   onAdd,
-  bagRef
+  bagRef,
+  soundSystem,
+  onOpenBag
 }: {
   p: Product;
   currency: string;
   onClose: () => void;
   onAdd: (product: Product, size: string, qty: number) => void;
   bagRef: RefObject<HTMLButtonElement | null>;
+  soundSystem?: ShelfSoundSystem;
+  onOpenBag?: () => void;
 }) {
   const reduce = useReducedMotion();
   const spin = useMotionValue(0);
   const [size, setSize] = useState(p.sizes[0]);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [isAutoSpinning, setIsAutoSpinning] = useState(false);
+  const [activeTab, setActiveTab] = useState<"order" | "process" | "lab">("order");
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const drag = useRef<{ x: number; v: number; samples: { x: number; t: number }[] } | null>(null);
 
@@ -2714,25 +1882,36 @@ function ProductPage({
     return () => c.stop();
   }, [spin, reduce]);
 
-  // Exact volume pricing lookup
+  // Continuous auto spin loop
+  useEffect(() => {
+    if (!isAutoSpinning) return;
+    let animId: number;
+    const tick = () => {
+      spin.set(spin.get() + 0.0032);
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, [isAutoSpinning, spin]);
+
   const computedPrice = getProductVolumePrice(p.id, size, p.price);
   const computedCompareAt = getProductVolumeCompareAt(p.id, size, p.compareAt) || Math.round(computedPrice * 1.25);
-  const savings = computedCompareAt - computedPrice;
 
   const handleAdd = () => {
     onAdd(p, size, qty);
     setAdded(true);
+    soundSystem?.playChime();
     bagRef.current?.animate(
-      [{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }],
+      [{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }],
       { duration: 320, easing: "ease-out" }
     );
-    setTimeout(() => setAdded(false), 2000);
   };
 
-  // Drag to rotate bottle: 1:1 rotation with inertial Apple momentum physics
   const onDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
+    setIsAutoSpinning(false);
     spin.stop();
+    soundSystem?.playWoodClick();
     drag.current = { x: e.clientX, v: spin.get(), samples: [{ x: e.clientX, t: e.timeStamp }] };
   };
 
@@ -2756,9 +1935,15 @@ function ProductPage({
     animate(spin, Math.round(projected), { type: "spring", bounce: 0, duration: 0.9, velocity });
   };
 
+  const snapAngle = (offset: number) => {
+    setIsAutoSpinning(false);
+    soundSystem?.playWoodClick();
+    const currentBase = Math.floor(spin.get());
+    animate(spin, currentBase + offset, { type: "spring", stiffness: 90, damping: 14 });
+  };
+
   return (
-    <motion.div role="dialog" aria-modal="true" aria-label={p.name} className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
+    <motion.div role="dialog" aria-modal="true" aria-label={p.name} className="fixed inset-0 z-[70] overflow-y-auto">
       <motion.div
         className="fixed inset-0 bg-stone-950/85 backdrop-blur-md"
         initial={{ opacity: 0 }}
@@ -2768,14 +1953,13 @@ function ProductPage({
         onClick={onClose}
       />
 
-      {/* Main Dialog Container */}
-      <div className="relative mx-auto flex min-h-full max-w-[1100px] flex-col justify-center px-3 py-4 sm:px-6 md:grid md:grid-cols-[1.05fr_1fr] md:items-center md:gap-8 md:py-8">
-        {/* Left Column: Big 3D interactive bottle on wooden turntable */}
-        <div className="relative flex flex-col items-center justify-center pt-2 pb-4 md:py-0">
+      <div className="relative mx-auto flex min-h-full max-w-[1140px] flex-col justify-center px-3 py-6 sm:px-6 md:grid md:grid-cols-[1.08fr_1fr] md:items-center md:gap-8 md:py-8">
+        {/* Left: 360° bottle on a turntable */}
+        <div className="relative flex flex-col items-center justify-center pb-4 pt-2 md:py-0">
           <motion.div
             layoutId={`product-${p.id}`}
             transition={SPRING}
-            className="relative z-10 w-[200px] sm:w-[250px] md:w-[290px] h-[44vh] sm:h-[52vh] md:h-[65vh] max-h-[580px] flex items-center justify-center cursor-grab touch-none select-none active:cursor-grabbing"
+            className="relative z-10 flex h-[44vh] max-h-[580px] w-[200px] cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing sm:h-[52vh] sm:w-[250px] md:h-[65vh] md:w-[290px]"
             onPointerDown={onDown}
             onPointerMove={onMove}
             onPointerUp={onUp}
@@ -2784,207 +1968,1202 @@ function ProductPage({
             <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
           </motion.div>
 
-          {/* Wooden Turntable Plinth under bottle */}
-          <div className="relative -mt-2 sm:-mt-3 flex flex-col items-center">
-            <div className="h-4 sm:h-5 w-44 sm:w-56 rounded-[50%] bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-[#FDE68A]/40" />
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold text-amber-200 tracking-wider uppercase shadow-sm">
-              <span className="text-xs">⇄</span> Drag horizontally to rotate 360°
+          {/* Wooden Turntable with controls */}
+          <div className="relative -mt-2 flex flex-col items-center sm:-mt-3">
+            <div className="h-4 w-44 rounded-[50%] border-t border-[#FDE68A]/40 bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] sm:h-5 sm:w-56" />
+
+            {/* Rotation & Inspection Action Bar */}
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAutoSpinning(!isAutoSpinning);
+                  soundSystem?.playWoodClick();
+                }}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold transition shadow-sm",
+                  isAutoSpinning
+                    ? "bg-amber-400 text-stone-900 ring-2 ring-amber-300 font-black"
+                    : "bg-white/10 text-amber-200 hover:bg-white/20 border border-white/20 backdrop-blur-md"
+                )}
+              >
+                {isAutoSpinning ? <Pause className="size-3" /> : <Play className="size-3" />}
+                <span>{isAutoSpinning ? "Pause 360°" : "Auto 360°"}</span>
+              </button>
+
+              <div className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 p-0.5 backdrop-blur-md text-[10px] font-bold text-amber-200">
+                <button
+                  type="button"
+                  onClick={() => snapAngle(0)}
+                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                >
+                  Front
+                </button>
+                <button
+                  type="button"
+                  onClick={() => snapAngle(0.25)}
+                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                >
+                  Botanical
+                </button>
+                <button
+                  type="button"
+                  onClick={() => snapAngle(0.5)}
+                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                >
+                  Nutrition
+                </button>
+                <button
+                  type="button"
+                  onClick={() => snapAngle(0.75)}
+                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                >
+                  Quality
+                </button>
+              </div>
             </div>
+
+            <p className="mt-2 text-center text-[10px] font-medium text-amber-200/70 sm:text-[11px]">
+              ⇄ Drag horizontally to spin • Inspect authentic purity stickers
+            </p>
           </div>
         </div>
 
-        {/* Right Column: Product Details, Volume Selector & CTA - Compact Single-Screen Layout (NO SCROLLING NEEDED!) */}
+        {/* Right: details card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ ...SPRING, delay: 0.05 }}
-          className="relative z-20 rounded-3xl bg-white p-5 sm:p-7 shadow-2xl border border-stone-200/90 text-stone-900 w-full max-w-[500px] mx-auto md:mx-0"
+          className="relative z-20 mx-auto w-full max-w-[520px] rounded-3xl border border-stone-200/90 bg-white p-5 text-stone-900 shadow-2xl sm:p-7 md:mx-0"
         >
-          {/* Header Bar */}
-          <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+          {/* Top Bar inside card */}
+          <div className="flex items-center justify-between border-b border-stone-100 pb-3">
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="inline-flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-black uppercase tracking-wider text-[#0E2A47] bg-[#EBF2F8] hover:bg-[#DDE9F4] transition-colors cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-1 rounded-xl bg-[#EBF2F8] px-2.5 py-1 text-xs font-black uppercase tracking-wider text-[#0E2A47] transition-colors hover:bg-[#DDE9F4]"
             >
-              <ChevronLeft className="size-3.5" strokeWidth={2.4} /> Back
+              <ChevronLeft className="size-3.5" strokeWidth={2.4} /> Back to Shelf
             </button>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/60">
+              <span className="rounded-full border border-amber-200/60 bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-800">
                 {p.category}
               </span>
-              <div className="flex items-center gap-1 text-[11px] font-black text-amber-600 bg-amber-50/60 px-2 py-0.5 rounded-full border border-amber-200/40">
+              <div className="flex items-center gap-1 rounded-full border border-amber-200/40 bg-amber-50/60 px-2 py-0.5 text-[11px] font-black text-amber-600">
                 <Star className="size-3 fill-amber-400 text-amber-500" />
                 <span>{p.rating.toFixed(1)}</span>
-                <span className="text-stone-400 font-normal">({p.reviews})</span>
+                <span className="font-normal text-stone-400">({p.reviews})</span>
               </div>
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="grid size-7 place-items-center rounded-lg text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition-colors cursor-pointer"
+              className="grid size-7 cursor-pointer place-items-center rounded-lg text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-800"
             >
               <X className="size-4" />
             </button>
           </div>
 
-          {/* Product Title & Hindi Subtitle */}
+          {/* Title & Pricing */}
           <div className="mt-3">
-            <h2 className="text-xl sm:text-2xl font-black text-stone-900 font-serif leading-tight">
-              {p.name}
-            </h2>
-            {p.sub && (
-              <p className="mt-0.5 text-xs sm:text-sm font-bold text-[#0E2A47]">
-                {p.sub}
-              </p>
-            )}
+            <h2 className="font-serif text-xl font-black leading-tight text-stone-900 sm:text-2xl">{p.name}</h2>
+            {p.sub && <p className="mt-0.5 text-xs font-bold text-[#0E2A47] sm:text-sm">{p.sub}</p>}
           </div>
 
-          {/* Price & Savings Row */}
-          <div className="mt-3 flex items-baseline gap-2.5 flex-wrap">
-            <span className="text-2xl sm:text-3xl font-black text-[#0E2A47] tabular-nums">
-              {currency}{computedPrice}
+          <div className="mt-2.5 flex flex-wrap items-baseline gap-2.5">
+            <span className="text-2xl font-black tabular-nums text-[#0E2A47] sm:text-3xl">
+              {currency}
+              {computedPrice}
             </span>
             {computedCompareAt && (
-              <span className="text-sm text-stone-400 line-through tabular-nums">
-                {currency}{computedCompareAt}
+              <span className="text-sm tabular-nums text-stone-400 line-through">
+                {currency}
+                {computedCompareAt}
               </span>
             )}
-            {computedCompareAt && computedCompareAt > computedPrice && (
-              <span className="text-[11px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                Save {currency}{computedCompareAt - computedPrice} ({Math.round(((computedCompareAt - computedPrice) / computedCompareAt) * 100)}% OFF)
+            {computedCompareAt > computedPrice && (
+              <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-black text-emerald-800">
+                Save {currency}
+                {computedCompareAt - computedPrice} ({Math.round(((computedCompareAt - computedPrice) / computedCompareAt) * 100)}% OFF)
               </span>
             )}
-            <span className="text-[11px] font-semibold text-stone-500">
-              Taxes included &bull; Free Delhi NCR above ₹799
-            </span>
+            <span className="text-[11px] font-semibold text-stone-500">Taxes included &bull; Free Delhi NCR above ₹799</span>
           </div>
 
-          {/* Select Volume / Packaging Size (Compact 3x2 Grid) */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-black uppercase tracking-wider text-stone-700">
-                Select Volume / Packaging:
-              </span>
-              <span className="text-[11px] font-bold text-[#0E2A47]">
-                {size}
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-              {p.sizes.map((sz) => {
-                const on = size === sz;
-                const optPrice = getProductVolumePrice(p.id, sz, p.price);
-                const shortSz = sz.replace(/\s*\([^)]*\)/g, "").trim();
-                const packType = sz.includes("Tin") ? "Tin" : p.kind === "jar" ? "Jar" : "PET";
-                return (
-                  <button
-                    key={sz}
-                    type="button"
-                    onClick={() => setSize(sz)}
-                    className={cn(
-                      "flex flex-col items-center justify-center py-1.5 px-1 rounded-xl border text-center transition-all cursor-pointer",
-                      on
-                        ? "bg-[#0E2A47] text-white border-[#0E2A47] shadow-sm ring-2 ring-[#0E2A47]/40"
-                        : "bg-stone-50 hover:bg-stone-100 text-stone-800 border-stone-200"
-                    )}
-                  >
-                    <span className="text-[12px] font-black leading-tight">{shortSz}</span>
-                    <span className={cn("text-[11px] font-bold tabular-nums", on ? "text-amber-300" : "text-[#0E2A47]")}>
-                      {currency}{optPrice} <span className="opacity-70 font-normal text-[9px]">({packType})</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Quantity Stepper & Actions (Add to Bag + WhatsApp) */}
-          <div className="mt-4 flex items-center gap-2">
-            {/* Quantity Stepper */}
-            <div className="flex items-center h-11 rounded-xl border border-stone-200 bg-stone-50 flex-shrink-0">
-              <button
-                type="button"
-                aria-label="Decrease quantity"
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="grid h-full w-8 place-items-center rounded-l-xl text-stone-700 hover:bg-stone-200 transition-colors disabled:opacity-30 cursor-pointer"
-                disabled={qty === 1}
-              >
-                <Minus className="size-3.5" />
-              </button>
-              <span className="w-7 text-center text-xs font-black tabular-nums">{qty}</span>
-              <button
-                type="button"
-                aria-label="Increase quantity"
-                onClick={() => setQty((q) => Math.min(10, q + 1))}
-                className="grid h-full w-8 place-items-center rounded-r-xl text-stone-700 hover:bg-stone-200 transition-colors cursor-pointer"
-              >
-                <Plus className="size-3.5" />
-              </button>
-            </div>
-
-            {/* Add to Bag Button */}
+          {/* Tab Navigation */}
+          <div className="mt-3 flex items-center rounded-xl bg-stone-100 p-1 border border-stone-200 text-xs font-bold text-stone-600">
             <button
               type="button"
-              onClick={handleAdd}
+              onClick={() => {
+                setActiveTab("order");
+                soundSystem?.playWoodClick();
+              }}
               className={cn(
-                "h-11 flex-1 rounded-xl text-xs sm:text-sm font-black tracking-wide uppercase shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-98",
-                added
-                  ? "bg-emerald-700 text-white"
-                  : "bg-[#0E2A47] hover:bg-[#163A60] text-amber-300 hover:text-white"
+                "flex-1 py-1.5 rounded-lg text-center transition-all",
+                activeTab === "order" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
               )}
             >
-              {added ? (
-                <>
-                  <Check className="size-4" />
-                  <span>Added ✓</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="size-4" />
-                  <span>Add ({currency}{computedPrice * qty})</span>
-                </>
-              )}
+              🛒 Select &amp; Order
             </button>
-
-            {/* Direct WhatsApp Quick Order Button */}
-            <a
-              href={`https://wa.me/919217744378?text=${encodeURIComponent(`Namaste Ramesh Kolhu Wale! I would like to order:\n\n*Product:* ${p.name}\n*Packaging:* ${size}\n*Quantity:* ${qty}\n*Amount:* ₹${computedPrice * qty}\n\nPlease confirm availability and delivery to Delhi NCR.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Order on WhatsApp"
-              className="h-11 px-3 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white flex items-center justify-center gap-1 font-bold text-xs shadow-sm hover:shadow transition-all active:scale-98 cursor-pointer flex-shrink-0"
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("process");
+                soundSystem?.playWoodClick();
+              }}
+              className={cn(
+                "flex-1 py-1.5 rounded-lg text-center transition-all",
+                activeTab === "process" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
+              )}
             >
-              <span className="text-sm">💬</span>
-              <span className="hidden sm:inline">WhatsApp</span>
-            </a>
+              🌿 Cold-Press Heritage
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("lab");
+                soundSystem?.playWoodClick();
+              }}
+              className={cn(
+                "flex-1 py-1.5 rounded-lg text-center transition-all",
+                activeTab === "lab" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
+              )}
+            >
+              🧪 Purity &amp; Nutrition
+            </button>
           </div>
 
-          {/* Trust Highlights Strip (3 Compact Badges) */}
-          <div className="mt-3.5 grid grid-cols-3 gap-1 text-center bg-stone-50 p-2 rounded-xl border border-stone-200/80">
-            <div className="text-[10px] sm:text-[11px] font-bold text-stone-700 flex flex-col items-center">
-              <span className="text-amber-700 font-black">❄️ &lt;38°C Cold Press</span>
-              <span className="text-[9px] text-stone-500 font-normal">Traditional Kolhu</span>
-            </div>
-            <div className="text-[10px] sm:text-[11px] font-bold text-stone-700 flex flex-col items-center border-x border-stone-200">
-              <span className="text-emerald-700 font-black">🌿 Single-Source</span>
-              <span className="text-[9px] text-stone-500 font-normal">Native Indian Seeds</span>
-            </div>
-            <div className="text-[10px] sm:text-[11px] font-bold text-stone-700 flex flex-col items-center">
-              <span className="text-[#0E2A47] font-black">🚚 Free Delhi NCR</span>
-              <span className="text-[9px] text-stone-500 font-normal">Orders above ₹799</span>
-            </div>
-          </div>
+          {/* TAB 1: ORDER */}
+          {activeTab === "order" && (
+            <div className="mt-3.5 space-y-3.5">
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-stone-700">Select Volume / Packaging:</span>
+                  <span className="text-[11px] font-bold text-[#0E2A47]">{size}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                  {p.sizes.map((sz) => {
+                    const on = size === sz;
+                    const optPrice = getProductVolumePrice(p.id, sz, p.price);
+                    const shortSz = sz.replace(/\s*\([^)]*\)/g, "").trim();
+                    const packType = sz.includes("Tin") ? "Tin" : p.kind === "jar" ? "Jar" : "PET";
+                    return (
+                      <button
+                        key={sz}
+                        type="button"
+                        onClick={() => {
+                          setSize(sz);
+                          soundSystem?.playWoodClick();
+                        }}
+                        className={cn(
+                          "flex cursor-pointer flex-col items-center justify-center rounded-xl border px-1 py-1.5 text-center transition-all",
+                          on
+                            ? "border-[#0E2A47] bg-[#0E2A47] text-white shadow-sm ring-2 ring-[#0E2A47]/40"
+                            : "border-stone-200 bg-stone-50 text-stone-800 hover:bg-stone-100"
+                        )}
+                      >
+                        <span className="text-[12px] font-black leading-tight">{shortSz}</span>
+                        <span className={cn("text-[11px] font-bold tabular-nums", on ? "text-amber-300" : "text-[#0E2A47]")}>
+                          {currency}
+                          {optPrice} <span className="text-[9px] font-normal opacity-70">({packType})</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-          {/* Crisp Culinary Tip */}
-          <p className="mt-2.5 text-[11px] text-stone-600 leading-snug italic text-center">
-            {p.tagline}
-          </p>
+              {/* Quantity and Actions */}
+              <div className="flex items-center gap-2">
+                <div className="flex h-11 flex-shrink-0 items-center rounded-xl border border-stone-200 bg-stone-50">
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    onClick={() => {
+                      setQty((q) => Math.max(1, q - 1));
+                      soundSystem?.playWoodClick();
+                    }}
+                    className="grid h-full w-8 cursor-pointer place-items-center rounded-l-xl text-stone-700 transition-colors hover:bg-stone-200 disabled:opacity-30"
+                    disabled={qty === 1}
+                  >
+                    <Minus className="size-3.5" />
+                  </button>
+                  <span className="w-7 text-center text-xs font-black tabular-nums">{qty}</span>
+                  <button
+                    type="button"
+                    aria-label="Increase quantity"
+                    onClick={() => {
+                      setQty((q) => Math.min(10, q + 1));
+                      soundSystem?.playWoodClick();
+                    }}
+                    className="grid h-full w-8 cursor-pointer place-items-center rounded-r-xl text-stone-700 transition-colors hover:bg-stone-200"
+                  >
+                    <Plus className="size-3.5" />
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className={cn(
+                    "flex h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-xs font-black uppercase tracking-wide shadow-md transition-all active:scale-95 sm:text-sm",
+                    added ? "bg-emerald-700 text-white" : "bg-[#0E2A47] text-amber-300 hover:bg-[#163A60] hover:text-white"
+                  )}
+                >
+                  {added ? (
+                    <>
+                      <Check className="size-4" />
+                      <span>Added ✓</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="size-4" />
+                      <span>
+                        Add ({currency}
+                        {computedPrice * qty})
+                      </span>
+                    </>
+                  )}
+                </button>
+
+                <a
+                  href={`https://wa.me/${WA}?text=${encodeURIComponent(
+                    `Namaste Ramesh Kolhu Wale! I would like to order:\n\n*Product:* ${p.name}\n*Packaging:* ${size}\n*Quantity:* ${qty}\n*Amount:* ₹${computedPrice * qty}\n\nPlease confirm availability and delivery to Delhi NCR.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Order on WhatsApp"
+                  className="flex h-11 flex-shrink-0 cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#25D366] px-3 text-xs font-bold text-white shadow-sm transition-all hover:bg-[#20BD5A] hover:shadow active:scale-95"
+                >
+                  <span className="text-sm">💬</span>
+                  <span className="hidden sm:inline">WhatsApp</span>
+                </a>
+              </div>
+
+              {/* Added to Bag Post-Action Banner */}
+              {added && (
+                <div className="flex items-center justify-between rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-900 animate-in fade-in zoom-in-95">
+                  <div className="flex items-center gap-1.5">
+                    <Check className="size-4 text-emerald-600" />
+                    <span>Item added to your basket!</span>
+                  </div>
+                  {onOpenBag && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onOpenBag();
+                      }}
+                      className="rounded-lg bg-emerald-700 px-2.5 py-1 text-[11px] font-black text-white hover:bg-emerald-800 transition"
+                    >
+                      View Bag &rarr;
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Trust Badges */}
+              <div className="grid grid-cols-3 gap-1 rounded-xl border border-stone-200/80 bg-stone-50 p-2 text-center">
+                <div className="flex flex-col items-center text-[10px] font-bold text-stone-700 sm:text-[11px]">
+                  <span className="font-black text-amber-700">❄️ &lt;38°C Cold Press</span>
+                  <span className="text-[9px] font-normal text-stone-500">Traditional Kolhu</span>
+                </div>
+                <div className="flex flex-col items-center border-x border-stone-200 text-[10px] font-bold text-stone-700 sm:text-[11px]">
+                  <span className="font-black text-emerald-700">🌿 Single-Source</span>
+                  <span className="text-[9px] font-normal text-stone-500">{p.origin || "Native Seeds"}</span>
+                </div>
+                <div className="flex flex-col items-center text-[10px] font-bold text-stone-700 sm:text-[11px]">
+                  <span className="font-black text-[#0E2A47]">🚚 Free Delhi NCR</span>
+                  <span className="text-[9px] font-normal text-stone-500">Orders above ₹799</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: EXTRACTION & PROCESS */}
+          {activeTab === "process" && (
+            <div className="mt-3.5 space-y-3 text-xs text-stone-700">
+              <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
+                <p className="font-bold text-amber-900">
+                  <span className="font-black">Cold Extraction Method:</span> Traditional Kachi Ghani (Kolhu) at slow 14 RPM under 38°C. Made without heat, chemical solvents, or argemone.
+                </p>
+                <p className="mt-1 text-[11px] text-amber-800">
+                  <span className="font-bold">Source Region:</span> {p.sourceType || "Seeds sourced from"} {p.origin || "Rajasthan certified fields"}.
+                </p>
+              </div>
+
+              <div>
+                <p className="font-black uppercase tracking-wider text-stone-800 text-[11px] mb-1.5">Key Health Benefits:</p>
+                <div className="space-y-1.5">
+                  {p.benefits.map((b, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <ShieldCheck className="size-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-stone-700 font-medium leading-snug">{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-stone-100 pt-2">
+                <p className="font-black text-[11px] text-stone-800">Ingredients:</p>
+                <p className="text-[11px] text-stone-600 mt-0.5 italic">{p.ingredients}</p>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: LAB VERIFIED & NUTRITION */}
+          {activeTab === "lab" && (
+            <div className="mt-3.5 space-y-3 text-xs">
+              <div className="flex items-center justify-between rounded-xl bg-stone-50 border border-stone-200 p-2.5">
+                <div>
+                  <span className="font-black text-[#0E2A47] text-sm italic">fssai</span>
+                  <span className="ml-1.5 text-[11px] font-bold text-stone-700">Lic. No. 10018011004919</span>
+                </div>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-800">
+                  100% PURE &bull; 0% ARGEMONE
+                </span>
+              </div>
+
+              <div>
+                <p className="font-black uppercase tracking-wider text-stone-800 text-[11px] mb-1">Nutrition Facts (per 100g):</p>
+                <div className="max-h-40 overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/50 p-2">
+                  <table className="w-full text-[11px]">
+                    <tbody>
+                      {getNutritionFacts(p).map(([lbl, val], idx) => (
+                        <tr key={idx} className="border-b border-stone-100 last:border-0">
+                          <td className="py-1 text-stone-600 font-medium">{lbl}</td>
+                          <td className="py-1 text-right font-black text-stone-900">{val}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="border-t border-stone-100 pt-2">
+                <p className="font-black text-[11px] text-stone-800">Culinary &amp; Wellness Instructions:</p>
+                <p className="text-[11px] text-stone-600 mt-0.5 leading-relaxed">{p.howTo}</p>
+              </div>
+            </div>
+          )}
+
+          <p className="mt-3 text-center text-[11px] italic leading-snug text-stone-600">{p.tagline}</p>
         </motion.div>
       </div>
     </motion.div>
   );
 }
 
+// ================================================================
+//  SHOP EXPERIENCE: storefront -> aisles -> billing counter
+// ================================================================
+
+const AISLES = [
+  {
+    no: "01",
+    title: "Mustard Oils & Vedic Bilona Ghee",
+    sub: "Traditional cold-press Kolhu & hand-churned curd ghee",
+    wall: "linear-gradient(180deg,#1b0f06 0%,#2e1a0b 60%,#3a2210 100%)",
+    glow: "rgba(255,196,80,0.55)"
+  },
+  {
+    no: "02",
+    title: "Nut & Coconut Cold-Pressed Oils",
+    sub: "Saurashtra peanuts, Kerala copra, Tiptur virgin & Gujarat sesame",
+    wall: "linear-gradient(180deg,#07201a 0%,#0e2f26 60%,#143a2f 100%)",
+    glow: "rgba(255,226,150,0.5)"
+  },
+  {
+    no: "03",
+    title: "Wellness Rogans & Exotic Seeds",
+    sub: "Kashmir Mamra & Gurbandi almonds, walnut & organic flaxseed",
+    wall: "linear-gradient(180deg,#2a0b12 0%,#3d121c 60%,#4a1824 100%)",
+    glow: "rgba(255,190,120,0.5)"
+  },
+  {
+    no: "04",
+    title: "Specialty & Daily Kitchen Oils",
+    sub: "Black sesame, olive, onion seed & sunflower",
+    wall: "linear-gradient(180deg,#0a1626 0%,#10233b 60%,#16304f 100%)",
+    glow: "rgba(255,214,130,0.5)"
+  }
+];
+
+// ---------------------------------------------------------------- storefront
+
+function Storefront({ preview, onEnter }: { preview: Product[]; onEnter: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
+  const shutterY = useTransform(scrollYProgress, [0.08, 0.42], ["0%", "-102%"]);
+  const facadeScale = useTransform(scrollYProgress, [0.3, 0.9], [1, 2.6]);
+  const facadeOpacity = useTransform(scrollYProgress, [0.62, 0.9], [1, 0]);
+  const interiorScale = useTransform(scrollYProgress, [0, 1], [1.12, 1]);
+  const welcomeOpacity = useTransform(scrollYProgress, [0.5, 0.72, 0.95], [0, 1, 0]);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+
+  return (
+    <div ref={ref} className="relative h-[240vh]">
+      <div className="sticky top-0 h-dvh overflow-hidden bg-[#150b04]">
+        {/* Interior glimpse behind the shutter */}
+        <motion.div style={{ scale: interiorScale }} className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgba(255,190,80,0.35),transparent_70%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-[34%] bg-[repeating-linear-gradient(90deg,#2b160a_0,#2b160a_70px,#34190b_70px,#34190b_72px)]" />
+          <div className="absolute inset-x-0 bottom-[34%] h-3 bg-gradient-to-b from-[#b8702f] to-[#6a2e0a]" />
+          <div className="absolute inset-x-0 bottom-[34%] flex items-end justify-center gap-[3vw] px-6">
+            {preview.map((p, i) => (
+              <div key={p.id} className={cn("h-[30vh] sm:h-[38vh]", i > 2 && "hidden sm:block")}>
+                <ProductArt p={p} className="h-full w-auto opacity-90 drop-shadow-2xl" />
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Welcome copy once the shutter is up */}
+        <motion.div style={{ opacity: welcomeOpacity }} className="pointer-events-none absolute inset-x-0 top-[16%] z-10 px-6 text-center">
+          <p className="text-[11px] font-black uppercase tracking-[0.35em] text-amber-300">Welcome in</p>
+          <h2 className="mt-2 font-serif text-3xl font-extrabold text-amber-50 sm:text-5xl">Pressed in front of you since 1981</h2>
+        </motion.div>
+
+        {/* Facade */}
+        <motion.div style={{ scale: facadeScale, opacity: facadeOpacity, transformOrigin: "50% 85%" }} className="absolute inset-0 z-20">
+          <div className="absolute inset-0 bg-[#0c1f2e]" />
+          <div className="absolute inset-0 opacity-30 [background:repeating-linear-gradient(0deg,transparent_0,transparent_26px,rgba(0,0,0,0.5)_26px,rgba(0,0,0,0.5)_28px),repeating-linear-gradient(90deg,transparent_0,transparent_58px,rgba(0,0,0,0.35)_58px,rgba(0,0,0,0.35)_60px)]" />
+
+          {/* Signboard */}
+          <div className="absolute inset-x-0 top-[7%] mx-auto w-[88%] max-w-3xl rounded-lg border-4 border-[#e5a812] bg-gradient-to-b from-[#7a1426] to-[#4a0a16] px-4 py-4 text-center shadow-[0_10px_40px_rgba(0,0,0,0.6)] sm:py-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-amber-300 sm:text-xs">Est. 1981 &bull; Live Kachi Ghani</p>
+            <h1 className="mt-1 font-serif text-3xl font-black tracking-wide text-amber-50 sm:text-6xl">RAMESH KOLHU WALE</h1>
+            <p className="mt-1 text-sm font-bold text-amber-200 sm:text-xl">रमेश कोल्हू वाले &bull; पीढ़ियों का विश्वास</p>
+          </div>
+
+          {/* Striped awning */}
+          <div className="absolute inset-x-0 top-[34%] h-[11%] shadow-[0_14px_24px_rgba(0,0,0,0.5)] [background:repeating-linear-gradient(90deg,#fab800_0,#fab800_48px,#7a1426_48px,#7a1426_96px)]" />
+
+          {/* Live Ghani Ticker Banner */}
+          <div className="absolute inset-x-0 top-[45%] z-20 flex justify-center px-4">
+            <div className="flex items-center gap-2 rounded-full border border-amber-400/40 bg-[#160b04]/90 px-4 py-1 text-[10px] font-bold text-amber-200 backdrop-blur-md shadow-lg sm:text-xs">
+              <span className="size-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+              <span>LIVE GHANI: 14 RPM Wood Press &bull; Cold-Pressed &lt;38°C &bull; Est. 1981 Delhi NCR</span>
+            </div>
+          </div>
+
+          {/* Rolling shutter */}
+          <div className="absolute inset-x-[6%] bottom-0 top-[47%] overflow-hidden border-x-8 border-t-8 border-[#5b2a0c]">
+            <motion.div
+              style={{ y: shutterY }}
+              className="absolute inset-0 bg-[repeating-linear-gradient(180deg,#9aa3a8_0,#c9d0d4_10px,#7b858b_12px)] shadow-[inset_0_-12px_20px_rgba(0,0,0,0.4)]"
+            >
+              <div className="absolute inset-x-0 bottom-0 flex h-11 items-center justify-center bg-[#555e63]">
+                <button
+                  type="button"
+                  onClick={onEnter}
+                  className="flex items-center gap-2 rounded-full bg-[#2a3135] px-4 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-amber-300 shadow transition hover:bg-amber-300 hover:text-stone-900 active:scale-95 cursor-pointer"
+                >
+                  <span>Open &bull; 10 AM &ndash; 10 PM</span>
+                  <span className="opacity-75">| Step Inside &darr;</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Bottom hint / quick enter */}
+        <motion.div style={{ opacity: hintOpacity }} className="absolute inset-x-0 bottom-6 z-30 flex flex-col items-center gap-1.5 text-amber-100">
+          <button
+            type="button"
+            onClick={onEnter}
+            className="flex items-center gap-2 rounded-full border border-amber-300/40 bg-black/60 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.3em] text-amber-200 backdrop-blur-md hover:bg-amber-300 hover:text-stone-900 transition active:scale-95 cursor-pointer"
+          >
+            <span>Scroll or Click to Enter Shop</span>
+            <ChevronDown className="size-4 animate-bounce" />
+          </button>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------- aisle
+
+function Lamp({ glow }: { glow: string }) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center">
+      <div className="h-8 w-px bg-amber-200/50 sm:h-14" />
+      <div className="h-5 w-14 rounded-t-full bg-gradient-to-b from-[#f5d77a] to-[#92400e] shadow-lg" />
+      <div className="-mt-px h-1.5 w-5 rounded-b bg-[#fff3c4] shadow-[0_0_24px_10px_rgba(255,220,120,0.7)]" />
+      <div
+        className="h-[78vw] max-h-[480px] w-[150%] -translate-y-1"
+        style={{
+          clipPath: "polygon(46% 0, 54% 0, 100% 100%, 0 100%)",
+          background: `linear-gradient(to bottom, ${glow}, transparent 88%)`
+        }}
+      />
+    </div>
+  );
+}
+
+function Aisle({
+  index,
+  items,
+  currency,
+  openId,
+  onOpen,
+  onActive,
+  onQuickAdd,
+  onSound
+}: {
+  index: number;
+  items: Product[];
+  currency: string;
+  openId: string | null;
+  onOpen: (id: string) => void;
+  onActive: (i: number) => void;
+  onQuickAdd: (p: Product, size: string, qty: number) => void;
+  onSound?: (type: "wood" | "chime" | "shutter") => void;
+}) {
+  const a = AISLES[index];
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const numY = useTransform(scrollYProgress, [0, 1], [90, -90]);
+  const wallShift = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
+  const [quickAddedId, setQuickAddedId] = useState<string | null>(null);
+
+  const handleQuick = (p: Product) => {
+    onQuickAdd(p, p.sizes[0], 1);
+    setQuickAddedId(p.id);
+    onSound?.("chime");
+    setTimeout(() => {
+      setQuickAddedId((cur) => (cur === p.id ? null : cur));
+    }, 1800);
+  };
+
+  return (
+    <motion.section
+      ref={ref}
+      id={`aisle-${index + 1}`}
+      onViewportEnter={() => onActive(index)}
+      viewport={{ amount: 0.45 }}
+      className="relative min-h-dvh overflow-hidden py-16 sm:py-24"
+      style={{ background: a.wall }}
+    >
+      <motion.div
+        style={{ y: wallShift }}
+        className="absolute inset-x-0 -top-10 bottom-0 opacity-[0.07] [background:repeating-linear-gradient(90deg,#fff_0,#fff_1px,transparent_1px,transparent_90px)]"
+      />
+      <div className="absolute inset-x-0 bottom-0 h-[22%] bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.35)_0,rgba(0,0,0,0.35)_80px,rgba(0,0,0,0.5)_80px,rgba(0,0,0,0.5)_82px)]" />
+
+      <motion.div
+        style={{ y: numY }}
+        aria-hidden
+        className="pointer-events-none absolute -right-4 top-10 select-none font-serif text-[34vw] font-black leading-none text-transparent [-webkit-text-stroke:2px_rgba(255,226,150,0.12)] sm:text-[24vw]"
+      >
+        {a.no}
+      </motion.div>
+
+      <div className="relative mx-auto max-w-[1200px] px-4 sm:px-6">
+        {/* Hanging aisle sign */}
+        <motion.div
+          initial={{ y: -80, opacity: 0, rotate: -3 }}
+          whileInView={{ y: 0, opacity: 1, rotate: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ type: "spring", stiffness: 70, damping: 11 }}
+          className="relative mx-auto mb-10 w-full max-w-xl origin-top text-center sm:mb-14"
+        >
+          <div className="pointer-events-none absolute -top-16 left-[18%] h-16 w-px bg-amber-200/40" />
+          <div className="pointer-events-none absolute -top-16 right-[18%] h-16 w-px bg-amber-200/40" />
+          <div className="rounded-xl border-2 border-[#e5a812] bg-gradient-to-b from-[#6a2e0a] to-[#3b1501] px-5 py-4 shadow-2xl">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-amber-300">Aisle {a.no}</p>
+            <h2 className="mt-1 font-serif text-xl font-extrabold leading-tight text-amber-50 sm:text-3xl">{a.title}</h2>
+            <p className="mt-1 text-[11px] font-medium text-amber-200/80 sm:text-sm">{a.sub}</p>
+            <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-0.5 text-[9px] font-extrabold tracking-wider text-amber-200 uppercase">
+              <span>❄️ Cold-Pressed &lt;38°C</span>
+              <span>&bull;</span>
+              <span>100% Single-Source</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Bottles on wooden shelf */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-12 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-0">
+          {items.map((p, i) => (
+            <div key={p.id} className="relative flex flex-col items-center">
+              <div className="relative h-[290px] w-full sm:h-[360px] lg:h-[400px]">
+                <Lamp glow={a.glow} />
+                <motion.div
+                  initial={{ y: 160, opacity: 0, rotate: i % 2 ? 4 : -4 }}
+                  whileInView={{ y: 0, opacity: 1, rotate: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ type: "spring", stiffness: 60, damping: 13, delay: 0.12 * (i % 4) }}
+                  className="absolute inset-x-0 bottom-0 flex h-[84%] items-end justify-center"
+                >
+                  {openId === p.id ? (
+                    <div className="h-full w-full" />
+                  ) : (
+                    <motion.div
+                      layoutId={`product-${p.id}`}
+                      transition={SPRING}
+                      whileHover={{ y: -14, scale: 1.04 }}
+                      className="group relative flex h-full w-full cursor-pointer items-end justify-center rounded-2xl outline-none"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onOpen(p.id);
+                          onSound?.("wood");
+                        }}
+                        className="h-full w-full flex items-end justify-center cursor-pointer"
+                        aria-label={`${p.name}, from ${currency}${p.price}`}
+                      >
+                        <ProductArt p={p} className="h-full w-auto max-w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]" />
+                      </button>
+
+                      {/* Hover Action Bar */}
+                      <div className="absolute -top-2 inset-x-0 flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-auto">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onOpen(p.id);
+                            onSound?.("wood");
+                          }}
+                          className="flex items-center gap-1 rounded-full bg-amber-300 px-2.5 py-1 text-[10px] font-black tracking-wider text-[#3b1501] shadow hover:bg-amber-400 active:scale-95 transition"
+                        >
+                          <RotateCw className="size-3" />
+                          <span>360°</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleQuick(p)}
+                          className={cn(
+                            "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-black tracking-wider shadow active:scale-95 transition",
+                            quickAddedId === p.id
+                              ? "bg-emerald-600 text-white"
+                              : "bg-[#0E2A47] text-amber-200 border border-amber-300/40 hover:bg-[#163A60]"
+                          )}
+                        >
+                          {quickAddedId === p.id ? (
+                            <>
+                              <Check className="size-3" />
+                              <span>Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="size-3" />
+                              <span>Add</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </div>
+
+              {/* Wooden plank shelf */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1 * (i % 4) }}
+                aria-hidden
+                className="-mt-1 h-3.5 w-[112%] rounded-sm bg-gradient-to-b from-[#c07a38] via-[#8c4318] to-[#4a1c05] shadow-[0_14px_22px_rgba(0,0,0,0.6)] sm:h-4"
+              />
+
+              {/* Hanging price tag */}
+              <motion.div
+                initial={{ rotate: -6, opacity: 0 }}
+                whileInView={{ rotate: 0, opacity: 1 }}
+                whileHover={{ rotate: 1, y: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 120, damping: 8, delay: 0.5 + 0.1 * (i % 4) }}
+                className="relative mt-3 w-full max-w-[215px] origin-top rounded-xl bg-gradient-to-b from-[#fdf7ea] to-[#f4e8cb] px-3.5 py-2.5 text-center shadow-xl border border-amber-900/10"
+              >
+                <span aria-hidden className="absolute -top-3 left-1/2 size-2.5 -translate-x-1/2 rounded-full border-2 border-[#92400e] bg-[#2a1608]" />
+
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <span className="rounded-full bg-amber-900/10 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-950">
+                    {p.origin || "PURE"}
+                  </span>
+                  <div className="flex items-center gap-0.5 text-amber-700">
+                    <Star className="size-2.5 fill-amber-500 text-amber-500" />
+                    <span className="text-[10px] font-black">{p.rating.toFixed(1)}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    onOpen(p.id);
+                    onSound?.("wood");
+                  }}
+                  className="block w-full text-left cursor-pointer group"
+                >
+                  <span className="block truncate text-[13px] font-black text-stone-900 group-hover:text-amber-800 transition-colors">
+                    {p.short}
+                  </span>
+                  {p.sub && <span className="block truncate text-[10px] font-medium text-stone-600">{p.sub}</span>}
+                </button>
+
+                <div className="mt-1.5 flex items-center justify-between border-t border-amber-900/10 pt-1.5">
+                  <div className="text-left">
+                    <span className="text-[13px] font-black tabular-nums text-[#7a1426]">
+                      {currency}
+                      {p.price}
+                    </span>
+                    {p.compareAt && (
+                      <span className="ml-1 text-[10px] text-stone-400 line-through">
+                        {currency}
+                        {p.compareAt}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleQuick(p)}
+                      className={cn(
+                        "flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-black uppercase tracking-wider shadow-sm transition-all active:scale-95",
+                        quickAddedId === p.id
+                          ? "bg-emerald-600 text-white"
+                          : "bg-[#0E2A47] text-amber-300 hover:bg-[#163A60] hover:text-white"
+                      )}
+                    >
+                      {quickAddedId === p.id ? "Added ✓" : "+ Add"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onOpen(p.id);
+                        onSound?.("wood");
+                      }}
+                      aria-label="360 view"
+                      className="grid size-6 place-items-center rounded-lg bg-amber-900/10 text-stone-700 hover:bg-amber-900/20 transition"
+                    >
+                      <RotateCw className="size-3" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
+// ---------------------------------------------------------------- billing counter
+
+function Counter({
+  onSound,
+  onBrowseAisles
+}: {
+  onSound?: (type: "wood" | "chime" | "shutter") => void;
+  onBrowseAisles?: () => void;
+}) {
+  const cart = useCart();
+  const subtotal = cart?.subtotal || 0;
+  const totalItems = cart?.totalItems || 0;
+  const threshold = 799;
+  const progressToFree = Math.min(100, Math.round((subtotal / threshold) * 100));
+  const diffToFree = Math.max(0, threshold - subtotal);
+
+  return (
+    <section id="counter" className="relative overflow-hidden bg-gradient-to-b from-[#3b1501] via-[#210c03] to-[#120702] px-4 py-20 text-center sm:py-28">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(255,190,80,0.25),transparent_70%)]" />
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.7 }}
+        className="relative mx-auto max-w-2xl"
+      >
+        <p className="text-[11px] font-black uppercase tracking-[0.4em] text-amber-300">Billing Counter &bull; Ramesh Kolhu Wale</p>
+        <h2 className="mt-2 font-serif text-3xl font-extrabold text-amber-50 sm:text-5xl">Ready to take authentic purity home?</h2>
+        <p className="mt-3 text-sm text-amber-100/80">Fresh cold-pressed oils &amp; Vedic Bilona ghee straight from our Delhi NCR unit.</p>
+
+        {/* Live Basket & Free Shipping Status */}
+        <div className="mt-6 rounded-2xl border border-amber-400/30 bg-black/40 p-4 backdrop-blur-md text-amber-50 text-left">
+          <div className="flex items-center justify-between text-xs sm:text-sm font-bold">
+            <span className="flex items-center gap-1.5">
+              <ShoppingBag className="size-4 text-amber-300" />
+              <span>Your Basket: <strong className="text-amber-300">{totalItems} items</strong> (₹{subtotal})</span>
+            </span>
+            <span className="text-[11px] text-amber-200/80 font-medium">Free Delivery above ₹799</span>
+          </div>
+
+          <div className="mt-3">
+            <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progressToFree}%` }}
+                className="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full"
+              />
+            </div>
+            <p className="mt-2 text-[11px] text-amber-200">
+              {diffToFree > 0
+                ? `🚚 Add ₹${diffToFree} more for FREE Delhi NCR Home Delivery!`
+                : "🎉 You have qualified for FREE Home Delivery across Delhi NCR!"}
+            </p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (cart) cart.setIsCartOpen(true);
+              onSound?.("chime");
+            }}
+            className="flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3.5 text-sm font-black text-[#2e1305] shadow-lg hover:bg-amber-300 active:scale-95 transition"
+          >
+            <ShoppingBag className="size-4" />
+            <span>Open Shopping Bag ({totalItems})</span>
+          </button>
+
+          <a
+            href={`https://wa.me/${WA}?text=${encodeURIComponent(
+              `Namaste Ramesh Kolhu Wale! I would like to order fresh cold-pressed oils & Vedic Bilona ghee directly to Delhi NCR.`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-black text-white shadow-lg transition hover:bg-[#20bd5a] active:scale-95"
+          >
+            <span>💬 WhatsApp +91 92177 44378</span>
+          </a>
+
+          <button
+            type="button"
+            onClick={() => {
+              onBrowseAisles?.();
+              onSound?.("wood");
+            }}
+            className="rounded-xl border border-amber-300/50 px-5 py-3.5 text-sm font-bold text-amber-200 transition hover:bg-amber-300/10 active:scale-95"
+          >
+            &uarr; Explore Aisles Again
+          </button>
+        </div>
+
+        {/* Trust Badges */}
+        <div className="mt-10 grid grid-cols-2 gap-2 text-[11px] font-bold text-amber-100/90 sm:grid-cols-4 sm:text-xs">
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">❄️ Cold-pressed &lt;38°C</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">🌿 Single-source seeds</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">✅ FSSAI Licensed</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">🚚 Fast Delhi NCR Delivery</div>
+        </div>
+
+        <p className="mt-6 text-[11px] text-amber-200/60">
+          Unit: B-2, Village Khurreji Khas, West Laxmi Market, Delhi-51 &bull; Open 7 Days: 10:00 AM &ndash; 10:00 PM
+        </p>
+      </motion.div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------- root
+
+export type ProductShelfProps = {
+  products?: Product[];
+  currency?: string;
+  className?: string;
+  children?: ReactNode;
+  title?: string;
+  subtitle?: string;
+  onAddToCart?: (product: Product, size: string, quantity: number) => void;
+};
+
+export function ShopExperience({
+  products = DEFAULT_PRODUCTS,
+  currency = "₹",
+  className,
+  children,
+  onAddToCart
+}: ProductShelfProps) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [bag, setBag] = useState(0);
+  const [active, setActive] = useState(-1);
+  const [soundOn, setSoundOn] = useState(false);
+  const soundRef = useRef(new ShelfSoundSystem());
+  const bagRef = useRef<HTMLButtonElement | null>(null);
+  const cart = useCart();
+  const count = cart ? cart.totalItems : bag;
+
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
+
+  const rows = [0, 1, 2, 3].map((r) => products.slice(r * 4, r * 4 + 4));
+  const open = products.find((p) => p.id === openId) ?? null;
+
+  useEffect(() => {
+    if (!openId) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenId(null);
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [openId]);
+
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    soundRef.current.setEnabled(next);
+    if (next) soundRef.current.playWoodClick();
+  };
+
+  const handleAdd = (product: Product, size: string, qty: number) => {
+    setBag((b) => b + qty);
+    if (onAddToCart) return onAddToCart(product, size, qty);
+    if (!cart) return;
+    const price = getProductVolumePrice(product.id, size, product.price);
+    const originalPrice = getProductVolumeCompareAt(product.id, size, product.compareAt) || Math.round(price * 1.25);
+    const vol = {
+      size,
+      price,
+      originalPrice,
+      packaging: size.includes("Tin") ? "Tin" : product.kind === "jar" ? "Glass Jar" : "PET bottle"
+    };
+    const cartProduct = {
+      id: product.id,
+      name: product.name,
+      hindiName: product.sub || product.name,
+      slug: product.id,
+      category: product.category,
+      shortDesc: product.tagline,
+      description: product.description,
+      price,
+      originalPrice,
+      rating: product.rating,
+      reviewsCount: product.reviews,
+      inStock: true,
+      featured: true,
+      bestSeller: false,
+      image: "/images/yellow_mustard.jpg",
+      volumes: [vol],
+      benefits: product.benefits,
+      processHighlight: product.tagline,
+      smokePoint: "250°C",
+      nutritionalInfo: { energy: "884 kcal / 100g" },
+      extractionDetails: { method: "Traditional Cold Press (<38°C)" },
+      labReportSummary: { purity: "100% Pure Virgin Grade" }
+    };
+    cart.addToCart(cartProduct as any, vol as any, qty);
+  };
+
+  const jump = (i: number) => {
+    document.getElementById(`aisle-${i + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <div className={cn("relative w-full overflow-x-clip bg-[#150b04] font-sans text-amber-50 antialiased", className)}>
+      {/* Scroll progress bar */}
+      <motion.div style={{ scaleX: progress }} className="fixed inset-x-0 top-0 z-[60] h-1 origin-left bg-gradient-to-r from-amber-300 to-[#e5a812]" />
+
+      {/* Side aisle rail on desktop */}
+      <div className="fixed right-3 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+        <button
+          type="button"
+          aria-label="Go to entrance"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            soundRef.current.playWoodClick();
+          }}
+          className={cn(
+            "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
+            active === -1 ? "scale-150 bg-amber-300" : "bg-transparent hover:bg-amber-200/40"
+          )}
+        >
+          <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 rounded-md bg-stone-900/90 px-2 py-0.5 text-[10px] font-bold text-amber-200 opacity-0 group-hover:opacity-100 transition whitespace-nowrap shadow">
+            Storefront
+          </span>
+        </button>
+
+        {AISLES.map((a, i) => (
+          <button
+            key={a.no}
+            type="button"
+            aria-label={`Go to aisle ${a.no}`}
+            onClick={() => {
+              jump(i);
+              soundRef.current.playWoodClick();
+            }}
+            className={cn(
+              "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
+              active === i ? "scale-150 bg-amber-300" : "bg-transparent hover:bg-amber-200/40"
+            )}
+          >
+            <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 rounded-md bg-stone-900/90 px-2 py-0.5 text-[10px] font-bold text-amber-200 opacity-0 group-hover:opacity-100 transition whitespace-nowrap shadow">
+              {a.no} &bull; {a.title.split("&")[0].trim()}
+            </span>
+          </button>
+        ))}
+
+        <button
+          type="button"
+          aria-label="Go to cash counter"
+          onClick={() => {
+            document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
+            soundRef.current.playWoodClick();
+          }}
+          className={cn(
+            "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
+            active === 4 ? "scale-150 bg-amber-300" : "bg-transparent hover:bg-amber-200/40"
+          )}
+        >
+          <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 rounded-md bg-stone-900/90 px-2 py-0.5 text-[10px] font-bold text-amber-200 opacity-0 group-hover:opacity-100 transition whitespace-nowrap shadow">
+            Cash Counter
+          </span>
+        </button>
+      </div>
+
+      {/* Floating Luxury Aisle Navigator Dock (replaces unwanted top header) */}
+      <nav
+        aria-label="Aisle Navigation"
+        className="fixed bottom-5 inset-x-0 z-40 mx-auto w-fit max-w-[96vw] flex items-center gap-1 sm:gap-2 rounded-full border border-amber-400/30 bg-[#160b05]/92 p-1.5 px-2.5 sm:px-3 text-amber-100 shadow-[0_15px_40px_rgba(0,0,0,0.65)] backdrop-blur-xl"
+      >
+        <button
+          type="button"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            soundRef.current.playShutter();
+          }}
+          className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-amber-200 hover:bg-white/10 transition"
+          title="Storefront Entrance"
+        >
+          <Store className="size-3.5" />
+          <span className="hidden sm:inline">Entrance</span>
+        </button>
+
+        <div className="flex items-center gap-1">
+          {AISLES.map((a, i) => (
+            <button
+              key={a.no}
+              type="button"
+              onClick={() => {
+                jump(i);
+                soundRef.current.playWoodClick();
+              }}
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[11px] font-bold transition",
+                active === i ? "bg-amber-300 text-[#3b1501] shadow" : "text-amber-100/90 hover:bg-white/10"
+              )}
+            >
+              <span className="font-black">{a.no}</span>
+              <span className="ml-1 hidden md:inline">{a.title.split(" ")[0]}</span>
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
+            soundRef.current.playWoodClick();
+          }}
+          className={cn(
+            "rounded-full px-2.5 py-1 text-[11px] font-bold transition",
+            active === 4 ? "bg-amber-300 text-[#3b1501]" : "text-amber-100 hover:bg-white/10"
+          )}
+        >
+          <span className="sm:hidden">Cash</span>
+          <span className="hidden sm:inline">🧾 Cash Counter</span>
+        </button>
+
+        <div className="h-4 w-px bg-amber-400/25" />
+
+        <button
+          ref={bagRef}
+          type="button"
+          onClick={() => {
+            if (cart) cart.setIsCartOpen(true);
+            else document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
+            soundRef.current.playChime();
+          }}
+          className="relative flex items-center gap-1.5 rounded-full bg-amber-400/20 hover:bg-amber-400/30 px-3 py-1 text-[11px] font-black text-amber-200 transition border border-amber-300/30"
+          title="Open Shopping Bag"
+        >
+          <ShoppingBag className="size-3.5" />
+          <span className="hidden sm:inline">Bag</span>
+          {count > 0 && (
+            <span className="grid size-4 place-items-center rounded-full bg-amber-300 text-[10px] font-black text-[#3b1501]">
+              {count}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={toggleSound}
+          className="grid size-7 place-items-center rounded-full text-amber-200 hover:bg-white/10 transition"
+          title={soundOn ? "Mute audio effects" : "Enable tactile sound effects"}
+        >
+          {soundOn ? <Volume2 className="size-3.5" /> : <VolumeX className="size-3.5 opacity-60" />}
+        </button>
+      </nav>
+
+      <LayoutGroup>
+        <Storefront
+          preview={products.slice(0, 5)}
+          onEnter={() => {
+            jump(0);
+            soundRef.current.playShutter();
+          }}
+        />
+
+        {rows.map((items, i) => (
+          <Aisle
+            key={i}
+            index={i}
+            items={items}
+            currency={currency}
+            openId={openId}
+            onOpen={setOpenId}
+            onActive={setActive}
+            onQuickAdd={handleAdd}
+            onSound={(type) => {
+              if (type === "wood") soundRef.current.playWoodClick();
+              if (type === "chime") soundRef.current.playChime();
+              if (type === "shutter") soundRef.current.playShutter();
+            }}
+          />
+        ))}
+
+        <Counter
+          onSound={(type) => {
+            if (type === "wood") soundRef.current.playWoodClick();
+            if (type === "chime") soundRef.current.playChime();
+          }}
+          onBrowseAisles={() => jump(0)}
+        />
+
+        <AnimatePresence>
+          {open && (
+            <ProductPage
+              key={open.id}
+              p={open}
+              currency={currency}
+              onClose={() => setOpenId(null)}
+              onAdd={handleAdd}
+              bagRef={bagRef}
+              soundSystem={soundRef.current}
+              onOpenBag={() => cart?.setIsCartOpen(true)}
+            />
+          )}
+        </AnimatePresence>
+      </LayoutGroup>
+
+      {children}
+    </div>
+  );
+}
+
+// Drop-in alias so existing <ProductShelf /> usages get the new experience.
+export const ProductShelf = ShopExperience;
+export default ShopExperience;
