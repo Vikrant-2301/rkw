@@ -85,3 +85,18 @@ input,textarea,select { accent-color:var(--rkw-green); }
   *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
 }
 @media (max-width:640px) { .rkw-shell { width:calc(100% - 32px); } }
+
+/* Fine-grain polish for the existing inner pages, product detail, shelf and checkout. */
+.bg-gradient-to-b.from-\[\#0A1C30\],.bg-gradient-to-b.from-\[\#0E2A47\] { --tw-gradient-from:var(--rkw-green-deep)!important; }
+.bg-gradient-to-b.to-\[\#123356\],.bg-gradient-to-br.from-\[\#0E2A47\] { --tw-gradient-to:var(--rkw-green)!important; }
+.bg-\[\#07131f\] { background-color:var(--rkw-green-deep)!important; }
+.text-\[\#C8D7E6\],.text-\[\#93B5D9\],.text-\[\#8EA5BC\] { color:#718477!important; }
+.border-\[\#163A60\]\/10,.border-\[\#163A60\]\/15 { border-color:var(--rkw-line)!important; }
+[class*="from-[#0E2A47]"] { --tw-gradient-from:var(--rkw-green)!important; }
+[class*="to-[#163A60]"] { --tw-gradient-to:#245442!important; }
+.rkw-product-card { min-width:0; }
+.rkw-product-visual { isolation:isolate; }
+.rkw-product-card:focus-visible { outline:2px solid var(--rkw-clay); outline-offset:5px; }
+@media (hover:none) {
+  .rkw-product-card .rkw-product-visual > div:last-child { transform:translateY(0); }
+}
