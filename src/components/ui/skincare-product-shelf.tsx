@@ -156,8 +156,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     liquid: "#eab318",
     price: 75,
     compareAt: 95,
-    bottleImage: "/mockups/yellow-mustard/bottle.png",
-    showcaseImage: "/mockups/yellow-mustard/showcase.png",
+    bottleImage: "/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Bottle.png",
+    showcaseImage: "/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Showcase.png",
     sizes: PET_SIZES,
     rating: 5.0,
     reviews: 2150,
@@ -190,8 +190,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     liquid: "#a25f0a",
     price: 70,
     compareAt: 90,
-    bottleImage: "/mockups/black-mustard/bottle.png",
-    showcaseImage: "/mockups/black-mustard/showcase.png",
+    bottleImage: "/pure oil/black mustard/RKW Black Mustard Oil Bottle.png",
+    showcaseImage: "/pure oil/black mustard/RKW Black Mustard Oil Product Display.png",
     sizes: PET_SIZES,
     rating: 4.9,
     reviews: 1420,
@@ -210,7 +210,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     id: "dahi-bilona-desi-cow-ghee",
     kind: "jar",
     name: "Dahi Bilona Desi Cow Ghee",
-    short: "Desi Cow Ghee",
+    short: "Cow Bilona Ghee",
     sub: "दही बिलोना देसी गाय का शुद्ध घी",
     category: "Bilona Ghee",
     color: "#f6f3eb",
@@ -224,7 +224,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     liquid: "#f0c64c",
     price: 750,
     compareAt: 900,
-    showcaseImage: "/images/bilona_ghee.jpg",
+    bottleImage: "/ghee/dahi bilona cow ghee/Ramesh Dahi Bilona Ghee Jar.png",
+    showcaseImage: "/ghee/dahi bilona cow ghee/Ramesh Bilona Ghee Jar.png",
     sizes: ["500 ml (PET bottle)", "1 L (PET bottle)"],
     rating: 5.0,
     reviews: 3280,
@@ -240,32 +241,38 @@ export const DEFAULT_PRODUCTS: Product[] = [
     howTo: "Enjoy 1-2 teaspoons over hot rotis, steaming dal, or stir into warm milk at bedtime for restful sleep and digestion."
   },
   {
-    id: "black-mustard-oil-5l-can",
-    kind: "tin",
-    name: "Black Mustard Oil Heritage 5L Eco Can",
-    short: "Mustard 5L Can",
-    sub: "5L पारम्परिक टिन कैन (झल वाला)",
-    category: "Mustard Oil",
-    color: "#e2e6e3",
-    cap: "#7a1426",
-    label: "#7a1426",
-    stickerColor: "#7A1426",
-    ink: "#fdf8ef",
-    price: 1500,
-    compareAt: 1850,
-    sizes: ["2 Litres", "5 Litres"],
+    id: "dahi-bilona-desi-buffalo-ghee",
+    kind: "jar",
+    name: "Dahi Bilona Desi Buffalo Ghee",
+    short: "Buffalo Bilona Ghee",
+    sub: "दही बिलोना देसी भैंस का शुद्ध घी",
+    category: "Bilona Ghee",
+    color: "#f8f9fa",
+    cap: "#c29139",
+    label: "#0E2A47",
+    stickerColor: "#0E2A47",
+    origin: "MURRAH BUFFALO",
+    sourceType: "Handcrafted from",
+    ink: "#0e2a47",
+    glass: true,
+    liquid: "#fdfbf7",
+    price: 780,
+    compareAt: 950,
+    bottleImage: "/ghee/Dahi Bilona Buffalo ghee/Ramesh Buffalo Ghee Jar Product Shot.png",
+    showcaseImage: "/ghee/Dahi Bilona Buffalo ghee/Ramesh Ghee Jar Product Shot.png",
+    sizes: ["500 ml (PET bottle)", "1 L (PET bottle)"],
     rating: 4.9,
-    reviews: 980,
-    tagline: "Heritage food-grade metal canister that locks in fresh pungent aroma.",
-    description: "Our signature high-pungency black mustard oil packed in an authentic food-grade metal tin can. Shields sensitive volatile antioxidants and allyl isothiocyanates from light degradation. Features a leakproof easy-pour spout for hassle-free kitchen decanting.",
+    reviews: 1840,
+    tagline: "Dense, snowy-white granular grain handcrafted from cultured Murrah buffalo curd.",
+    description: "Authentic Dahi Bilona Desi Buffalo Ghee prepared through traditional whole-curd churning by Ramesh Kolhu Wale. Buffalo milk is naturally cultured into thick dahi overnight, then churned bi-directionally to separate probiotic-rich makkhan before slow simmering. The result is an extraordinarily dense, fragrant, snowy-granular ghee packed with healthy fats, calcium, and natural vitality.",
     benefits: [
-      "100% UV & Light-Proof Metal Packaging",
-      "Zero Plastic Leaching into Oil",
-      "Built-in Spill-Proof Pouring Spout",
-      "Extra family value savings for heavy Indian kitchen usage"
+      "100% Pure Murrah Buffalo Ghee",
+      "Dense snowy-white danedar grain with rich heritage fragrance",
+      "Handcrafted from cultured dahi makkhan with bi-directional churning",
+      "Rich in natural calcium and healthy fats for muscle strength"
     ],
-    ingredients: "100% Pure Cold-Pressed Black Mustard Oil (Cold Press).",
-    howTo: "Pull up the spout ring, decant into your daily glass kitchen cruet, and close the cap tightly."
+    ingredients: "100% Pure Clarified Butterfat from Fresh Desi Buffalo Milk Curd.",
+    howTo: "Spoon over steaming parathas, khichdi, or use in traditional mithais for rich creamy sweetness."
   },
 
   // --- AISLE 2: Nut & Coconut Cold-Pressed Range ---
@@ -1236,25 +1243,42 @@ export function ProductArt({
   p,
   spin,
   size,
-  className
+  className,
+  preferPhoto = false
 }: {
   p: Product;
   spin?: MotionValue<number>;
   size?: string;
   className?: string;
+  preferPhoto?: boolean;
 }) {
   const id = "ps" + useId().replace(/[^a-zA-Z0-9]/g, "");
+  const fallback = useMotionValue(0);
   const isPet = p.kind === "round-bottle" || p.kind === "bottle";
   const s = SHAPES[p.kind] || SHAPES["round-bottle"];
+  const { print: P, box: B } = s;
+  const period = isPet ? 136 : P.w * 2.6;
+  const x = useTransform(spin ?? fallback, (v) => -((((v * period) % period) + period) % period));
+
+  if (preferPhoto && p.bottleImage) {
+    return (
+      <div className={cn("relative flex items-center justify-center select-none h-full w-auto", className)}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={p.bottleImage}
+          alt={p.name}
+          className="h-full w-auto max-h-full max-w-full object-contain filter drop-shadow-[0_18px_25px_rgba(0,0,0,0.55)] transition-transform duration-300"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
   const c = hexRgb(p.color);
   const k = hexRgb(p.cap);
   const lab = hexRgb(p.label);
   const a = p.glass ? (lum(c) > 200 ? 0.32 : 0.78) : 1;
   const liq = hexRgb(p.liquid ?? p.color);
-  const { print: P, box: B } = s;
-  const period = isPet ? 136 : P.w * 2.6;
-  const fallback = useMotionValue(0);
-  const x = useTransform(spin ?? fallback, (v) => -((((v * period) % period) + period) % period));
   const nameSize = Math.min(9.5, P.w * 0.11, (P.w * 1.1) / p.short.length);
   const subSize = Math.min(6.2, P.w * 0.075, (P.w * 1.2) / Math.max(1, (p.sub ?? "").length));
 
@@ -1274,6 +1298,7 @@ export function ProductArt({
     const { line1: title1, line2: title2 } = getStickerTitle(p.short);
     const displayQty = getDisplayQty(size || p.sizes[0]);
     const cleanHindiSub = p.sub ? p.sub.replace(/\s*\([^)]*\)/g, "").trim() : "";
+    const isGhee = p.category.toLowerCase().includes("ghee") || p.id.includes("ghee");
 
     return (
       <g key={`front-${dx}`}>
@@ -1305,7 +1330,9 @@ export function ProductArt({
 
         <g transform={`translate(${cx} ${sy + 37.5})`}>
           <rect x="-17" y="-3" width="34" height="6" rx="3" fill={maroon} />
-          <text x="0" y="1.2" fill="#FFF" fontSize="3.1" fontWeight="900" letterSpacing="0.08em" textAnchor="middle">COLD PRESSED</text>
+          <text x="0" y="1.2" fill="#FFF" fontSize="3.1" fontWeight="900" letterSpacing="0.08em" textAnchor="middle">
+            {isGhee ? "BILONA GHEE" : "COLD PRESSED"}
+          </text>
         </g>
 
         <text x={cx} y={sy + 46.5} fill={maroon} fontSize={title2 ? "5.4" : "6"} fontWeight="900" letterSpacing="0.02em" textAnchor="middle">{title1}</text>
@@ -1319,7 +1346,9 @@ export function ProductArt({
 
         <g transform={`translate(${cx} ${sy + (title2 ? 63 : 59)})`}>
           <rect x="-15" y="-2.6" width="30" height="5.2" rx="2.6" fill={maroon} />
-          <text x="0" y="1.1" fill="#FFF" fontSize="2.7" fontWeight="800" letterSpacing="0.06em" textAnchor="middle">SINGLE PRESSED</text>
+          <text x="0" y="1.1" fill="#FFF" fontSize="2.7" fontWeight="800" letterSpacing="0.06em" textAnchor="middle">
+            {isGhee ? "VEDIC MAKKHAN" : "SINGLE PRESSED"}
+          </text>
         </g>
 
         <text x={cx} y={sy + (title2 ? 70 : 66)} fill="#555" fontSize="2.4" fontWeight="600" textAnchor="middle">{sourceType}</text>
@@ -1871,6 +1900,7 @@ export function ProductPage({
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [isAutoSpinning, setIsAutoSpinning] = useState(false);
+  const [mediaView, setMediaView] = useState<"turntable" | "bottle" | "showcase">("turntable");
   const [activeTab, setActiveTab] = useState<"order" | "process" | "lab">("order");
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const drag = useRef<{ x: number; v: number; samples: { x: number; t: number }[] } | null>(null);
@@ -1954,18 +1984,98 @@ export function ProductPage({
       />
 
       <div className="relative mx-auto flex min-h-full max-w-[1140px] flex-col justify-center px-3 py-6 sm:px-6 md:grid md:grid-cols-[1.08fr_1fr] md:items-center md:gap-8 md:py-8">
-        {/* Left: 360° bottle on a turntable */}
+        {/* Left: 360° bottle / Studio bottle / Showcase on turntable */}
         <div className="relative flex flex-col items-center justify-center pb-4 pt-2 md:py-0">
+          {/* Media switcher */}
+          {(p.bottleImage || p.showcaseImage) && (
+            <div className="mb-3 flex items-center justify-center gap-1.5 rounded-full border border-white/20 bg-stone-900/90 p-1 backdrop-blur-md shadow-lg z-30">
+              <button
+                type="button"
+                onClick={() => {
+                  setMediaView("turntable");
+                  soundSystem?.playWoodClick();
+                }}
+                className={cn(
+                  "rounded-full px-3 py-1 text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer",
+                  mediaView === "turntable"
+                    ? "bg-amber-400 text-stone-900 shadow font-black"
+                    : "text-amber-200 hover:text-white"
+                )}
+              >
+                <RotateCw className="size-3" />
+                <span>360° 3D Bottle</span>
+              </button>
+              {p.bottleImage && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMediaView("bottle");
+                    setIsAutoSpinning(false);
+                    soundSystem?.playWoodClick();
+                  }}
+                  className={cn(
+                    "rounded-full px-3 py-1 text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer",
+                    mediaView === "bottle"
+                      ? "bg-amber-400 text-stone-900 shadow font-black"
+                      : "text-amber-200 hover:text-white"
+                  )}
+                >
+                  <span>📷 Real Bottle Shot</span>
+                </button>
+              )}
+              {p.showcaseImage && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMediaView("showcase");
+                    setIsAutoSpinning(false);
+                    soundSystem?.playWoodClick();
+                  }}
+                  className={cn(
+                    "rounded-full px-3 py-1 text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer",
+                    mediaView === "showcase"
+                      ? "bg-amber-400 text-stone-900 shadow font-black"
+                      : "text-amber-200 hover:text-white"
+                  )}
+                >
+                  <span>✨ Product Showcase</span>
+                </button>
+              )}
+            </div>
+          )}
+
           <motion.div
             layoutId={`product-${p.id}`}
             transition={SPRING}
             className="relative z-10 flex h-[44vh] max-h-[580px] w-[200px] cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing sm:h-[52vh] sm:w-[250px] md:h-[65vh] md:w-[290px]"
-            onPointerDown={onDown}
-            onPointerMove={onMove}
-            onPointerUp={onUp}
-            onPointerCancel={onUp}
+            onPointerDown={mediaView === "turntable" ? onDown : undefined}
+            onPointerMove={mediaView === "turntable" ? onMove : undefined}
+            onPointerUp={mediaView === "turntable" ? onUp : undefined}
+            onPointerCancel={mediaView === "turntable" ? onUp : undefined}
           >
-            <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
+            {mediaView === "turntable" && (
+              <ProductArt p={p} spin={spin} size={size} className="h-full w-auto max-w-full drop-shadow-2xl" />
+            )}
+            {mediaView === "bottle" && p.bottleImage && (
+              <div className="relative flex h-full w-full items-center justify-center p-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.bottleImage}
+                  alt={p.name}
+                  className="max-h-full max-w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.7)] rounded-2xl"
+                />
+              </div>
+            )}
+            {mediaView === "showcase" && p.showcaseImage && (
+              <div className="relative flex h-full w-full items-center justify-center p-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.showcaseImage}
+                  alt={`${p.name} Showcase`}
+                  className="max-h-full max-w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.7)] rounded-2xl"
+                />
+              </div>
+            )}
           </motion.div>
 
           {/* Wooden Turntable with controls */}
@@ -1973,59 +2083,69 @@ export function ProductPage({
             <div className="h-4 w-44 rounded-[50%] border-t border-[#FDE68A]/40 bg-gradient-to-b from-[#B86B28] via-[#8C4318] to-[#451A03] shadow-[0_15px_35px_rgba(0,0,0,0.5)] sm:h-5 sm:w-56" />
 
             {/* Rotation & Inspection Action Bar */}
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAutoSpinning(!isAutoSpinning);
-                  soundSystem?.playWoodClick();
-                }}
-                className={cn(
-                  "flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold transition shadow-sm",
-                  isAutoSpinning
-                    ? "bg-amber-400 text-stone-900 ring-2 ring-amber-300 font-black"
-                    : "bg-white/10 text-amber-200 hover:bg-white/20 border border-white/20 backdrop-blur-md"
-                )}
-              >
-                {isAutoSpinning ? <Pause className="size-3" /> : <Play className="size-3" />}
-                <span>{isAutoSpinning ? "Pause 360°" : "Auto 360°"}</span>
-              </button>
+            {mediaView === "turntable" ? (
+              <>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAutoSpinning(!isAutoSpinning);
+                      soundSystem?.playWoodClick();
+                    }}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold transition shadow-sm",
+                      isAutoSpinning
+                        ? "bg-amber-400 text-stone-900 ring-2 ring-amber-300 font-black"
+                        : "bg-white/10 text-amber-200 hover:bg-white/20 border border-white/20 backdrop-blur-md"
+                    )}
+                  >
+                    {isAutoSpinning ? <Pause className="size-3" /> : <Play className="size-3" />}
+                    <span>{isAutoSpinning ? "Pause 360°" : "Auto 360°"}</span>
+                  </button>
 
-              <div className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 p-0.5 backdrop-blur-md text-[10px] font-bold text-amber-200">
-                <button
-                  type="button"
-                  onClick={() => snapAngle(0)}
-                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
-                >
-                  Front
-                </button>
-                <button
-                  type="button"
-                  onClick={() => snapAngle(0.25)}
-                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
-                >
-                  Botanical
-                </button>
-                <button
-                  type="button"
-                  onClick={() => snapAngle(0.5)}
-                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
-                >
-                  Nutrition
-                </button>
-                <button
-                  type="button"
-                  onClick={() => snapAngle(0.75)}
-                  className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
-                >
-                  Quality
-                </button>
+                  <div className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 p-0.5 backdrop-blur-md text-[10px] font-bold text-amber-200">
+                    <button
+                      type="button"
+                      onClick={() => snapAngle(0)}
+                      className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                    >
+                      Front
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => snapAngle(0.25)}
+                      className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                    >
+                      Botanical
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => snapAngle(0.5)}
+                      className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                    >
+                      Nutrition
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => snapAngle(0.75)}
+                      className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
+                    >
+                      Quality
+                    </button>
+                  </div>
+                </div>
+
+                <p className="mt-2 text-center text-[10px] font-medium text-amber-200/70 sm:text-[11px]">
+                  ⇄ Drag horizontally to spin • Inspect authentic purity stickers
+                </p>
+              </>
+            ) : (
+              <div className="mt-3 flex items-center justify-center">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-[11px] font-bold text-amber-200 border border-white/20 backdrop-blur-md shadow">
+                  ✨ Authentic Studio Photography • Ramesh Kolhu Wale
+                </span>
               </div>
-            </div>
-
-            <p className="mt-2 text-center text-[10px] font-medium text-amber-200/70 sm:text-[11px]">
-              ⇄ Drag horizontally to spin • Inspect authentic purity stickers
-            </p>
+            )}
           </div>
         </div>
 
@@ -2511,6 +2631,7 @@ function Aisle({
   items,
   currency,
   openId,
+  shelfView = "3d",
   onOpen,
   onActive,
   onQuickAdd,
@@ -2520,6 +2641,7 @@ function Aisle({
   items: Product[];
   currency: string;
   openId: string | null;
+  shelfView?: "3d" | "photo";
   onOpen: (id: string) => void;
   onActive: (i: number) => void;
   onQuickAdd: (p: Product, size: string, qty: number) => void;
@@ -2618,7 +2740,11 @@ function Aisle({
                         className="h-full w-full flex items-end justify-center cursor-pointer"
                         aria-label={`${p.name}, from ${currency}${p.price}`}
                       >
-                        <ProductArt p={p} className="h-full w-auto max-w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]" />
+                        <ProductArt
+                          p={p}
+                          preferPhoto={shelfView === "photo"}
+                          className="h-full w-auto max-w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
+                        />
                       </button>
 
                       {/* Hover Action Bar */}
@@ -2887,8 +3013,9 @@ export function ShopExperience({
   const [openId, setOpenId] = useState<string | null>(null);
   const [bag, setBag] = useState(0);
   const [active, setActive] = useState(-1);
+  const [shelfView, setShelfView] = useState<"3d" | "photo">("3d");
   const [soundOn, setSoundOn] = useState(false);
-  const soundRef = useRef(new ShelfSoundSystem());
+  const [soundSystem] = useState(() => new ShelfSoundSystem());
   const bagRef = useRef<HTMLButtonElement | null>(null);
   const cart = useCart();
   const count = cart ? cart.totalItems : bag;
@@ -2914,8 +3041,8 @@ export function ShopExperience({
   const toggleSound = () => {
     const next = !soundOn;
     setSoundOn(next);
-    soundRef.current.setEnabled(next);
-    if (next) soundRef.current.playWoodClick();
+    soundSystem.setEnabled(next);
+    if (next) soundSystem.playWoodClick();
   };
 
   const handleAdd = (product: Product, size: string, qty: number) => {
@@ -2973,7 +3100,7 @@ export function ShopExperience({
           aria-label="Go to entrance"
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
-            soundRef.current.playWoodClick();
+            soundSystem.playWoodClick();
           }}
           className={cn(
             "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
@@ -2992,7 +3119,7 @@ export function ShopExperience({
             aria-label={`Go to aisle ${a.no}`}
             onClick={() => {
               jump(i);
-              soundRef.current.playWoodClick();
+              soundSystem.playWoodClick();
             }}
             className={cn(
               "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
@@ -3010,7 +3137,7 @@ export function ShopExperience({
           aria-label="Go to cash counter"
           onClick={() => {
             document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
-            soundRef.current.playWoodClick();
+            soundSystem.playWoodClick();
           }}
           className={cn(
             "group relative size-2.5 rounded-full border border-amber-200/70 transition-all",
@@ -3032,7 +3159,7 @@ export function ShopExperience({
           type="button"
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
-            soundRef.current.playShutter();
+            soundSystem.playShutter();
           }}
           className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-amber-200 hover:bg-white/10 transition"
           title="Storefront Entrance"
@@ -3048,7 +3175,7 @@ export function ShopExperience({
               type="button"
               onClick={() => {
                 jump(i);
-                soundRef.current.playWoodClick();
+                soundSystem.playWoodClick();
               }}
               className={cn(
                 "rounded-full px-2.5 py-1 text-[11px] font-bold transition",
@@ -3065,7 +3192,7 @@ export function ShopExperience({
           type="button"
           onClick={() => {
             document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
-            soundRef.current.playWoodClick();
+            soundSystem.playWoodClick();
           }}
           className={cn(
             "rounded-full px-2.5 py-1 text-[11px] font-bold transition",
@@ -3084,7 +3211,7 @@ export function ShopExperience({
           onClick={() => {
             if (cart) cart.setIsCartOpen(true);
             else document.getElementById("counter")?.scrollIntoView({ behavior: "smooth" });
-            soundRef.current.playChime();
+            soundSystem.playChime();
           }}
           className="relative flex items-center gap-1.5 rounded-full bg-amber-400/20 hover:bg-amber-400/30 px-3 py-1 text-[11px] font-black text-amber-200 transition border border-amber-300/30"
           title="Open Shopping Bag"
@@ -3100,8 +3227,25 @@ export function ShopExperience({
 
         <button
           type="button"
+          onClick={() => {
+            setShelfView((v) => (v === "3d" ? "photo" : "3d"));
+            soundSystem.playWoodClick();
+          }}
+          className={cn(
+            "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition border cursor-pointer",
+            shelfView === "photo"
+              ? "bg-amber-400 text-stone-900 border-amber-300 font-black shadow-sm"
+              : "text-amber-200 border-amber-300/30 hover:bg-white/10"
+          )}
+          title="Toggle between 3D procedural bottles and Real Studio photography"
+        >
+          {shelfView === "photo" ? "📷 Real Bottles" : "🍶 3D Bottles"}
+        </button>
+
+        <button
+          type="button"
           onClick={toggleSound}
-          className="grid size-7 place-items-center rounded-full text-amber-200 hover:bg-white/10 transition"
+          className="grid size-7 place-items-center rounded-full text-amber-200 hover:bg-white/10 transition cursor-pointer"
           title={soundOn ? "Mute audio effects" : "Enable tactile sound effects"}
         >
           {soundOn ? <Volume2 className="size-3.5" /> : <VolumeX className="size-3.5 opacity-60" />}
@@ -3113,7 +3257,7 @@ export function ShopExperience({
           preview={products.slice(0, 5)}
           onEnter={() => {
             jump(0);
-            soundRef.current.playShutter();
+            soundSystem.playShutter();
           }}
         />
 
@@ -3124,21 +3268,22 @@ export function ShopExperience({
             items={items}
             currency={currency}
             openId={openId}
+            shelfView={shelfView}
             onOpen={setOpenId}
             onActive={setActive}
             onQuickAdd={handleAdd}
             onSound={(type) => {
-              if (type === "wood") soundRef.current.playWoodClick();
-              if (type === "chime") soundRef.current.playChime();
-              if (type === "shutter") soundRef.current.playShutter();
+              if (type === "wood") soundSystem.playWoodClick();
+              if (type === "chime") soundSystem.playChime();
+              if (type === "shutter") soundSystem.playShutter();
             }}
           />
         ))}
 
         <Counter
           onSound={(type) => {
-            if (type === "wood") soundRef.current.playWoodClick();
-            if (type === "chime") soundRef.current.playChime();
+            if (type === "wood") soundSystem.playWoodClick();
+            if (type === "chime") soundSystem.playChime();
           }}
           onBrowseAisles={() => jump(0)}
         />
@@ -3152,7 +3297,7 @@ export function ShopExperience({
               onClose={() => setOpenId(null)}
               onAdd={handleAdd}
               bagRef={bagRef}
-              soundSystem={soundRef.current}
+              soundSystem={soundSystem}
               onOpenBag={() => cart?.setIsCartOpen(true)}
             />
           )}

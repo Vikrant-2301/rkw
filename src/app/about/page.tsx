@@ -5,8 +5,8 @@ import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Our Story & Heritage Since 1981 | Ramesh Kolhu Wale',
-  description: 'Learn the story of Ramesh Kolhu Wale — four generations of authentic cold-pressed oils and pure Bilona Desi Ghee in Delhi NCR since 1981.',
+  title: 'Since 1981 – A Legacy of Purity and Trust | Ramesh Kolhu Wale',
+  description: 'Our journey began in 1981 with a simple belief: every Indian family deserves pure, high-quality edible oils and authentic Bilona Ghee.',
   alternates: {
     canonical: '/about',
   },
@@ -21,11 +21,10 @@ export default function AboutPage() {
           <div className="max-w-3xl">
             <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-4 font-semibold">Our Heritage &amp; Mission</p>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#1C1A16] font-normal leading-tight mb-6">
-              A family tradition,<br />four generations deep
+              Since 1981 – A Legacy of Purity and Trust
             </h1>
             <p className="text-[#5A5248] text-lg leading-relaxed font-light">
-              Ramesh Kolhu Wale began in 1981 with a sacred belief: that the best edible oil is extracted slowly, 
-              with pure slow cold-press technique, zero heat, and zero chemicals — exactly as India&apos;s ancient Vaidyas prescribed.
+              Our journey began in 1981 with a simple belief every Indian family deserves pure, high-quality edible oils.
             </p>
           </div>
         </div>
@@ -62,26 +61,25 @@ export default function AboutPage() {
               <span className="text-xs font-semibold text-[#0E2A47] bg-[#EBF2F8] px-3 py-1 rounded-full uppercase tracking-wider">
                 Est. 1981 · Delhi NCR
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">The founding story</h2>
+              <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">Our Story</h2>
               <div className="space-y-4 text-[#5A5248] leading-relaxed text-sm sm:text-base">
-                <p>
-                  Ramesh ji started with a single traditional cold-press Kolhu in Delhi, cold-pressing indigenous mustard seeds 
-                  for local families. The demand grew not through commercial advertisements, but by word of mouth — 
-                  families tasted the rich pungency of authentic cold-pressed mustard oil, the golden hues, and the complete absence of bleaching or chemical solvents.
+                <p className="text-base sm:text-lg font-medium text-[#1C1A16]">
+                  Our journey began in 1981 with a simple belief every Indian family deserves pure, high-quality edible oils.
                 </p>
                 <p>
-                  Today, Ramesh Kolhu Wale operates authentic extraction Units across Delhi NCR, 
-                  yet our core principle has never deviated. Every batch is cold-pressed 
-                  at slow rotations below 38°C, preserving 100% of the seeds&apos; vital antioxidants, Omega-3s, and tocopherols.
+                  In those early days, mustard oil manufacturing was closely connected to traditional knowledge and hands-on experience. From selecting mustard seeds to understanding their quality, aroma and natural characteristics, every step required care and attention. We learned that making good mustard oil was not just about manufacturing a product; it was about preserving the taste and traditions that have been part of Indian kitchens for generations.
                 </p>
                 <p>
-                  We are FSSAI registered with Agmark R.B.O. Certified Quality (100% Pure Guarantee). But our truest badge of honor is open transparency: you can walk into any of our Units, inspect the raw seeds, and watch your bottle pressed live before your eyes.
+                  Rooted in tradition and strengthened by decades of experience, we have continuously evolved by embracing modern manufacturing practices while staying true to the values that define us.
+                </p>
+                <p className="font-medium text-[#0E2A47] text-base border-l-2 border-[#B8860B] pl-4 italic bg-[#FAF8F3] py-2.5 rounded-r-lg">
+                  For us, quality is more than a promise it is a commitment built on family values, generations of hard work and the trust of our customers.
                 </p>
               </div>
               <div className="pt-2 flex flex-wrap gap-4 text-xs font-semibold text-[#0E2A47]">
                 <div className="flex items-center gap-1.5"><FiCheckCircle className="text-[#0E2A47]" /> 100% Pure First Press</div>
-                <div className="flex items-center gap-1.5"><FiCheckCircle className="text-[#0E2A47]" /> Zero Added Solvents</div>
-                <div className="flex items-center gap-1.5"><FiCheckCircle className="text-[#0E2A47]" /> Authentic Cold-Press</div>
+                <div className="flex items-center gap-1.5"><FiCheckCircle className="text-[#0E2A47]" /> Traditional Knowledge</div>
+                <div className="flex items-center gap-1.5"><FiCheckCircle className="text-[#0E2A47]" /> Generations of Trust</div>
               </div>
             </div>
           </div>

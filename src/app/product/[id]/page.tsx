@@ -369,9 +369,6 @@ export default function ProductDetailPage() {
                 </div>
               ))}
             </div>
-            <Link href="/lab-reports" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0E2A47] hover:text-[#B8860B] transition-colors">
-              View full lab reports <FiArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         )}
       </div>

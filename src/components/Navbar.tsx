@@ -36,9 +36,7 @@ export const Navbar: React.FC = () => {
     { href: '/shop', label: 'Shop' },
     { href: '/stores', label: 'Find Unit' },
     { href: '/shelf', label: 'Virtual Shelf' },
-    { href: '/process', label: 'Our Process' },
     { href: '/about', label: 'About' },
-    { href: '/lab-reports', label: 'Quality Standards' },
     { href: '/contact', label: 'Contact' },
   ];
 

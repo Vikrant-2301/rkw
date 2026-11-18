@@ -17,10 +17,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     bestSeller: true,
-    image: '/mockups/yellow-mustard/showcase.png',
-    bottleImage: '/mockups/yellow-mustard/bottle.png',
-    showcaseImage: '/mockups/yellow-mustard/showcase.png',
-    additionalImages: ['/mockups/yellow-mustard/bottle.png'],
+    image: '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Showcase.png',
+    bottleImage: '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Bottle.png',
+    showcaseImage: '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Showcase.png',
+    additionalImages: [
+      '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Bottle.png',
+      '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Showcase.png'
+    ],
     volumes: [
       { size: '200ml (PET bottle)', price: 75, originalPrice: 95, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 180, originalPrice: 220, packaging: 'PET bottle' },
@@ -75,10 +78,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     bestSeller: false,
-    image: '/mockups/black-mustard/showcase.png',
-    bottleImage: '/mockups/black-mustard/bottle.png',
-    showcaseImage: '/mockups/black-mustard/showcase.png',
-    additionalImages: ['/mockups/black-mustard/bottle.png'],
+    image: '/pure oil/black mustard/RKW Black Mustard Oil Product Display.png',
+    bottleImage: '/pure oil/black mustard/RKW Black Mustard Oil Bottle.png',
+    showcaseImage: '/pure oil/black mustard/RKW Black Mustard Oil Product Display.png',
+    additionalImages: [
+      '/pure oil/black mustard/RKW Black Mustard Oil Bottle.png',
+      '/pure oil/black mustard/RKW Black Mustard Oil Product Display.png'
+    ],
     volumes: [
       { size: '200ml (PET bottle)', price: 70, originalPrice: 90, packaging: 'PET bottle' },
       { size: '500ml (PET bottle)', price: 170, originalPrice: 210, packaging: 'PET bottle' },
@@ -135,8 +141,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     bestSeller: true,
-    image: '/images/bilona_ghee.jpg',
-    additionalImages: ['/images/bilona_tradition.jpg'],
+    image: '/ghee/Desi cow ghee/Ramesh Cream Bilona Ghee Jar.png',
+    bottleImage: '/ghee/Desi cow ghee/RKW Cream Bilona Ghee Jar.png',
+    showcaseImage: '/ghee/Desi cow ghee/Ramesh Cream Bilona Ghee Jar.png',
+    additionalImages: [
+      '/ghee/Desi cow ghee/RKW Cream Bilona Ghee Jar.png',
+      '/ghee/Desi cow ghee/Ramesh Cream Bilona Ghee Jar.png'
+    ],
     volumes: [
       { size: '500ml (PET bottle)', price: 450, originalPrice: 550, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 880, originalPrice: 1050, packaging: 'PET bottle' }
@@ -187,8 +198,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: false,
     bestSeller: false,
-    image: '/images/bilona_tradition.jpg',
-    additionalImages: ['/images/bilona_ghee.jpg'],
+    image: '/ghee/Desi Buffalo ghee/Traditional Buffalo Ghee Product Display.png',
+    bottleImage: '/ghee/Desi Buffalo ghee/RAMESH Cream Bilona Ghee Jar.png',
+    showcaseImage: '/ghee/Desi Buffalo ghee/Traditional Buffalo Ghee Product Display.png',
+    additionalImages: [
+      '/ghee/Desi Buffalo ghee/RAMESH Cream Bilona Ghee Jar.png',
+      '/ghee/Desi Buffalo ghee/Traditional Buffalo Ghee Product Display.png'
+    ],
     volumes: [
       { size: '500ml (PET bottle)', price: 480, originalPrice: 580, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 940, originalPrice: 1100, packaging: 'PET bottle' }
@@ -239,8 +255,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     bestSeller: true,
-    image: '/images/bilona_ghee.jpg',
-    additionalImages: ['/images/bilona_tradition.jpg'],
+    image: '/ghee/dahi bilona cow ghee/Ramesh Bilona Ghee Jar.png',
+    bottleImage: '/ghee/dahi bilona cow ghee/Ramesh Dahi Bilona Ghee Jar.png',
+    showcaseImage: '/ghee/dahi bilona cow ghee/Ramesh Bilona Ghee Jar.png',
+    additionalImages: [
+      '/ghee/dahi bilona cow ghee/Ramesh Dahi Bilona Ghee Jar.png',
+      '/ghee/dahi bilona cow ghee/Ramesh Bilona Ghee Jar.png'
+    ],
     volumes: [
       { size: '500ml (PET bottle)', price: 750, originalPrice: 900, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 1450, originalPrice: 1750, packaging: 'PET bottle' }
@@ -291,8 +312,13 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: false,
     bestSeller: false,
-    image: '/images/bilona_tradition.jpg',
-    additionalImages: ['/images/bilona_ghee.jpg'],
+    image: '/ghee/Dahi Bilona Buffalo ghee/Ramesh Ghee Jar Product Shot.png',
+    bottleImage: '/ghee/Dahi Bilona Buffalo ghee/Ramesh Buffalo Ghee Jar Product Shot.png',
+    showcaseImage: '/ghee/Dahi Bilona Buffalo ghee/Ramesh Ghee Jar Product Shot.png',
+    additionalImages: [
+      '/ghee/Dahi Bilona Buffalo ghee/Ramesh Buffalo Ghee Jar Product Shot.png',
+      '/ghee/Dahi Bilona Buffalo ghee/Ramesh Ghee Jar Product Shot.png'
+    ],
     volumes: [
       { size: '500ml (PET bottle)', price: 780, originalPrice: 950, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 1500, originalPrice: 1800, packaging: 'PET bottle' }

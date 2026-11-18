@@ -70,7 +70,7 @@ export const metadata: Metadata = {
         alt: "Ramesh Kolhu Wale — Pure Traditional Cold-Pressed Oils and Bilona Ghee",
       },
       {
-        url: "/logos/6.svg",
+        url: "/logos/5.svg",
         width: 800,
         height: 350,
         alt: "Ramesh Kolhu Wale Official Brand Logo",
@@ -124,7 +124,7 @@ export default function RootLayout({
         "url": siteUrl,
         "logo": {
           "@type": "ImageObject",
-          "url": `${siteUrl}/logos/6.svg`,
+          "url": `${siteUrl}/logos/5.svg`,
           "caption": "Ramesh Kolhu Wale Logo",
         },
         "description": "Manufacturer and retailer of authentic cold-pressed oils and pure Bilona Desi Ghee since 1981.",

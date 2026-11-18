@@ -121,7 +121,7 @@ export const RKWLogo: React.FC<RKWLogoProps> = ({
     );
   }
 
-  // 4. Default: Standard Horizontal Logo Lockup (6.svg)
+  // 4. Default: Standard Horizontal Logo Lockup (5.svg)
   // When theme is 'light' (e.g. dark footer), frame in a refined cream pill so the royal navy/gold branding shines with high contrast.
   if (theme === 'light') {
     return (
@@ -137,7 +137,7 @@ export const RKWLogo: React.FC<RKWLogoProps> = ({
           >
             <div className="absolute inset-0 flex items-center justify-center scale-[2.75] origin-center">
               <Image
-                src="/logos/6.svg"
+                src="/logos/5.svg"
                 alt="Ramesh Kolhu Wale Logo"
                 fill
                 sizes="280px"
@@ -163,7 +163,7 @@ export const RKWLogo: React.FC<RKWLogoProps> = ({
       >
         <div className="absolute inset-0 flex items-center justify-center scale-[2.75] origin-center">
           <Image
-            src="/logos/6.svg"
+            src="/logos/5.svg"
             alt="Ramesh Kolhu Wale Logo"
             fill
             sizes="280px"

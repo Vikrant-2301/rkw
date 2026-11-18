@@ -26,7 +26,7 @@ export const SITE_CONFIG = {
     {
       id: 'unit-01-khureji-khas',
       unitNumber: 'UNIT-01',
-      name: 'RKW Unit-01: Khureji Khas',
+      name: 'Khureji Khas',
       area: 'Khureji Khas / East Delhi',
       city: 'New Delhi',
       pincode: '110051',
@@ -42,7 +42,7 @@ export const SITE_CONFIG = {
     {
       id: 'unit-02-new-ashok-nagar',
       unitNumber: 'UNIT-02',
-      name: 'RKW Unit-02: New Ashok Nagar',
+      name: 'New Ashok Nagar',
       area: 'New Ashok Nagar / East Delhi',
       city: 'New Delhi',
       pincode: '110096',
@@ -58,7 +58,7 @@ export const SITE_CONFIG = {
     {
       id: 'unit-03-maujpur',
       unitNumber: 'UNIT-03',
-      name: 'RKW Unit-03: Maujpur',
+      name: 'Maujpur',
       area: 'Maujpur / North East Delhi',
       city: 'New Delhi',
       pincode: '110053',
@@ -74,7 +74,7 @@ export const SITE_CONFIG = {
     {
       id: 'unit-04-karawal-nagar',
       unitNumber: 'UNIT-04',
-      name: 'RKW Unit-04: Karawal Nagar',
+      name: 'Karawal Nagar',
       area: 'Karawal Nagar / North East Delhi',
       city: 'New Delhi',
       pincode: '110094',

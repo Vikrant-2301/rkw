@@ -180,7 +180,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 </div>
 
                 <h3 className="font-serif text-xl font-bold text-[#1C1A16] leading-snug mb-2">
-                  {store.name}
+                  {store.name.replace(/^RKW\s+Unit-\d+:\s*/i, '')}
                 </h3>
 
                 <p className="text-sm text-[#5A5248] leading-relaxed mb-4">

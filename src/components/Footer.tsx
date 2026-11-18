@@ -55,8 +55,6 @@ export const Footer: React.FC = () => {
               {[
                 { href: '/stores', label: 'Find Nearest Unit' },
                 { href: '/about', label: 'Our Story (Since 1981)' },
-                { href: '/process', label: 'Cold-Press Process' },
-                { href: '/lab-reports', label: 'Quality Standards' },
                 { href: '/shelf', label: '3D Virtual Shelf' },
                 { href: '/shop', label: 'Shop All' },
                 { href: '/contact', label: 'Contact & Visit' },
@@ -116,7 +114,6 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-5">
             <Link href="/stores" className="hover:text-white transition-colors">Find Unit</Link>
             <Link href="/about" className="hover:text-white transition-colors">About</Link>
-            <Link href="/process" className="hover:text-white transition-colors">Process</Link>
             <Link href="/shelf" className="hover:text-white transition-colors">Virtual Shelf</Link>
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           </div>
