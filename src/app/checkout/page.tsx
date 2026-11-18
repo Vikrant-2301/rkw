@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
-import confetti from 'canvas-confetti';
 import { 
   FiCheckCircle, 
   FiTruck, 
@@ -17,7 +16,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/config/site';
 
 export default function CheckoutPage() {
-  const { cart, subtotal, discount, shippingFee, total, clearCart } = useCart();
+  const { cart, subtotal, discount, shippingFee, total } = useCart();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -31,116 +30,36 @@ export default function CheckoutPage() {
     paymentMethod: 'upi',
   });
 
-  const [isOrdered, setIsOrdered] = useState(false);
-  const [orderId, setOrderId] = useState('');
-  const [orderDate, setOrderDate] = useState('');
-
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) return;
 
-    const newOrderId = `RKW-${Math.floor(100000 + Math.random() * 900000)}`;
-    const now = new Date().toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+    const lines = cart.map(item =>
+      `• ${item.product.name} — ${item.selectedVolume.size} × ${item.quantity} = ₹${item.selectedVolume.price * item.quantity}`
+    ).join('\n');
+    const message = [
+      'Hello Ramesh Kolhu Wale, I would like to place an order:',
+      '',
+      lines,
+      '',
+      `Subtotal: ₹${subtotal}`,
+      discount > 0 ? `Discount: -₹${discount}` : '',
+      `Delivery: ${shippingFee === 0 ? 'Free' : `₹${shippingFee}`}`,
+      `Estimated total: ₹${total}`,
+      '',
+      'DELIVERY DETAILS',
+      `Name: ${formData.name}`,
+      `Phone: ${formData.phone}`,
+      `Email: ${formData.email || 'Not provided'}`,
+      `Address: ${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+      `Payment preference: ${formData.paymentMethod === 'upi' ? 'UPI / QR' : 'Cash on Delivery'}`,
+      '',
+      'Please confirm product availability, delivery and payment instructions.'
+    ].filter(Boolean).join('\n');
 
-    setOrderId(newOrderId);
-    setOrderDate(now);
-    setIsOrdered(true);
-
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 },
-      });
-    } catch {}
-
-    clearCart();
+    const url = `https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
-
-  if (isOrdered) {
-    return (
-      <div className="max-w-2xl mx-auto px-4 py-16 sm:py-24 animate-fadeIn">
-        <div className="bg-[#FAF8F3] rounded-3xl p-8 sm:p-12 border border-[#E8E0D0] shadow-sm text-center space-y-8">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#EBF2F8] text-[#0E2A47] flex items-center justify-center">
-            <FiCheckCircle className="w-8 h-8" />
-          </div>
-
-          <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#B8860B]">
-              Order Confirmed
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-serif text-[#1C1A16] font-normal">
-              Thank You for Your Order
-            </h1>
-            <p className="text-sm text-[#5A5248] max-w-md mx-auto">
-              Your order <strong className="text-[#1C1A16]">#{orderId}</strong> has been received by our Delhi NCR Unit. 
-              We are preparing your fresh cold-pressed bottles.
-            </p>
-          </div>
-
-          <div className="bg-[#F2EEE5] rounded-2xl p-6 text-left space-y-3 text-sm">
-            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
-              <span className="text-[#8A7E6E]">Order Number</span>
-              <span className="font-semibold text-[#1C1A16] font-mono">{orderId}</span>
-            </div>
-            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
-              <span className="text-[#8A7E6E]">Order Date</span>
-              <span className="text-[#1C1A16]">{orderDate}</span>
-            </div>
-            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
-              <span className="text-[#8A7E6E]">Shipping Address</span>
-              <span className="font-medium text-[#1C1A16] text-right max-w-xs">
-                {formData.name}, {formData.address}, {formData.city} {formData.pincode}
-              </span>
-            </div>
-            <div className="flex justify-between border-b border-[#E0D8CC] pb-3">
-              <span className="text-[#8A7E6E]">Payment Method</span>
-              <span className="font-medium text-[#1C1A16] uppercase text-xs">
-                {formData.paymentMethod === 'upi' ? 'UPI / QR' : formData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
-              </span>
-            </div>
-            <div className="flex justify-between text-base font-semibold text-[#1C1A16] pt-1">
-              <span>Total Paid</span>
-              <span className="font-serif font-bold text-[#0E2A47]">₹{total}</span>
-            </div>
-          </div>
-
-          <div className="space-y-3 pt-2">
-            <a
-              href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-                `Hello Ramesh Kolhu Wale, I have placed order #${orderId}. Please send tracking updates.`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-medium text-sm transition-colors shadow-sm"
-            >
-              <FaWhatsapp className="text-base" />
-              <span>Get WhatsApp Tracking Updates</span>
-            </a>
-
-            <div className="flex justify-center gap-4 pt-2">
-              <button
-                onClick={() => window.print()}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#D0C8B8] text-[#5A5248] hover:bg-[#EBF2F8] text-xs font-semibold transition-colors cursor-pointer"
-              >
-                <FiPrinter /> Print Receipt
-              </button>
-              <Link
-                href="/"
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#0E2A47] text-white hover:bg-[#163A60] text-xs font-semibold transition-colors"
-              >
-                <FiHome /> Back to Home
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (cart.length === 0) {
     return (
@@ -266,11 +185,11 @@ export default function CheckoutPage() {
 
           {/* Payment */}
           <div className="bg-[#FAF8F3] p-7 rounded-2xl border border-[#E8E0D0] space-y-4 shadow-xs">
-            <h3 className="font-serif text-lg text-[#0E2A47] font-semibold">2. Payment Method</h3>
+            <h3 className="font-serif text-lg text-[#0E2A47] font-semibold">2. Payment preference</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               {[
-                { id: 'upi', label: 'UPI / QR Payment', desc: 'Google Pay, PhonePe, Paytm' },
-                { id: 'cod', label: 'Cash on Delivery', desc: 'Pay when delivered' },
+                { id: 'upi', label: 'UPI / QR', desc: 'Payment details confirmed by our team' },
+                { id: 'cod', label: 'Cash on Delivery', desc: 'Subject to order confirmation' },
               ].map((method) => (
                 <label
                   key={method.id}
@@ -295,6 +214,7 @@ export default function CheckoutPage() {
                 </label>
               ))}
             </div>
+            <p className="border-t border-[#D9D0C0] pt-4 text-xs leading-6 text-[#817767]">Your order details will open in WhatsApp. Our team will confirm availability, delivery and payment instructions with you before the order is finalised. No payment is collected on this page.</p>
           </div>
         </div>
 
@@ -358,7 +278,7 @@ export default function CheckoutPage() {
               type="submit"
               className="w-full py-4 bg-[#0E2A47] hover:bg-[#163A60] text-white font-semibold text-sm rounded-full transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]"
             >
-              <span>Place Order (₹{total})</span>
+              <span>Continue to WhatsApp · ₹{total}</span>
               <FiArrowRight className="w-4 h-4" />
             </button>
           </div>
