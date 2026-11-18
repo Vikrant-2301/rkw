@@ -3,125 +3,23 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
-import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
+import { FiArrowUpRight, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
 import { RKWLogo } from './RKWLogo';
 import { SITE_CONFIG } from '@/config/site';
 
-export const Footer: React.FC = () => {
-  return (
-    <footer className="bg-[#0A1C30] text-[#C8D7E6]">
-      {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand column */}
-          <div className="lg:col-span-1 space-y-5">
-            <RKWLogo size="md" theme="light" variant="horizontal" />
-            <p className="text-sm leading-relaxed text-[#8EA5BC] max-w-xs font-light">
-              Preserving India&apos;s sacred heritage of 100% pure cold-pressed oils and pure Bilona ghee since 1981.
-              Every drop pressed fresh before your eyes.
-            </p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs px-2.5 py-1 border border-[#1E4E80] text-[#93B5D9] bg-[#0E2A47]/60 rounded-full font-medium">Agmark R.B.O. Certified</span>
-              <span className="text-xs px-2.5 py-1 border border-[#1E4E80] text-[#93B5D9] bg-[#0E2A47]/60 rounded-full font-medium">100% Pure Guarantee</span>
-            </div>
-          </div>
-
-          {/* Products */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest">Products</h4>
-            <ul className="space-y-2.5 text-sm">
-              {[
-                { href: '/shop?category=oil', label: 'Cold-Pressed Oils' },
-                { href: '/shop?category=bilona-ghee', label: 'Bilona Ghee' },
-                { href: '/product/yellow-mustard-oil', label: 'Yellow Mustard Oil' },
-                { href: '/product/black-mustard-oil', label: 'Black Mustard Oil' },
-                { href: '/product/desi-cow-ghee', label: 'Desi Cow Ghee' },
-                { href: '/product/desi-buffalo-ghee', label: 'Desi Buffalo Ghee' },
-                { href: '/product/dahi-bilona-desi-cow-ghee', label: 'Dahi Bilona Cow Ghee' },
-                { href: '/product/dahi-bilona-desi-buffalo-ghee', label: 'Dahi Bilona Buffalo Ghee' },
-                { href: '/product/cold-pressed-coconut-oil', label: 'Cold-Pressed Coconut Oil' },
-              ].map(item => (
-                <li key={item.href}>
-                  <Link href={item.href} className="hover:text-white transition-colors text-[#8EA5BC] hover:underline underline-offset-4">{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest">Company &amp; Stores</h4>
-            <ul className="space-y-2.5 text-sm">
-              {[
-                { href: '/stores', label: 'Find Nearest Unit' },
-                { href: '/about', label: 'Our Story (Since 1981)' },
-                { href: '/process', label: 'Cold-Press Process' },
-                { href: '/lab-reports', label: 'Quality Standards' },
-                { href: '/shelf', label: '3D Virtual Shelf' },
-                { href: '/shop', label: 'Shop All' },
-                { href: '/contact', label: 'Contact & Visit' },
-              ].map(item => (
-                <li key={item.href}>
-                  <Link href={item.href} className="hover:text-white transition-colors text-[#8EA5BC] hover:underline underline-offset-4">{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest">Units &amp; Delivery</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2.5">
-                <FiMapPin className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#B8860B]" />
-                <span className="text-[#8EA5BC]">
-                  UNIT-01: Khureji Khas, West Laxmi Market, Delhi-51<br />
-                  <span className="text-xs text-[#6B85A0]">(4 Units across Delhi NCR)</span>
-                </span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <FiPhone className="w-4 h-4 flex-shrink-0 text-[#B8860B]" />
-                <a href={`tel:${SITE_CONFIG.contact.phoneRaw}`} className="hover:text-white transition-colors text-[#8EA5BC]">
-                  {SITE_CONFIG.contact.phone} / {SITE_CONFIG.contact.phoneSecondary}
-                </a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <FaWhatsapp className="w-4 h-4 flex-shrink-0 text-[#25D366]" />
-                <a
-                  href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-                    'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors text-[#8EA5BC]"
-                >
-                  WhatsApp: {SITE_CONFIG.contact.whatsapp}
-                </a>
-              </li>
-              <li className="text-xs text-[#F5E6B0] font-medium">
-                ⏰ Unit Hours: {SITE_CONFIG.contact.unitHours}
-              </li>
-              <li className="text-xs text-[#8EA5BC]">
-                🚚 Free Delhi NCR Delivery above ₹799 (₹100 below ₹799)
-              </li>
-            </ul>
-          </div>
-        </div>
+export const Footer: React.FC = () => (
+  <footer className="bg-[#102B23] text-[#F5F1E8]">
+    <div className="rkw-shell grid gap-14 py-16 sm:py-20 lg:grid-cols-[1.3fr_.7fr_.8fr_1fr]">
+      <div>
+        <RKWLogo size="lg" theme="light" variant="horizontal"/>
+        <p className="mt-7 max-w-xs font-serif text-2xl leading-snug text-[#F5F1E8]">A little slower.<br/><em className="text-[#E7B18A]">A lot more considered.</em></p>
+        <p className="mt-5 max-w-xs text-xs leading-6 text-white/55">Traditional cold-pressed oils and Bilona ghee from Ramesh Kolhu Wale. A family tradition since 1981.</p>
+        <div className="mt-7 flex flex-wrap gap-2"><span className="border border-white/20 px-3 py-2 text-[8px] font-bold uppercase tracking-widest text-white/65">Agmark R.B.O. quality</span><span className="border border-white/20 px-3 py-2 text-[8px] font-bold uppercase tracking-widest text-white/65">Delhi NCR</span></div>
       </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-[#163A60]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#6B85A0]">
-          <p>© {new Date().getFullYear()} Ramesh Kolhu Wale. Since 1981. All rights reserved.</p>
-          <div className="flex items-center gap-5">
-            <Link href="/stores" className="hover:text-white transition-colors">Find Unit</Link>
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
-            <Link href="/process" className="hover:text-white transition-colors">Process</Link>
-            <Link href="/shelf" className="hover:text-white transition-colors">Virtual Shelf</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
+      <div><p className="mb-6 text-[9px] font-bold uppercase tracking-[.2em] text-[#E7B18A]">Explore</p><ul className="space-y-4 text-xs text-white/65">{[{href:'/shop',label:'Shop the collection'},{href:'/shelf',label:'The virtual shelf'},{href:'/process',label:'Our method'},{href:'/about',label:'Our story'},{href:'/lab-reports',label:'Quality standards'}].map(x=><li key={x.href}><Link href={x.href} className="transition hover:text-white">{x.label}</Link></li>)}</ul></div>
+      <div><p className="mb-6 text-[9px] font-bold uppercase tracking-[.2em] text-[#E7B18A]">Visit RKW</p><ul className="space-y-4 text-xs text-white/65">{SITE_CONFIG.stores.map(s=><li key={s.id}><Link href="/stores" className="transition hover:text-white"><span className="mb-1 block text-[8px] font-bold uppercase tracking-widest text-[#E7B18A]">{s.unitNumber}</span>{s.area}</Link></li>)}<li><Link href="/contact" className="inline-flex items-center gap-1 text-[#E7B18A]">All locations <FiArrowUpRight/></Link></li></ul></div>
+      <div><p className="mb-6 text-[9px] font-bold uppercase tracking-[.2em] text-[#E7B18A]">Talk to us</p><div className="space-y-4 text-xs text-white/65"><a href={`tel:${SITE_CONFIG.contact.phoneRaw}`} className="flex items-center gap-3 hover:text-white"><FiPhone className="text-[#E7B18A]"/>{SITE_CONFIG.contact.phone}</a><a href={`mailto:${SITE_CONFIG.contact.email}`} className="flex items-center gap-3 hover:text-white"><FiMail className="text-[#E7B18A]"/>{SITE_CONFIG.contact.email}</a><p className="flex items-start gap-3"><FiMapPin className="mt-0.5 shrink-0 text-[#E7B18A]"/><span>Delhi NCR · {SITE_CONFIG.contact.unitHours}<br/>Open all 7 days</span></p><a href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-2 bg-[#E7B18A] px-5 py-3 text-[9px] font-bold uppercase tracking-widest text-[#173C31] transition hover:bg-white"><FaWhatsapp/> WhatsApp RKW ↗</a></div></div>
+    </div>
+    <div className="border-t border-white/15"><div className="rkw-shell flex flex-col justify-between gap-3 py-5 text-[9px] uppercase tracking-[.12em] text-white/40 sm:flex-row"><span>© {new Date().getFullYear()} Ramesh Kolhu Wale. All rights reserved.</span><span>Made with care · Est. 1981</span></div></div>
+  </footer>
+);
