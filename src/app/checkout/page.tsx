@@ -111,7 +111,7 @@ export default function CheckoutPage() {
 
           <div className="space-y-3 pt-2">
             <a
-              href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
+              href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
                 `Hello Ramesh Kolhu Wale, I have placed order #${orderId}. Please send tracking updates.`
               )}`}
               target="_blank"

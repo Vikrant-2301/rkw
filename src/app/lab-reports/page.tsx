@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Quality & Purity Standards | Ramesh Kolhu Wale',
-  description: 'View authentic laboratory purity standards for our cold-pressed oils and pure Bilona ghee. 100% pure, Agmark standards tested for every single batch.',
+  description: 'View authentic laboratory purity standards for our cold-pressed oils and pure Bilona ghee. 100% pure, batch tested for every single batch.',
   alternates: {
     canonical: '/lab-reports',
   },
@@ -98,7 +98,7 @@ export default function LabReportsPage() {
             ))}
           </div>
           <p className="mt-8 text-sm text-[#8A7E6E]">
-            Full batch purity summaries and Agmark standards data are available on request. Contact our quality team on WhatsApp or email care@rameshkolhuwale.com.
+            Full batch purity summaries and quality data are available on request. Contact our quality team on WhatsApp or email care@rameshkolhuwale.com.
           </p>
         </div>
       </section>

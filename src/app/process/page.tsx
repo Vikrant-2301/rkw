@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Our Traditional Extraction Process | Ramesh Kolhu Wale',
-  description: 'Discover how we cold-press our oils below 38°C in traditional cold-press units and churn authentic Bilona Ghee at Ramesh Kolhu Wale.',
+  description: 'Discover how we cold-press our oils in traditional cold-press units and churn authentic Bilona Ghee at Ramesh Kolhu Wale.',
   alternates: {
     canonical: '/process',
   },
@@ -26,7 +26,7 @@ export default function ProcessPage() {
     {
       num: '03',
       title: 'Cold Pressing',
-      desc: 'The dried seeds are fed into our traditional cold-press ghanis rotating at 8–10 RPM. This slow speed keeps temperature below 38°C — the threshold above which nutrients begin to degrade.',
+      desc: 'The dried seeds are fed into our traditional cold-press ghanis rotating at 8–10 RPM. This slow speed avoids friction heat and preserves all vital nutrients, natural aroma, and flavour.',
     },
     {
       num: '04',
@@ -112,7 +112,7 @@ export default function ProcessPage() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-6">
           <h2 className="font-serif text-3xl sm:text-4xl text-white font-normal">Watch it happen live</h2>
           <p className="text-[#93B5D9] font-light">
-            Visit our Units across Delhi NCR any day between 10:00 AM and 10:00 PM. See cold-press extraction in action 
+            Visit our Units across Delhi NCR any day between 10:00 AM and 8:30 PM. See cold-press extraction in action 
             and taste the oil fresh from the press.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Ramesh Kolhu Wale",
   },
   description:
-    "Ramesh Kolhu Wale (RKW) — Est. 1981. 100% pure, unrefined, chemical-free cold-pressed oils (Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic Bilona Desi Ghee (Cow & Buffalo) in Delhi NCR. Unit hours 10:00 AM - 10:00 PM. Free home delivery in Delhi NCR above ₹799 (₹100 below ₹799).",
+    "Ramesh Kolhu Wale (RKW) — Est. 1981. 100% pure, unrefined, chemical-free cold-pressed oils (Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic Bilona Desi Ghee (Cow & Buffalo) in Delhi NCR. Unit hours 10:00 AM - 8:30 PM. Free home delivery in Delhi NCR above ₹799 (₹100 below ₹799).",
   keywords: [
     "Ramesh Kolhu Wale",
     "RKW Oils",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Bilona Desi Ghee",
     description:
-      "Traditional cold-pressed oils and Bilona Desi Ghee crafted with pride in Delhi NCR since 1981. Unit hours 10:00 AM - 10:00 PM.",
+      "Traditional cold-pressed oils and Bilona Desi Ghee crafted with pride in Delhi NCR since 1981. Unit hours 10:00 AM - 8:30 PM.",
     images: ["/images/hero.jpg"],
   },
   robots: {
@@ -140,7 +140,7 @@ export default function RootLayout({
         "name": "Ramesh Kolhu Wale",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": siteUrl,
-        "telephone": "+91-9217744378",
+        "telephone": "+91-9217744380",
         "priceRange": "₹₹",
         "address": {
           "@type": "PostalAddress",
@@ -160,7 +160,7 @@ export default function RootLayout({
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "opens": "10:00",
-            "closes": "22:00",
+            "closes": "20:30",
           },
         ],
       },

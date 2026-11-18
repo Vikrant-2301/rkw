@@ -21,7 +21,9 @@ export default function ProductDetailPage() {
   const product = PRODUCTS.find((p) => p.slug === slug || p.id === slug);
 
   const [selectedVolume, setSelectedVolume] = useState<ProductVolume>(
-    product?.volumes[0] || { size: '1 Liter', price: 360, originalPrice: 450, packaging: 'Bottle' }
+    product?.volumes.find((v) => v.size.startsWith('1L')) ||
+    product?.volumes[0] ||
+    { size: '1L (PET bottle)', price: 340, originalPrice: 420, packaging: 'PET bottle' }
   );
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'benefits' | 'nutrition' | 'extraction' | 'lab'>('benefits');
@@ -161,7 +163,7 @@ export default function ProductDetailPage() {
           <div className="bg-[#EBF2F8] rounded-xl p-4 flex items-start gap-3 border border-[#163A60]/10">
             <FiCheck className="w-4 h-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
             <p className="text-xs text-[#5A5248] leading-relaxed">
-              Cold-pressed below 38°C in traditional slow Kolhu. No chemical solvents, zero refinement, and Agmark standard 100% pure guarantee.
+              Cold-pressed in traditional slow Kolhu. No chemical solvents, zero refinement, and 100% pure natural guarantee.
             </p>
           </div>
         </div>
@@ -262,7 +264,7 @@ export default function ProductDetailPage() {
             </button>
 
             <a
-              href={`https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
+              href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full h-11 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
@@ -279,7 +281,7 @@ export default function ProductDetailPage() {
             </div>
             <div>
               <p className="font-semibold text-[#0E2A47]">100% Pure Guarantee</p>
-              <p>Agmark R.B.O. Quality</p>
+              <p>Traditional Kolhu Quality</p>
             </div>
           </div>
         </div>

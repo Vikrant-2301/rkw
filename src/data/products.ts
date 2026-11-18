@@ -4,12 +4,12 @@ export const PRODUCTS: Product[] = [
   // ─── 1. Mustard Oils ────────────────────────────────────────────────────────
   {
     id: 'yellow-mustard-oil',
-    name: 'Pure Cold-Pressed Yellow Mustard Oil',
+    name: 'Yellow Mustard Oil (Rajasthan Seeds)',
     hindiName: 'पीली सरसों का शुद्ध तेल (कच्ची घानी)',
     slug: 'yellow-mustard-oil',
     category: 'oil',
     shortDesc: 'Cold pressed fresh at our Units. Mild golden pungency with natural omega-3 and appetizing cooking aroma.',
-    description: 'Extracted fresh before your eyes at our live extraction Units at less than 38°C. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale since 1981. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat. Perfect for everyday Indian curries, tadka, and seasonal pickles.',
+    description: 'Extracted fresh before your eyes at our live extraction Units without friction heat. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale since 1981. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat. Perfect for everyday Indian curries, tadka, and seasonal pickles.',
     price: 340,
     originalPrice: 420,
     rating: 4.9,
@@ -25,16 +25,16 @@ export const PRODUCTS: Product[] = [
       '/pure oil/yellow mustard oil/RKW Yellow Mustard Oil Showcase.png'
     ],
     volumes: [
-      { size: '200ml (PET bottle)', price: 75, originalPrice: 95, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 180, originalPrice: 220, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 340, originalPrice: 420, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 180, originalPrice: 220, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 75, originalPrice: 95, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 660, originalPrice: 800, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 1600, originalPrice: 1950, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 4500, originalPrice: 5400, packaging: 'Tin' }
     ],
     benefits: [
       'Heart friendly: Rich in Monounsaturated Fatty Acids (MUFA) and Omega-3 & 6',
-      'Extracted at <38°C: Zero heat damage, preserving natural Vitamin E & Allyl Isothiocyanate',
+      'Extracted slowly: Zero heat damage, preserving natural Vitamin E & Allyl Isothiocyanate',
       'Mild Golden Pungency: Perfect appetizing aroma for daily cooking, sabzis & dals',
       'Zero chemicals, zero palm oil, zero argemone adulteration'
     ],
@@ -51,13 +51,13 @@ export const PRODUCTS: Product[] = [
     },
     extractionDetails: {
       method: 'Traditional Kacchi Ghani (Cold Press)',
-      temperature: 'Always kept below 38°C',
+      temperature: 'Natural Room Temperature (No Heat)',
       rpm: '12 - 14 RPM (Slow Rotation)',
       seedOrigin: 'Single-source Certified Farms, Alwar (Rajasthan)',
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Pure Virgin Grade (Agmark Standard)',
+      purity: '100% Pure Virgin Grade (Certified Pure)',
       adulteration: 'Negative for Mineral Oil & Palm Oil',
       argemone: 'Negative (TLC method)',
       freeFattyAcid: '0.42% (Standard < 1.5%)'
@@ -65,7 +65,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'black-mustard-oil',
-    name: 'Traditional Cold-Pressed Black Mustard Oil',
+    name: 'Black Mustard Oil (Rajasthan Seeds)',
     hindiName: 'काली सरसों का शुद्ध तेल (कच्ची घानी - झल वाला)',
     slug: 'black-mustard-oil',
     category: 'oil',
@@ -86,9 +86,9 @@ export const PRODUCTS: Product[] = [
       '/pure oil/black mustard/RKW Black Mustard Oil Product Display.png'
     ],
     volumes: [
-      { size: '200ml (PET bottle)', price: 70, originalPrice: 90, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 170, originalPrice: 210, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 320, originalPrice: 400, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 170, originalPrice: 210, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 70, originalPrice: 90, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 620, originalPrice: 760, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 1500, originalPrice: 1850, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 4200, originalPrice: 5100, packaging: 'Tin' }
@@ -118,7 +118,7 @@ export const PRODUCTS: Product[] = [
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Single Origin Black Mustard (Agmark Standard)',
+      purity: '100% Single Origin Black Mustard (100% Pure Standard)',
       adulteration: 'Zero Foreign Oil Detected',
       argemone: 'Negative',
       freeFattyAcid: '0.38%'
@@ -134,8 +134,8 @@ export const PRODUCTS: Product[] = [
     category: 'bilona-ghee',
     shortDesc: 'Golden aromatic pure Desi Cow Ghee. Handcrafted traditional recipe with natural granular danedar texture.',
     description: 'Pure Desi Cow Ghee prepared with utmost reverence by Ramesh Kolhu Wale since 1981. Made from fresh desi cow milk with rich golden color, granular (danedar) texture, and comforting traditional aroma. Completely unadulterated, free from artificial colors or essences. Enhances immunity, aids digestion, and imparts heavenly flavor to rotis, dals, and Ayurvedic recipes.',
-    price: 450,
-    originalPrice: 550,
+    price: 880,
+    originalPrice: 1050,
     rating: 4.9,
     reviewsCount: 284,
     inStock: true,
@@ -148,9 +148,9 @@ export const PRODUCTS: Product[] = [
       '/ghee/Desi cow ghee/RKW Cream Bilona Ghee Jar.png',
       '/ghee/Desi cow ghee/Ramesh Cream Bilona Ghee Jar.png'
     ],
-    volumes: [
-      { size: '500ml (PET bottle)', price: 450, originalPrice: 550, packaging: 'PET bottle' },
-      { size: '1L (PET bottle)', price: 880, originalPrice: 1050, packaging: 'PET bottle' }
+        volumes: [
+      { size: '1L (PET jar)', price: 880, originalPrice: 1050, packaging: 'PET jar' },
+      { size: '500ml (PET jar)', price: 450, originalPrice: 550, packaging: 'PET jar' }
     ],
     benefits: [
       'Golden Danedar Texture: Pure cow milkfat with heavenly traditional aroma',
@@ -177,7 +177,7 @@ export const PRODUCTS: Product[] = [
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Pure Desi Cow Ghee (Agmark Standard)',
+      purity: '100% Pure Desi Cow Ghee (100% Pure Standard)',
       adulteration: 'Negative for Vanaspati, Palm Oil & Animal Tallow',
       argemone: 'Negative',
       freeFattyAcid: '0.20%'
@@ -191,8 +191,8 @@ export const PRODUCTS: Product[] = [
     category: 'bilona-ghee',
     shortDesc: 'Pure snow-white Murrah Desi Buffalo Ghee. Rich, creamy, thick danedar texture for energy and sweet delicacies.',
     description: 'Pure Desi Buffalo Ghee crafted by Ramesh Kolhu Wale from rich, high-fat Murrah buffalo milk. Known across North Indian households for its snow-white granular texture, rich density, and sweet creamy fragrance. Traditional wrestlers and fitness enthusiasts have relied on buffalo ghee for muscle strength, bone density, and vital stamina since 1981.',
-    price: 480,
-    originalPrice: 580,
+    price: 940,
+    originalPrice: 1100,
     rating: 4.8,
     reviewsCount: 198,
     inStock: true,
@@ -205,9 +205,9 @@ export const PRODUCTS: Product[] = [
       '/ghee/Desi Buffalo ghee/RAMESH Cream Bilona Ghee Jar.png',
       '/ghee/Desi Buffalo ghee/Traditional Buffalo Ghee Product Display.png'
     ],
-    volumes: [
-      { size: '500ml (PET bottle)', price: 480, originalPrice: 580, packaging: 'PET bottle' },
-      { size: '1L (PET bottle)', price: 940, originalPrice: 1100, packaging: 'PET bottle' }
+        volumes: [
+      { size: '1L (PET jar)', price: 940, originalPrice: 1100, packaging: 'PET jar' },
+      { size: '500ml (PET jar)', price: 480, originalPrice: 580, packaging: 'PET jar' }
     ],
     benefits: [
       'High calorie, wholesome energy source for strength & stamina',
@@ -234,7 +234,7 @@ export const PRODUCTS: Product[] = [
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Pure Buffalo Milkfat (Agmark Standard)',
+      purity: '100% Pure Buffalo Milkfat (100% Pure Standard)',
       adulteration: 'Negative for Vegetable Fat & Preservatives',
       argemone: 'Negative',
       freeFattyAcid: '0.22%'
@@ -248,8 +248,8 @@ export const PRODUCTS: Product[] = [
     category: 'bilona-ghee',
     shortDesc: 'Vedic 5-step Dahi Bilona Desi Cow Ghee. Hand-churned from cultured curd (dahi makkhan) in clay pots.',
     description: 'The pinnacle of Ayurvedic purity: authentic Dahi Bilona Desi Cow Ghee crafted following sacred Vedic methods. Unlike industrial commercial ghee made by boiling centrifugal cream, our dahi bilona ghee requires 5 classical steps: boiling pure cow milk, culturing it into rich whole curd (dahi), hand-churning with a bi-directional mathani to extract fresh butter (makkhan), and gently clarifying over slow earthen heat. Takes ~25 to 30 liters of whole milk to yield just 1 liter of this precious golden medicine.',
-    price: 750,
-    originalPrice: 900,
+    price: 1450,
+    originalPrice: 1750,
     rating: 5.0,
     reviewsCount: 345,
     inStock: true,
@@ -262,9 +262,9 @@ export const PRODUCTS: Product[] = [
       '/ghee/dahi bilona cow ghee/Ramesh Dahi Bilona Ghee Jar.png',
       '/ghee/dahi bilona cow ghee/Ramesh Bilona Ghee Jar.png'
     ],
-    volumes: [
-      { size: '500ml (PET bottle)', price: 750, originalPrice: 900, packaging: 'PET bottle' },
-      { size: '1L (PET bottle)', price: 1450, originalPrice: 1750, packaging: 'PET bottle' }
+        volumes: [
+      { size: '1L (PET jar)', price: 1450, originalPrice: 1750, packaging: 'PET jar' },
+      { size: '500ml (PET jar)', price: 750, originalPrice: 900, packaging: 'PET jar' }
     ],
     benefits: [
       'Authentic Dahi Bilona Churning: Cultured curd butter method, zero cream boiling',
@@ -305,8 +305,8 @@ export const PRODUCTS: Product[] = [
     category: 'bilona-ghee',
     shortDesc: 'Vedic Dahi Bilona Buffalo Ghee. Churned from cultured buffalo curd for rich density, strength, and immunity.',
     description: 'Authentic Dahi Bilona Desi Buffalo Ghee prepared through traditional whole-curd churning by Ramesh Kolhu Wale. Buffalo milk is naturally cultured into thick dahi overnight, then churned bi-directionally to separate probiotic-rich makkhan before slow simmering. The result is an extraordinarily dense, fragrant, snowy-granular ghee packed with healthy fats, calcium, and natural vitality.',
-    price: 780,
-    originalPrice: 950,
+    price: 1500,
+    originalPrice: 1800,
     rating: 4.9,
     reviewsCount: 162,
     inStock: true,
@@ -319,9 +319,9 @@ export const PRODUCTS: Product[] = [
       '/ghee/Dahi Bilona Buffalo ghee/Ramesh Buffalo Ghee Jar Product Shot.png',
       '/ghee/Dahi Bilona Buffalo ghee/Ramesh Ghee Jar Product Shot.png'
     ],
-    volumes: [
-      { size: '500ml (PET bottle)', price: 780, originalPrice: 950, packaging: 'PET bottle' },
-      { size: '1L (PET bottle)', price: 1500, originalPrice: 1800, packaging: 'PET bottle' }
+        volumes: [
+      { size: '1L (PET jar)', price: 1500, originalPrice: 1800, packaging: 'PET jar' },
+      { size: '500ml (PET jar)', price: 780, originalPrice: 950, packaging: 'PET jar' }
     ],
     benefits: [
       'Authentic Dahi Bilona Method: Prepared from cultured buffalo dahi makkhan',
@@ -376,9 +376,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/groundnut-oil/showcase.png',
     additionalImages: ['/mockups/groundnut-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 80, originalPrice: 105, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 190, originalPrice: 240, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 360, originalPrice: 450, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 190, originalPrice: 240, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 80, originalPrice: 105, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 700, originalPrice: 870, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 1700, originalPrice: 2100, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 4900, originalPrice: 5900, packaging: 'Tin' }
@@ -389,7 +389,7 @@ export const PRODUCTS: Product[] = [
       'Zero cholesterol & trans fats: Promotes balanced HDL/LDL lipid profile',
       'Naturally sweet, clean nutty aroma that elevates home-cooked snacks'
     ],
-    processHighlight: 'Cold-pressed at under 38°C from shelled, sun-dried Saurashtra groundnuts.',
+    processHighlight: 'Cold-pressed slowly without heat from shelled, sun-dried Saurashtra groundnuts.',
     smokePoint: '225°C (Superb high-heat tolerance for crispy frying)',
     nutritionalInfo: {
       energy: '884 kcal / 100g',
@@ -402,13 +402,13 @@ export const PRODUCTS: Product[] = [
     },
     extractionDetails: {
       method: 'Kacchi Ghani Cold Press',
-      temperature: '< 38°C',
+      temperature: 'Natural Room Temperature (No Heat)',
       rpm: '13 RPM',
       seedOrigin: 'Saurashtra Organic Peanut Farms (Gujarat)',
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Pure Virgin Groundnut Oil (Agmark Standard)',
+      purity: '100% Pure Virgin Groundnut Oil (100% Pure Standard)',
       adulteration: 'Zero Foreign Oil Adulteration',
       argemone: 'Negative',
       freeFattyAcid: '0.35%'
@@ -434,9 +434,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/coconut-oil/showcase.png',
     additionalImages: ['/mockups/coconut-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 110, originalPrice: 140, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 260, originalPrice: 320, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 480, originalPrice: 600, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 260, originalPrice: 320, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 110, originalPrice: 140, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 940, originalPrice: 1150, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2280, originalPrice: 2800, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 6500, originalPrice: 7800, packaging: 'Tin' }
@@ -466,7 +466,7 @@ export const PRODUCTS: Product[] = [
       pressType: 'Traditional Cold Press'
     },
     labReportSummary: {
-      purity: '100% Virgin Coconut Oil (Agmark Standard)',
+      purity: '100% Virgin Coconut Oil (100% Pure Standard)',
       adulteration: 'Negative for Liquid Paraffin & Mineral Oils',
       argemone: 'Negative',
       freeFattyAcid: '0.15%'
@@ -492,9 +492,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/extra-virgin-coconut-oil/showcase.png',
     additionalImages: ['/mockups/extra-virgin-coconut-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 130, originalPrice: 165, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 310, originalPrice: 390, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 580, originalPrice: 720, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 310, originalPrice: 390, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 130, originalPrice: 165, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 1120, originalPrice: 1380, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2700, originalPrice: 3300, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 7800, originalPrice: 9400, packaging: 'Tin' }
@@ -550,9 +550,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/white-sesame-oil/showcase.png',
     additionalImages: ['/mockups/white-sesame-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 120, originalPrice: 150, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 275, originalPrice: 340, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 275, originalPrice: 340, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 120, originalPrice: 150, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 1020, originalPrice: 1250, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2480, originalPrice: 3050, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 7100, originalPrice: 8500, packaging: 'Tin' }
@@ -608,9 +608,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/black-sesame-oil/showcase.png',
     additionalImages: ['/mockups/black-sesame-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 135, originalPrice: 170, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 320, originalPrice: 390, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 600, originalPrice: 750, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 320, originalPrice: 390, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 135, originalPrice: 170, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 1160, originalPrice: 1420, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2800, originalPrice: 3450, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 8100, originalPrice: 9800, packaging: 'Tin' }
@@ -656,8 +656,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: '100% pure sweet almond oil cold-pressed from premium edible Mamra kernels. For brain health, skin glow & infant care.',
     description: 'Gold in liquid form since 1981. Ramesh Kolhu Wale extracts this 100% Pure Badam Rogan slowly from premium edible Kashmiri Mamra sweet almonds without heat, preserving 100% of the active Vitamin E, riboflavin, and essential fatty acids. Used for centuries in Unani and Ayurvedic traditions to enhance memory, nourish brain cells, and soften skin. Completely food grade and chemical-free.',
-    price: 520,
-    originalPrice: 650,
+    price: 2400,
+    originalPrice: 2950,
     rating: 5.0,
     reviewsCount: 189,
     inStock: true,
@@ -667,10 +667,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/mamra-almond-oil/bottle.png',
     showcaseImage: '/mockups/mamra-almond-oil/showcase.png',
     additionalImages: ['/mockups/mamra-almond-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 1250, originalPrice: 1550, packaging: 'PET bottle' },
+  volumes: [
       { size: '1L (PET bottle)', price: 2400, originalPrice: 2950, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 1250, originalPrice: 1550, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 4700, originalPrice: 5700, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 11400, originalPrice: 13500, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 31000, originalPrice: 36000, packaging: 'Tin' }
@@ -714,8 +714,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Cold pressed from high-altitude Kashmiri Gurbandi almonds. Exceptional nutrient density and intense natural almond aroma.',
     description: 'Pressed from wild Kashmiri Gurbandi almonds by Ramesh Kolhu Wale. Gurbandi almonds have a smaller profile but boast a significantly higher natural oil content and concentrated antioxidants compared to standard commercial varieties. Revered for energy rejuvenation, daily memory tonic with milk, and natural winter warmth.',
-    price: 380,
-    originalPrice: 480,
+    price: 1780,
+    originalPrice: 2200,
     rating: 4.9,
     reviewsCount: 88,
     inStock: true,
@@ -725,10 +725,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/gurbandi-almond-oil/bottle.png',
     showcaseImage: '/mockups/gurbandi-almond-oil/showcase.png',
     additionalImages: ['/mockups/gurbandi-almond-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 380, originalPrice: 480, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 920, originalPrice: 1150, packaging: 'PET bottle' },
+  volumes: [
       { size: '1L (PET bottle)', price: 1780, originalPrice: 2200, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 920, originalPrice: 1150, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 380, originalPrice: 480, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 3480, originalPrice: 4250, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 8400, originalPrice: 10200, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 24500, originalPrice: 29000, packaging: 'Tin' }
@@ -772,8 +772,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Plant-based Omega-3 superfood extracted from high-altitude whole Kashmiri walnut kernels. Nourishes brain & heart.',
     description: 'Extracted in small cold-press batches from prized Kashmiri walnuts by Ramesh Kolhu Wale. Boasts an exceptional concentration of Alpha-Linolenic Acid (ALA) and polyphenols for cardiovascular wellness, memory enhancement, and radiant skin elasticity. Delicious drizzled raw over gourmet salads and soups.',
-    price: 280,
-    originalPrice: 350,
+    price: 1280,
+    originalPrice: 1580,
     rating: 4.8,
     reviewsCount: 94,
     inStock: true,
@@ -783,10 +783,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/walnut-oil/bottle.png',
     showcaseImage: '/mockups/walnut-oil/showcase.png',
     additionalImages: ['/mockups/walnut-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 280, originalPrice: 350, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 660, originalPrice: 820, packaging: 'PET bottle' },
+  volumes: [
       { size: '1L (PET bottle)', price: 1280, originalPrice: 1580, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 660, originalPrice: 820, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 280, originalPrice: 350, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 2500, originalPrice: 3050, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 6100, originalPrice: 7400, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 17800, originalPrice: 21000, packaging: 'Tin' }
@@ -830,8 +830,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Mother Nature\'s richest plant source of Alpha-Linolenic Acid (ALA Omega-3). Supports joints, heart & cellular vitality.',
     description: 'Pressed below 32°C from Madhya Pradesh organic brown flaxseeds. Never heated and unfiltered to preserve delicate lignans and essential omega-3 fatty acids that support cellular vitality and joint flexibility. Golden amber oil with earthy nutty flavor.',
-    price: 95,
-    originalPrice: 120,
+    price: 430,
+    originalPrice: 540,
     rating: 4.8,
     reviewsCount: 135,
     inStock: true,
@@ -841,10 +841,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/flax-seed-oil/bottle.png',
     showcaseImage: '/mockups/flax-seed-oil/showcase.png',
     additionalImages: ['/mockups/flax-seed-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 95, originalPrice: 120, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 225, originalPrice: 280, packaging: 'PET bottle' },
+   volumes: [
       { size: '1L (PET bottle)', price: 430, originalPrice: 540, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 225, originalPrice: 280, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 95, originalPrice: 120, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 840, originalPrice: 1040, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2050, originalPrice: 2520, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 5900, originalPrice: 7200, packaging: 'Tin' }
@@ -888,8 +888,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Single-estate first mechanical cold press from select olive groves. Herbal fresh aroma with peppery antioxidant finish.',
     description: 'First mechanical cold extraction of handpicked olives harvested from select Indian olive groves and Mediterranean cultivars. Exhibits a fresh herbal green aroma with a distinct peppery finish, proving high oleocanthal and polyphenol content. Perfect for salads, Mediterranean bowls, and drizzling over warm rotis.',
-    price: 220,
-    originalPrice: 280,
+    price: 980,
+    originalPrice: 1220,
     rating: 4.9,
     reviewsCount: 156,
     inStock: true,
@@ -899,10 +899,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/olive-oil/bottle.png',
     showcaseImage: '/mockups/olive-oil/showcase.png',
     additionalImages: ['/mockups/olive-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 220, originalPrice: 280, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
+   volumes: [
       { size: '1L (PET bottle)', price: 980, originalPrice: 1220, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 520, originalPrice: 650, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 220, originalPrice: 280, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 1920, originalPrice: 2380, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 4650, originalPrice: 5700, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 13500, originalPrice: 16200, packaging: 'Tin' }
@@ -946,8 +946,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Pressed from Maharashtra onion seeds (Kalonji/Pyaj beej). Rich in sulfur, potassium & antioxidants for hair density.',
     description: 'Cold-pressed from genuine native Maharashtra onion seeds (Allium cepa) by Ramesh Kolhu Wale. Naturally rich in sulfur, potassium, and active quercetin, onion seed oil stimulates dormant hair follicles, reduces seasonal hair fall, and restores scalp balance. 100% pure cold-pressed with zero liquid paraffin or synthetic fragrances.',
-    price: 140,
-    originalPrice: 180,
+    price: 620,
+    originalPrice: 780,
     rating: 4.9,
     reviewsCount: 210,
     inStock: true,
@@ -958,9 +958,9 @@ export const PRODUCTS: Product[] = [
     showcaseImage: '/mockups/onion-oil/showcase.png',
     additionalImages: ['/mockups/onion-oil/bottle.png'],
     volumes: [
-      { size: '200ml (PET bottle)', price: 140, originalPrice: 180, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 330, originalPrice: 410, packaging: 'PET bottle' },
       { size: '1L (PET bottle)', price: 620, originalPrice: 780, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 330, originalPrice: 410, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 140, originalPrice: 180, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 1200, originalPrice: 1480, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 2900, originalPrice: 3600, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 8400, originalPrice: 10200, packaging: 'Tin' }
@@ -1004,8 +1004,8 @@ export const PRODUCTS: Product[] = [
     category: 'oil',
     shortDesc: 'Light golden, non-greasy cooking oil cold pressed from Karnataka sunflower seeds. High Vitamin E for light healthy meals.',
     description: 'Cold-pressed by Ramesh Kolhu Wale from non-GMO, sun-drenched Karnataka sunflower seeds. Naturally light, neutral, and clear, it allows the authentic flavors of vegetables and curries to shine without greasy residue. Exceptionally rich in Vitamin E and heart-healthy polyunsaturated fatty acids (PUFA).',
-    price: 90,
-    originalPrice: 115,
+    price: 390,
+    originalPrice: 490,
     rating: 4.8,
     reviewsCount: 168,
     inStock: true,
@@ -1015,10 +1015,10 @@ export const PRODUCTS: Product[] = [
     bottleImage: '/mockups/sunflower-oil/bottle.png',
     showcaseImage: '/mockups/sunflower-oil/showcase.png',
     additionalImages: ['/mockups/sunflower-oil/bottle.png'],
-    volumes: [
-      { size: '200ml (PET bottle)', price: 90, originalPrice: 115, packaging: 'PET bottle' },
-      { size: '500ml (PET bottle)', price: 210, originalPrice: 265, packaging: 'PET bottle' },
+   volumes: [
       { size: '1L (PET bottle)', price: 390, originalPrice: 490, packaging: 'PET bottle' },
+      { size: '500ml (PET bottle)', price: 210, originalPrice: 265, packaging: 'PET bottle' },
+      { size: '200ml (PET bottle)', price: 90, originalPrice: 115, packaging: 'PET bottle' },
       { size: '2L (PET bottle)', price: 760, originalPrice: 940, packaging: 'PET bottle' },
       { size: '5L (PET bottle)', price: 1850, originalPrice: 2300, packaging: 'PET bottle' },
       { size: '15kg (Tin)', price: 5300, originalPrice: 6500, packaging: 'Tin' }
@@ -1065,11 +1065,11 @@ export const CATEGORIES = [
 export const FAQS = [
   {
     q: 'What is the promise of "Ramesh Kolhu Wale (RKW)"?',
-    a: 'At Ramesh Kolhu Wale, we practice 100% open, transparent cold extraction since 1981. You are welcome to walk into our Units anytime between 10:00 AM and 10:00 PM, inspect our raw seeds, watch them being slowly pressed in our Kolhus at under 38°C, and receive warm, fresh oil bottled right before your eyes. Our motto: "अनुभव चार पीढ़ियों का, स्वाद हर पीढ़ी का" (Experience of 4 generations, taste for every generation).'
+    a: 'At Ramesh Kolhu Wale, we practice 100% open, transparent cold extraction since 1981. You are welcome to walk into our Units anytime between 10:00 AM and 8:30 PM, inspect our raw seeds, watch them being slowly pressed in our Kolhus without friction heat, and receive warm, fresh oil bottled right before your eyes. Our motto: "अनुभव चार पीढ़ियों का, स्वाद हर पीढ़ी का" (Experience of 4 generations, taste for every generation).'
   },
   {
     q: 'Why should I choose Cold-Pressed over Refined Oils?',
-    a: 'Industrial refined oils are subjected to extreme heat (>200°C) and treated with harsh chemical solvents like Hexane, caustic soda bleach, and artificial deodorizers, stripping away all natural vitamins. RKW cold-press kolhus crush seeds slowly at room temperature (<38°C) without friction heat, preserving natural aroma, golden color, antioxidants, and authentic health benefits.'
+    a: 'Industrial refined oils are subjected to extreme heat (>200°C) and treated with harsh chemical solvents like Hexane, caustic soda bleach, and artificial deodorizers, stripping away all natural vitamins. RKW cold-press kolhus crush seeds slowly at natural room temperature without friction heat, preserving natural aroma, golden color, antioxidants, and authentic health benefits.'
   },
   {
     q: 'What types of Ghee are available at Ramesh Kolhu Wale?',
@@ -1081,6 +1081,6 @@ export const FAQS = [
   },
   {
     q: 'Can I visit the Ramesh Kolhu Wale Units or order via WhatsApp?',
-    a: 'Yes, absolutely! We have 4 Units across Delhi NCR: Khureji Khas (Unit-01), New Ashok Nagar (Unit-02), Maujpur (Unit-03), and Karawal Nagar (Unit-04). Open everyday from 10:00 AM to 10:00 PM. You can also call or WhatsApp us on +91 9217744378 or +91 9217744379 for fast home delivery across Delhi NCR (Free delivery above ₹799, ₹100 below ₹799).'
+    a: 'Yes, absolutely! We have 4 Units across Delhi NCR: Khureji Khas (Unit-01: +91 9217744381), New Ashok Nagar (Unit-02: +91 9217744382), Maujpur (Unit-03), and Karawal Nagar (Unit-04). Open everyday from 10:00 AM to 8:30 PM. Order on WhatsApp: +91 9217744380 for doorstep delivery across Delhi NCR (Free delivery above ₹799, ₹100 below ₹799).'
   }
 ];

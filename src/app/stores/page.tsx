@@ -2,11 +2,13 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { StoreLocatorSection } from '@/components/StoreLocatorSection';
 import { SITE_CONFIG } from '@/config/site';
+import { FiClock, FiTruck } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 
 export const metadata: Metadata = {
   title: 'Find Nearest Store & Units in Delhi NCR | Ramesh Kolhu Wale',
   description:
-    'Visit our 4 live cold-press Units in Delhi NCR: Khureji Khas, New Ashok Nagar, Maujpur, and Karawal Nagar. Open everyday 10:00 AM – 10:00 PM. Free home delivery above ₹799.',
+    'Visit our 4 live cold-press Units in Delhi NCR: Khureji Khas, New Ashok Nagar, Maujpur, and Karawal Nagar. Open everyday 10:00 AM – 8:30 PM. Free home delivery above ₹799.',
   keywords: [
     'Ramesh Kolhu Wale store',
     'cold press oil shop near me',
@@ -32,14 +34,14 @@ export default function StoresPage() {
             Visit our Units to see seeds cold-pressed before your eyes, or have fresh oils &amp; pure Bilona ghee delivered free to your doorstep in Delhi NCR on orders above ₹799.
           </p>
           <div className="mt-6 flex flex-wrap justify-center items-center gap-4 text-xs font-semibold text-[#0E2A47]">
-            <span className="px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
-              ⏰ Hours: {SITE_CONFIG.contact.unitHours}
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
+              <FiClock className="w-3.5 h-3.5 text-[#B8860B]" /> Hours: {SITE_CONFIG.contact.unitHours}
             </span>
-            <span className="px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
-              🚚 Free Home Delivery Above ₹799 (₹100 under ₹799)
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
+              <FiTruck className="w-3.5 h-3.5 text-[#B8860B]" /> Free Home Delivery Above ₹799 (₹100 under ₹799)
             </span>
-            <span className="px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
-              💬 WhatsApp Order: {SITE_CONFIG.contact.whatsapp}
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white rounded-full border border-[#163A60]/10 shadow-xs">
+              <FaWhatsapp className="w-3.5 h-3.5 text-[#25D366]" /> WhatsApp Order: {SITE_CONFIG.contact.whatsapp}
             </span>
           </div>
         </div>

@@ -15,7 +15,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
-  const defaultVolume = product.volumes[0];
+  const defaultVolume = product.volumes.find((v) => v.size.startsWith('1L')) || product.volumes[0];
   const discountPercent = defaultVolume.originalPrice > defaultVolume.price
     ? Math.round(((defaultVolume.originalPrice - defaultVolume.price) / defaultVolume.originalPrice) * 100)
     : 0;

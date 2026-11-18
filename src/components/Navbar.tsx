@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { RKWLogo } from './RKWLogo';
 import { useCart } from '@/context/CartContext';
 import { PRODUCTS } from '@/data/products';
-import { FiShoppingBag, FiSearch, FiMenu, FiX, FiArrowRight, FiMapPin } from 'react-icons/fi';
+import { FiShoppingBag, FiSearch, FiMenu, FiX, FiArrowRight, FiMapPin, FiTruck, FiClock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/config/site';
@@ -44,9 +44,9 @@ export const Navbar: React.FC = () => {
     <>
       {/* Announcement bar in rich heritage navy */}
       <div className="bg-[#0E2A47] text-[#F5E6B0] text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
-        <span>🚚 Free Delhi NCR Home Delivery above ₹799 (₹100 under ₹799)</span>
+        <span className="inline-flex items-center gap-1.5"><FiTruck className="w-3.5 h-3.5 text-[#B8860B]" /> Free Delhi NCR Home Delivery above ₹799 (₹100 under ₹799)</span>
         <span className="hidden md:inline text-white/30">|</span>
-        <span className="hidden md:inline">⏰ Unit Hours: {SITE_CONFIG.contact.unitHours}</span>
+        <span className="hidden md:inline-flex items-center gap-1.5"><FiClock className="w-3.5 h-3.5 text-[#B8860B]" /> Unit Hours: {SITE_CONFIG.contact.unitHours}</span>
         <span className="hidden sm:inline text-white/30">|</span>
         <a
           href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
@@ -180,8 +180,8 @@ export const Navbar: React.FC = () => {
                 <span>WhatsApp: {SITE_CONFIG.contact.whatsapp}</span>
               </a>
               <div className="text-center space-y-1 pt-1 text-[11px] text-[#5A5248]">
-                <p>⏰ Unit Hours: {SITE_CONFIG.contact.unitHours}</p>
-                <p className="text-[#0E2A47] font-semibold">🚚 Free Delivery in Delhi NCR above ₹799</p>
+                <p className="inline-flex items-center justify-center gap-1.5"><FiClock className="w-3 h-3 text-[#B8860B]" /> Unit Hours: {SITE_CONFIG.contact.unitHours}</p>
+                <p className="text-[#0E2A47] font-semibold inline-flex items-center justify-center gap-1.5"><FiTruck className="w-3 h-3 text-[#B8860B]" /> Free Delivery in Delhi NCR above ₹799</p>
               </div>
             </div>
           </div>

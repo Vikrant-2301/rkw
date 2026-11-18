@@ -16,7 +16,7 @@ function ShopContent() {
 
   const categories = [
     { id: 'all', label: 'All Products' },
-    { id: 'oil', label: 'Cold-Pressed Oils' },
+    { id: 'oil', label: 'Pure Oils' },
     { id: 'bilona-ghee', label: 'Bilona Ghee' },
   ];
 
@@ -31,7 +31,7 @@ function ShopContent() {
         <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Our Collection</p>
         <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
         <p className="text-[#8A7E6E] mt-3 max-w-xl font-light">
-          Every product is cold-pressed fresh or authentically Bilona-churned, Agmark standard tested, and 100% pure & chemical-free.
+          Every product is cold-pressed fresh or authentically Bilona-churned, batch tested, and 100% pure &amp; chemical-free.
         </p>
       </div>
 

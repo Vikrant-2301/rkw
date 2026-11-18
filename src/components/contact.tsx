@@ -23,7 +23,7 @@ import { SITE_CONFIG } from "@/config/site";
 const GUIDE_NAME = "Your RKW Guide";
 const GUIDE_PHOTO: string | null = null;
 
-const WA_BASE = `https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}`;
+const WA_BASE = `https://wa.me/${SITE_CONFIG.contact.whatsappRaw}`;
 const waLink = (text: string) => `${WA_BASE}?text=${encodeURIComponent(text)}`;
 const mapsLink = (q: string) => `https://maps.google.com/?q=${encodeURIComponent(q)}`;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -55,10 +55,10 @@ const STORIES: Story[] = [
                 emoji: "🪵"
             },
             {
-                eyebrow: "Below 38°C",
+                eyebrow: "Cold Press",
                 title: "Slow, so nothing burns",
-                body: "Seeds are crushed gently at under 38°C. No hexane, no bleaching, no chemical refining, so the aroma and goodness stay in the bottle.",
-                emoji: "❄️"
+                body: "Seeds are crushed gently without friction heat. No hexane, no bleaching, no chemical refining, so the aroma and goodness stay in the bottle.",
+                emoji: "✨"
             },
             {
                 eyebrow: "Single pressed",
@@ -405,7 +405,7 @@ function useOpenStatus() {
             const h = Number(parts.find((p) => p.type === "hour")?.value ?? 0) % 24;
             const m = Number(parts.find((p) => p.type === "minute")?.value ?? 0);
             const mins = h * 60 + m;
-            if (mins >= 600 && mins < 1320) setStatus({ open: true, label: "Our Units are open now · closing 10:00 PM" });
+            if (mins >= 600 && mins < 1230) setStatus({ open: true, label: "Our Units are open now · closing 8:30 PM" });
             else if (mins < 600) setStatus({ open: false, label: "Units are closed · opening 10:00 AM today" });
             else setStatus({ open: false, label: "Units are closed · opening 10:00 AM tomorrow" });
         };
@@ -774,7 +774,7 @@ export default function ContactExperience() {
                 ? await say(["Namaste again! 🙏 Fresh start.", "What can I help you with?"])
                 : await say([
                     "Namaste! 🙏 I'm your guide at Ramesh Kolhu Wale.",
-                    "Our oils are pressed slowly, below 38°C, in a traditional Kolhu, and I'd love to help you find the right one.",
+                    "Our oils are pressed slowly without friction heat, in a traditional Kolhu, and I'd love to help you find the right one.",
                     "What brings you here today?"
                 ]);
             if (ok) showMain();
@@ -1285,7 +1285,7 @@ export default function ContactExperience() {
                     <div className="mt-10 grid gap-4 md:grid-cols-3">
                         {[
                             {
-                                href: `https://wa.me/91${SITE_CONFIG.contact.whatsappRaw}`,
+                                href: `https://wa.me/${SITE_CONFIG.contact.whatsappRaw}`,
                                 icon: <FaWhatsapp className="size-6" />,
                                 title: "WhatsApp: fastest response",
                                 text: `${SITE_CONFIG.contact.whatsapp} / ${SITE_CONFIG.contact.whatsappSecondary}`,

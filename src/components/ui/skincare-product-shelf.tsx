@@ -162,7 +162,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 5.0,
     reviews: 2150,
     tagline: "Naturally sweeter with mild golden aroma for everyday healthy curries.",
-    description: "Extracted slowly in our authentic traditional cold-press Kolhu in front of your eyes at less than 38°C. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat.",
+    description: "Extracted slowly in our authentic traditional cold-press Kolhu in front of your eyes without friction heat. Made exclusively from select Rajasthani native yellow mustard seeds (Pili Sarson) supervised by Ramesh Kolhu Wale. Naturally sweeter, milder, and preserves all vital omega-3 fatty acids without burning the throat.",
     benefits: [
       "Rich in Heart-Healthy MUFA and Omega-3 & 6",
       "Cold-Pressed at 14 RPM with zero chemical refining",
@@ -196,9 +196,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     rating: 4.9,
     reviews: 1420,
     tagline: "Authentic pungent jhal, single cold-pressed in traditional Cold Press Kolhu.",
-    description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly at <38°C by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
+    description: "The quintessential North Indian kitchen soul. Sourced from high-pungency Rajasthani black mustard seeds (Kali Sarson) crushed slowly without friction heat by Ramesh Kolhu Wale. Retains natural sinigrin for the eye-watering pungency true mustard lovers crave. Ideal for achaar, fish curries and winter massage.",
     benefits: [
-      "100% Single-Pressed at <38°C in Traditional Cold Press Kolhu",
+      "100% Single-Pressed in Traditional Cold Press Kolhu",
       "Seeds sourced from Alwar & Bharatpur (Rajasthan)",
       "Zero Palm Oil, Zero Argemone Adulteration",
       "Natural Sinigrin & High Pungency for authentic Indian taste"
@@ -1457,7 +1457,7 @@ export function ProductArt({
           <g transform="translate(0 9)">
             <circle cx="-14" cy="0" r="2.6" fill="#22C55E" />
             <path d="M -15 -1 Q -14 -2 -13 -1 L -12.5 0 Q -13 1 -14 1 Q -15 0 -15 -1 Z" fill="#FFF" />
-            <text x="-8" y="0.8" fill="#111" fontSize="2.1" fontWeight="800">+91 9217744378 / 79</text>
+            <text x="-8" y="0.8" fill="#111" fontSize="2.1" fontWeight="800">+91 9217744380</text>
           </g>
         </g>
 
@@ -1531,7 +1531,7 @@ export function ProductArt({
         <g transform={`translate(${centerX} ${P.y + P.h * 0.74})`}>
           <rect x="-24" y="-4" width="48" height="8" rx="2" fill={p.ink} fillOpacity="0.1" />
           <text x="0" y="1.8" fill={p.ink} fontSize="3.5" fontWeight="700" letterSpacing="0.04em" textAnchor="middle">
-            {isJar ? "BILONA GHEE • 100% PURE" : "COLD-PRESSED • <38°C"}
+            {isJar ? "BILONA GHEE • 100% PURE" : "COLD-PRESSED • 100% PURE"}
           </text>
         </g>
 
@@ -1875,7 +1875,7 @@ export class ShelfSoundSystem {
 // ---------------------------------------------------------------- 360° product dialog
 
 const SPRING = { type: "spring" as const, bounce: 0, duration: 0.55 };
-const WA = "919217744378";
+const WA = "919217744380";
 
 export function ProductPage({
   p,
@@ -2388,7 +2388,7 @@ export function ProductPage({
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-1 rounded-xl border border-stone-200/80 bg-stone-50 p-2 text-center">
                 <div className="flex flex-col items-center text-[10px] font-bold text-stone-700 sm:text-[11px]">
-                  <span className="font-black text-amber-700">❄️ &lt;38°C Cold Press</span>
+                  <span className="font-black text-amber-700">Slow Cold Press</span>
                   <span className="text-[9px] font-normal text-stone-500">Traditional Kolhu</span>
                 </div>
                 <div className="flex flex-col items-center border-x border-stone-200 text-[10px] font-bold text-stone-700 sm:text-[11px]">
@@ -2396,7 +2396,7 @@ export function ProductPage({
                   <span className="text-[9px] font-normal text-stone-500">{p.origin || "Native Seeds"}</span>
                 </div>
                 <div className="flex flex-col items-center text-[10px] font-bold text-stone-700 sm:text-[11px]">
-                  <span className="font-black text-[#0E2A47]">🚚 Free Delhi NCR</span>
+                  <span className="font-black text-[#0E2A47]">Free Delhi NCR</span>
                   <span className="text-[9px] font-normal text-stone-500">Orders above ₹799</span>
                 </div>
               </div>
@@ -2408,7 +2408,7 @@ export function ProductPage({
             <div className="mt-3.5 space-y-3 text-xs text-stone-700">
               <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
                 <p className="font-bold text-amber-900">
-                  <span className="font-black">Cold Extraction Method:</span> Traditional Kachi Ghani (Kolhu) at slow 14 RPM under 38°C. Made without heat, chemical solvents, or argemone.
+                  <span className="font-black">Cold Extraction Method:</span> Traditional Kachi Ghani (Kolhu) at slow 14 RPM without friction heat. Made without chemical solvents or artificial refining.
                 </p>
                 <p className="mt-1 text-[11px] text-amber-800">
                   <span className="font-bold">Source Region:</span> {p.sourceType || "Seeds sourced from"} {p.origin || "Rajasthan certified fields"}.
@@ -2567,7 +2567,7 @@ function Storefront({ preview, onEnter }: { preview: Product[]; onEnter: () => v
           <div className="absolute inset-x-0 top-[45%] z-20 flex justify-center px-4">
             <div className="flex items-center gap-2 rounded-full border border-amber-400/40 bg-[#160b04]/90 px-4 py-1 text-[10px] font-bold text-amber-200 backdrop-blur-md shadow-lg sm:text-xs">
               <span className="size-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-              <span>LIVE GHANI: 14 RPM Wood Press &bull; Cold-Pressed &lt;38°C &bull; Est. 1981 Delhi NCR</span>
+              <span>LIVE GHANI: 14 RPM Wood Press &bull; 100% Cold-Pressed &bull; Est. 1981 Delhi NCR</span>
             </div>
           </div>
 
@@ -2583,7 +2583,7 @@ function Storefront({ preview, onEnter }: { preview: Product[]; onEnter: () => v
                   onClick={onEnter}
                   className="flex items-center gap-2 rounded-full bg-[#2a3135] px-4 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-amber-300 shadow transition hover:bg-amber-300 hover:text-stone-900 active:scale-95 cursor-pointer"
                 >
-                  <span>Open &bull; 10 AM &ndash; 10 PM</span>
+                  <span>Open &bull; 10 AM &ndash; 8:30 PM</span>
                   <span className="opacity-75">| Step Inside &darr;</span>
                 </button>
               </div>
@@ -2702,7 +2702,7 @@ function Aisle({
             <h2 className="mt-1 font-serif text-xl font-extrabold leading-tight text-amber-50 sm:text-3xl">{a.title}</h2>
             <p className="mt-1 text-[11px] font-medium text-amber-200/80 sm:text-sm">{a.sub}</p>
             <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-0.5 text-[9px] font-extrabold tracking-wider text-amber-200 uppercase">
-              <span>❄️ Cold-Pressed &lt;38°C</span>
+              <span>100% Cold-Pressed</span>
               <span>&bull;</span>
               <span>100% Single-Source</span>
             </div>
@@ -2932,7 +2932,7 @@ function Counter({
             </div>
             <p className="mt-2 text-[11px] text-amber-200">
               {diffToFree > 0
-                ? `🚚 Add ₹${diffToFree} more for FREE Delhi NCR Home Delivery!`
+                ? `Add ₹${diffToFree} more for FREE Delhi NCR Home Delivery!`
                 : "🎉 You have qualified for FREE Home Delivery across Delhi NCR!"}
             </p>
           </div>
@@ -2977,14 +2977,14 @@ function Counter({
 
         {/* Trust Badges */}
         <div className="mt-10 grid grid-cols-2 gap-2 text-[11px] font-bold text-amber-100/90 sm:grid-cols-4 sm:text-xs">
-          <div className="rounded-xl bg-white/5 p-3 border border-white/5">❄️ Cold-pressed &lt;38°C</div>
-          <div className="rounded-xl bg-white/5 p-3 border border-white/5">🌿 Single-source seeds</div>
-          <div className="rounded-xl bg-white/5 p-3 border border-white/5">✅ FSSAI Licensed</div>
-          <div className="rounded-xl bg-white/5 p-3 border border-white/5">🚚 Fast Delhi NCR Delivery</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">Slow Cold-Pressed</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">Single-source seeds</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">FSSAI Licensed</div>
+          <div className="rounded-xl bg-white/5 p-3 border border-white/5">Fast Delhi NCR Delivery</div>
         </div>
 
         <p className="mt-6 text-[11px] text-amber-200/60">
-          Unit: B-2, Village Khurreji Khas, West Laxmi Market, Delhi-51 &bull; Open 7 Days: 10:00 AM &ndash; 10:00 PM
+          Unit: B-2, Village Khurreji Khas, West Laxmi Market, Delhi-51 &bull; Open 7 Days: 10:00 AM &ndash; 8:30 PM
         </p>
       </motion.div>
     </section>
@@ -3078,7 +3078,7 @@ export function ShopExperience({
       processHighlight: product.tagline,
       smokePoint: "250°C",
       nutritionalInfo: { energy: "884 kcal / 100g" },
-      extractionDetails: { method: "Traditional Cold Press (<38°C)" },
+      extractionDetails: { method: "Traditional Cold Press (No Heat)" },
       labReportSummary: { purity: "100% Pure Virgin Grade" }
     };
     cart.addToCart(cartProduct as any, vol as any, qty);

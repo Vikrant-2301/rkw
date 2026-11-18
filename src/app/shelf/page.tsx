@@ -17,7 +17,7 @@ export default function ShelfPage() {
     >
       <div className="text-center pb-12 pt-6">
         <p className="text-xs text-[#8A7E6E] font-medium tracking-wide">
-          Every drop cold-pressed at under 38°C in traditional cold-press ghanis · Ramesh Kolhu Wale
+          Every drop cold-pressed fresh in traditional cold-press ghanis · Ramesh Kolhu Wale
         </p>
       </div>
     </ProductShelf>
