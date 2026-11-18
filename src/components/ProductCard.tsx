@@ -7,74 +7,46 @@ import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { FiShoppingBag, FiCheck } from 'react-icons/fi';
 
-interface ProductCardProps {
-  product: Product;
-}
+interface ProductCardProps { product: Product; }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
-
   const defaultVolume = product.volumes[0];
   const discountPercent = defaultVolume.originalPrice > defaultVolume.price
-    ? Math.round(((defaultVolume.originalPrice - defaultVolume.price) / defaultVolume.originalPrice) * 100)
-    : 0;
+    ? Math.round(((defaultVolume.originalPrice - defaultVolume.price) / defaultVolume.originalPrice) * 100) : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product, defaultVolume, 1);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    e.preventDefault(); e.stopPropagation();
+    addToCart(product, defaultVolume, 1); setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
   };
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block">
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-[#EBF2F8] mb-4 shadow-xs">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        {discountPercent > 0 && (
-          <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#0E2A47] text-white text-xs font-semibold rounded-full shadow-sm">
-            {discountPercent}% off
-          </span>
-        )}
-        {/* Quick add overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <button
-            onClick={handleAddToCart}
-            className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all shadow-md flex items-center justify-center gap-2 ${
-              added
-                ? 'bg-[#0E2A47] text-white'
-                : 'bg-white/95 text-[#1C1A16] hover:bg-[#0E2A47] hover:text-white'
-            }`}
-          >
-            {added ? (
-              <><FiCheck className="w-4 h-4 text-emerald-400" /> Added</>
-            ) : (
-              <><FiShoppingBag className="w-4 h-4" /> Add to basket</>
-            )}
+    <Link href={`/product/${product.slug}`} className="rkw-product-card group block">
+      <div className="rkw-product-visual relative mb-5 aspect-[4/5] overflow-hidden bg-[#EAE2D3]">
+        <Image src={product.showcaseImage || product.image} alt={product.name} fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]" />
+        <span className="absolute left-4 top-4 bg-[#F5F1E8] px-3 py-2 text-[9px] font-bold uppercase tracking-[.14em] text-[#173C31]">
+          {product.bestSeller ? 'RKW favourite' : product.category === 'bilona-ghee' ? 'Bilona ghee' : 'Cold pressed'}
+        </span>
+        {discountPercent > 0 && <span className="absolute right-4 top-4 bg-[#B66B3D] px-2.5 py-2 text-[9px] font-bold text-white">{discountPercent}% OFF</span>}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full p-3 transition-transform duration-300 group-hover:translate-y-0 group-focus-within:translate-y-0">
+          <button onClick={handleAddToCart} className={`flex w-full items-center justify-center gap-2 py-4 text-[10px] font-bold uppercase tracking-[.16em] shadow-lg transition ${added ? 'bg-[#173C31] text-white' : 'bg-[#F5F1E8] text-[#173C31] hover:bg-[#B66B3D] hover:text-white'}`}>
+            {added ? <><FiCheck/> Added to basket</> : <><FiShoppingBag/> Add to basket</>}
           </button>
         </div>
       </div>
-
-      <div className="space-y-1 px-1">
-        <p className="text-xs text-[#8A7E6E] uppercase tracking-widest font-medium">
-          {product.category === 'bilona-ghee' ? 'Vedic Bilona Ghee' : 'Cold-Pressed Oil'}
-        </p>
-        <h3 className="text-sm font-semibold text-[#1C1A16] leading-snug group-hover:text-[#0E2A47] transition-colors">
-          {product.name}
-        </h3>
-        <div className="flex items-baseline gap-2 pt-0.5">
-          <span className="text-sm font-bold text-[#0E2A47]">₹{defaultVolume.price}</span>
-          {defaultVolume.originalPrice > defaultVolume.price && (
-            <span className="text-xs text-[#A09585] line-through">₹{defaultVolume.originalPrice}</span>
-          )}
-          <span className="text-xs text-[#8A7E6E] ml-auto">{defaultVolume.size}</span>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="mb-2 text-[9px] font-bold uppercase tracking-[.18em] text-[#B66B3D]">{product.category === 'bilona-ghee' ? 'Ghee collection' : 'Oil collection'}</p>
+          <h3 className="font-serif text-[21px] leading-tight text-[#202A22] transition-colors group-hover:text-[#B66B3D]">{product.name}</h3>
+          <p className="mt-2 text-[10px] text-[#817767]">{defaultVolume.size}</p>
+        </div>
+        <div className="shrink-0 pt-5 text-right">
+          <p className="text-sm font-bold text-[#173C31]">₹{defaultVolume.price}</p>
+          {defaultVolume.originalPrice > defaultVolume.price && <p className="mt-1 text-[10px] text-[#A69B8B] line-through">₹{defaultVolume.originalPrice}</p>}
         </div>
       </div>
     </Link>

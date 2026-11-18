@@ -11,7 +11,7 @@ import { SITE_CONFIG } from "@/config/site";
 const siteUrl = "https://www.rameshkolhuwale.com";
 
 export const viewport: Viewport = {
-  themeColor: "#0E2A47",
+  themeColor: "#173C31",
   width: "device-width",
   initialScale: 1,
 };
@@ -189,7 +189,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#FAF8F3] text-stone-900 font-sans antialiased selection:bg-amber-300 selection:text-[#0E2A47]">
+      <body className="min-h-full flex flex-col bg-[#F5F1E8] text-stone-900 font-sans antialiased selection:bg-amber-300 selection:text-[#0E2A47]">
         <CartProvider>
           <ScrollToTop />
           <Navbar />

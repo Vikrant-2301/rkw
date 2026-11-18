@@ -4,8 +4,6 @@ import Image from 'next/image';
 import { PRODUCTS } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
 import { StoreLocatorSection } from '@/components/StoreLocatorSection';
-import { FiArrowRight, FiCheck } from 'react-icons/fi';
-import { FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/config/site';
 
 export default function HomePage() {
@@ -13,249 +11,123 @@ export default function HomePage() {
   const displayProducts = featuredProducts.length >= 3 ? featuredProducts : PRODUCTS.slice(0, 4);
 
   return (
-    <div>
-      {/* ─── Hero ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#0E2A47] bg-gradient-to-b from-[#0A1C30] via-[#0E2A47] to-[#123356]">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero.jpg"
-            alt="Ramesh Kolhu Wale — authentic cold-pressed oils"
-            fill
-            priority
-            loading="eager"
-            sizes="100vw"
-            className="object-cover opacity-25"
-          />
+    <main className="overflow-hidden">
+      <section className="relative min-h-[690px] lg:min-h-[790px] bg-[#173C31] text-[#F5F1E8]">
+        <div className="absolute inset-0">
+          <Image src="/images/hero.jpg" alt="Traditional oil extraction at Ramesh Kolhu Wale" fill priority sizes="100vw" className="object-cover object-center opacity-45" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#102B23] via-[#102B23]/85 to-[#102B23]/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#102B23]/70 via-transparent to-[#102B23]/10" />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="max-w-2xl">
-            <p className="text-[#F5E6B0] text-sm uppercase tracking-[0.2em] mb-6 font-semibold">
-              Ramesh Kolhu Wale — Est. 1981
-            </p>
-            <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-white leading-tight mb-8">
-              Pure Oils,<br />
-              <em className="text-[#D4A017] not-italic font-serif">Cold-Pressed Fresh</em>
+        <div className="relative z-10 rkw-shell flex min-h-[690px] lg:min-h-[790px] items-end pb-20 pt-28 lg:items-center lg:pb-16">
+          <div className="max-w-[760px] rkw-reveal">
+            <p className="mb-8 text-[10px] font-bold uppercase tracking-[.28em] text-[#E8B58C]">Ramesh Kolhu Wale · Since 1981 · Delhi NCR</p>
+            <h1 className="rkw-display max-w-[760px] text-[clamp(4rem,9vw,8.6rem)] text-[#F5F1E8]">
+              Good food<br />begins <em className="font-normal text-[#D99A6B]">at the source.</em>
             </h1>
-            <p className="text-[#C8D7E6] text-lg sm:text-xl leading-relaxed mb-10 max-w-xl font-light">
-              Authentic traditional cold-pressed oils and Vedic Bilona ghee, 
-              crafted in Delhi NCR with zero chemicals or artificial refining.
+            <p className="mt-8 max-w-[450px] text-sm leading-7 text-white/75 sm:text-base">
+              Traditional cold-pressed oils and Bilona ghee, made with care and brought fresh from our Delhi NCR units to your kitchen.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#B8860B] hover:bg-[#D4A017] text-white font-medium rounded-full shadow-lg shadow-black/20 transition-all hover:scale-[1.02]"
-              >
-                Shop Now
-                <FiArrowRight className="w-4 h-4" />
+            <div className="mt-10 flex flex-wrap items-center gap-5">
+              <Link href="/shop" className="inline-flex items-center gap-5 bg-[#E7B18A] px-7 py-4 text-[11px] font-bold uppercase tracking-[.16em] text-[#173C31] transition hover:bg-[#F5F1E8]">
+                Explore the collection <span className="text-lg">↗</span>
               </Link>
-              <Link
-                href="#find-store"
-                className="inline-flex items-center gap-2 px-8 py-4 border border-[#C8D7E6]/40 text-[#C8D7E6] hover:border-white hover:text-white rounded-full transition-all hover:bg-white/5"
-              >
-                Find Nearest Store
+              <Link href="/process" className="border-b border-white/50 pb-2 text-[11px] font-bold uppercase tracking-[.16em] text-white transition hover:border-[#E7B18A] hover:text-[#E7B18A]">
+                See how we make it
               </Link>
             </div>
           </div>
+          <div className="absolute bottom-8 right-0 hidden items-center gap-4 text-[9px] uppercase tracking-[.2em] text-white/70 md:flex">
+            <span className="h-px w-12 bg-white/50" /> A little slower. A lot more considered.
+          </div>
+        </div>
+        <div className="absolute right-[7%] top-[18%] hidden h-40 w-40 rounded-full border border-white/20 lg:block" />
+        <div className="absolute right-[10%] top-[21%] hidden h-28 w-28 rounded-full border border-white/20 lg:block" />
+      </section>
+
+      <section className="border-b border-[#D9D0C0] bg-[#EAE2D3] py-5">
+        <div className="rkw-shell grid grid-cols-2 gap-y-5 md:grid-cols-4 md:gap-8">
+          {[
+            ['01', 'Traditional extraction', 'Slow cold-press methods'],
+            ['02', 'Made in our units', 'Delhi NCR · open all 7 days'],
+            ['03', 'Quality standards', 'Agmark R.B.O. quality'],
+            ['04', 'Doorstep delivery', 'Free above ₹799 in Delhi NCR'],
+          ].map(([n,title,sub]) => <div key={n} className="flex items-start gap-4">
+            <span className="font-serif text-sm italic text-[#B66B3D]">{n}</span>
+            <div><p className="text-[11px] font-bold uppercase tracking-[.12em] text-[#202A22]">{title}</p><p className="mt-1 text-[11px] text-[#817767]">{sub}</p></div>
+          </div>)}
         </div>
       </section>
 
-      {/* ─── Trust bar ───────────────────────────────────────── */}
-      <section className="bg-[#FAF8F3] border-b border-[#E8E0D0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-sm">
-            {[
-              { label: 'Cold-Pressed', sub: 'Never refined or solvent-extracted' },
-              { label: '100% Pure Guarantee', sub: 'Agmark R.B.O. Certified Quality' },
-              { label: 'Free Delivery', sub: 'Delhi NCR on orders ₹799+ (₹100 under)' },
-              { label: '10 AM – 10 PM', sub: 'Unit hours open all 7 days' },
-            ].map(item => (
-              <div key={item.label} className="space-y-1">
-                <p className="font-semibold text-[#0E2A47]">{item.label}</p>
-                <p className="text-xs text-[#8A7E6E]">{item.sub}</p>
-              </div>
-            ))}
+      <section className="rkw-section">
+        <div className="rkw-shell">
+          <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <div><p className="rkw-eyebrow">The RKW collection</p><h2 className="rkw-display mt-5 text-5xl text-[#202A22] sm:text-6xl">Everyday essentials.<br/><em>Made with intention.</em></h2></div>
+            <Link href="/shop" className="rkw-link">Shop all products</Link>
           </div>
-        </div>
-      </section>
-
-      {/* ─── Featured Products ───────────────────────────────── */}
-      <section className="py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <p className="text-[#B8860B] text-xs uppercase tracking-widest font-semibold mb-2">Our Collection</p>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">
-                Made without shortcuts
-              </h2>
-            </div>
-            <Link
-              href="/shop"
-              className="hidden sm:inline-flex items-center gap-1 text-sm text-[#0E2A47] hover:text-[#B8860B] transition-colors font-semibold"
-            >
-              View all <FiArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {displayProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-          <div className="mt-10 text-center sm:hidden">
-            <Link href="/shop" className="inline-flex items-center gap-2 text-sm text-[#0E2A47] font-semibold">
-              See all products <FiArrowRight className="w-4 h-4" />
-            </Link>
+          <div className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {displayProducts.map(product => <ProductCard key={product.id} product={product} />)}
           </div>
         </div>
       </section>
 
-      {/* ─── Craft story ─────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-[#F2EEE5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
-              <Image
-                src="/images/hero.jpg"
-                alt="Traditional cold-press extraction in action"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="space-y-6">
-              <p className="text-[#B8860B] text-xs uppercase tracking-widest font-semibold">Why RKW</p>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal leading-snug">
-                The difference you<br />can taste
-              </h2>
-              <p className="text-[#5A5248] leading-relaxed">
-                At Ramesh Kolhu Wale, we press our oils slowly at under 38°C using 
-                traditional cold-press techniques. No heat, no chemicals, no compromise. 
-                The result is oil that retains all its natural nutrients, flavour, and colour —
-                exactly as nature intended.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  'Pressed below 38°C — nutrients fully preserved',
-                  'Zero chemical solvents or refining',
-                  '100% Pure & Agmark standard quality tested',
-                  'Watch your oil being pressed live at our Units (10 AM – 10 PM)',
-                ].map(point => (
-                  <li key={point} className="flex items-start gap-3 text-sm text-[#5A5248]">
-                    <FiCheck className="w-4 h-4 text-[#0E2A47] flex-shrink-0 mt-0.5" />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/process"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#0E2A47] hover:text-[#B8860B] transition-colors"
-              >
-                Learn about our process <FiArrowRight className="w-4 h-4" />
-              </Link>
+      <section className="bg-[#173C31] text-[#F5F1E8]">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative min-h-[440px] lg:min-h-[660px]">
+            <Image src="/images/process_live.jpg" alt="Live traditional kolhu oil pressing" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+            <div className="absolute bottom-7 left-7 border border-white/40 bg-[#102B23]/70 px-5 py-3 text-[9px] uppercase tracking-[.2em] backdrop-blur-sm">A view from our units</div>
+          </div>
+          <div className="flex items-center px-8 py-20 sm:px-14 lg:px-20">
+            <div className="max-w-xl">
+              <p className="rkw-eyebrow !text-[#E7B18A]">A process you can see</p>
+              <h2 className="rkw-display mt-6 text-5xl leading-[1.04] sm:text-6xl">Not made in a hurry.<br/><em>Never made a mystery.</em></h2>
+              <p className="mt-7 max-w-md text-sm leading-7 text-white/70">Visit one of our units and see the traditional extraction process in person. From the raw seeds to the bottle, we believe the way food is made should never be hidden.</p>
+              <Link href="/process" className="mt-9 inline-flex border-b border-[#E7B18A] pb-2 text-[10px] font-bold uppercase tracking-[.18em] text-[#E7B18A]">Explore our process ↗</Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Process steps ───────────────────────────────────── */}
-      <section className="py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-[#B8860B] text-xs uppercase tracking-widest font-semibold mb-3">The Method</p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">
-              From seed to bottle
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { step: '01', title: 'Seed Selection', desc: 'Single-origin seeds sourced directly from farmers across Rajasthan, MP, and Gujarat.' },
-              { step: '02', title: 'Sun Drying', desc: 'Seeds are dried naturally for 2–3 days to reduce moisture and intensify flavour.' },
-              { step: '03', title: 'Cold-Press Extraction', desc: 'Slow cold-pressing at under 38°C in traditional cold-press ghanis. Zero friction heat.' },
-              { step: '04', title: 'Natural Settling', desc: 'Oil settles naturally for 48 hours before filtering and bottling. No preservatives added.' },
-            ].map(item => (
-              <div key={item.step} className="space-y-4">
-                <div className="text-4xl font-serif text-[#C8D7E6] font-bold leading-none">{item.step}</div>
-                <h3 className="text-base font-semibold text-[#1C1A16]">{item.title}</h3>
-                <p className="text-sm text-[#8A7E6E] leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+      <section className="rkw-section bg-[#EAE2D3]">
+        <div className="rkw-shell">
+          <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+            <div><p className="rkw-eyebrow">The way we work</p><h2 className="rkw-display mt-5 text-5xl text-[#202A22] sm:text-6xl">A little more<br/><em>care in every step.</em></h2><p className="mt-6 max-w-sm text-sm leading-7 text-[#817767]">A considered process, shaped by traditional methods and a belief in doing the essentials well.</p></div>
+            <div className="grid gap-8 sm:grid-cols-2">
+              {[
+                ['01','Choose well','Seeds are selected and checked before they enter the press.'],
+                ['02','Prepare naturally','Seeds are sun-dried to prepare them for extraction.'],
+                ['03','Press slowly','Traditional cold-press ghanis work at a slow rotation.'],
+                ['04','Let it settle','Oil is allowed to settle naturally before bottling.'],
+              ].map(([n,t,d])=><div key={n} className="border-t border-[#BDB3A1] pt-5"><span className="font-serif text-2xl italic text-[#B66B3D]">{n}</span><h3 className="mt-4 font-serif text-2xl text-[#202A22]">{t}</h3><p className="mt-2 max-w-xs text-xs leading-6 text-[#817767]">{d}</p></div>)}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Testimonials ────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-[#0A1C30]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-[#F5E6B0] text-xs uppercase tracking-widest font-semibold mb-3">What people say</p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-white font-normal">
-              Trusted by families
-            </h2>
+      <section className="rkw-section">
+        <div className="rkw-shell grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <div className="relative min-h-[420px] overflow-hidden bg-[#EAE2D3]">
+            <Image src="/images/bilona_tradition.jpg" alt="Traditional Bilona ghee preparation" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "The mustard oil from RKW has completely changed how our food tastes. You can smell the difference the moment you open the bottle.",
-                author: "Priya Sharma",
-                location: "Rohini, Delhi",
-              },
-              {
-                quote: "I visited the unit and watched pure oil pressed before my eyes. That level of transparency is rare. The Desi cow ghee is exceptional.",
-                author: "Rajesh Mehra",
-                location: "East Delhi",
-              },
-              {
-                quote: "My family has been buying from Ramesh ji for over 15 years. We will never go back to supermarket oils. The purity is unmatched.",
-                author: "Anita Kapoor",
-                location: "Laxmi Nagar, Delhi",
-              },
-            ].map(item => (
-              <div key={item.author} className="bg-[#163A60] rounded-2xl p-7 space-y-5 border border-[#1E4E80]/40 shadow-md">
-                <p className="text-[#EBF2F8] leading-relaxed text-sm">&ldquo;{item.quote}&rdquo;</p>
-                <div>
-                  <p className="text-white font-semibold text-sm">{item.author}</p>
-                  <p className="text-[#93B5D9] text-xs mt-0.5">{item.location}</p>
-                </div>
-              </div>
-            ))}
+          <div className="max-w-lg">
+            <p className="rkw-eyebrow">Our story · Est. 1981</p>
+            <h2 className="rkw-display mt-5 text-5xl text-[#202A22] sm:text-6xl">Rooted in a<br/><em>way of making.</em></h2>
+            <p className="mt-6 text-sm leading-7 text-[#817767]">Ramesh Kolhu Wale began with a simple belief: good oil deserves time, care and honest methods. Today, that belief continues across our Delhi NCR units.</p>
+            <Link href="/about" className="rkw-link mt-8">Get to know RKW</Link>
           </div>
         </div>
       </section>
 
-      {/* ─── Find Nearest Store & Live Units ───────────── */}
       <StoreLocatorSection id="find-store" />
 
-      {/* ─── CTA / WhatsApp ──────────────────────────────────── */}
-      <section className="py-16 sm:py-24 bg-[#F2EEE5] border-t border-[#E8E0D0]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-6">
-          <span className="text-xs uppercase tracking-widest text-[#B8860B] font-semibold">Fast Delhi NCR Doorstep Delivery</span>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal">
-            Order Fresh Cold-Pressed Oils &amp; Bilona Ghee
-          </h2>
-          <p className="text-[#5A5248] leading-relaxed max-w-xl mx-auto">
-            Free home delivery across Delhi NCR on orders above ₹799 (₹100 delivery fee on orders below ₹799). 
-            Units open everyday from 10:00 AM to 10:00 PM.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 pt-2">
-            <a
-              href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-                'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold rounded-full shadow-md transition-all hover:scale-[1.02]"
-            >
-              <FaWhatsapp className="text-xl" />
-              <span>WhatsApp to Order ({SITE_CONFIG.contact.whatsapp})</span>
-            </a>
-            <Link
-              href="/stores"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-[#0E2A47] text-[#0E2A47] hover:bg-[#0E2A47] hover:text-white rounded-full transition-all font-semibold"
-            >
-              Find Nearest Store
-            </Link>
+      <section className="bg-[#B66B3D] py-20 text-[#FFF8EF]">
+        <div className="rkw-shell flex flex-col justify-between gap-8 md:flex-row md:items-end">
+          <div className="max-w-2xl"><p className="text-[10px] font-bold uppercase tracking-[.24em] text-white/70">Bring RKW home</p><h2 className="rkw-display mt-4 text-5xl sm:text-6xl">Your kitchen, our<br/><em>everyday craft.</em></h2><p className="mt-5 max-w-lg text-sm leading-7 text-white/80">Order directly from RKW. Free home delivery across Delhi NCR on orders above ₹799.</p></div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/shop" className="bg-[#F5F1E8] px-7 py-4 text-[10px] font-bold uppercase tracking-[.16em] text-[#173C31] transition hover:bg-white">Shop collection ↗</Link>
+            <Link href="/stores" className="border border-white/60 px-7 py-4 text-[10px] font-bold uppercase tracking-[.16em] text-white transition hover:bg-white/10">Find a unit</Link>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

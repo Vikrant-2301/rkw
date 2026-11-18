@@ -1,102 +1,55 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PRODUCTS } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
-import { FiTruck, FiClock } from 'react-icons/fi';
 import { SITE_CONFIG } from '@/config/site';
 
 function ShopContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get('category') || 'all';
-  const [activeCategory, setActiveCategory] = useState(initialCategory);
-
+  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'all');
+  const [query, setQuery] = useState('');
   const categories = [
-    { id: 'all', label: 'All Products' },
-    { id: 'oil', label: 'Cold-Pressed Oils' },
-    { id: 'bilona-ghee', label: 'Bilona Ghee' },
+    { id: 'all', label: 'Everything' },
+    { id: 'oil', label: 'Cold-pressed oils' },
+    { id: 'bilona-ghee', label: 'Bilona ghee' },
   ];
-
-  const filtered = activeCategory === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === activeCategory);
+  const filtered = useMemo(() => PRODUCTS.filter(p =>
+    (activeCategory === 'all' || p.category === activeCategory) &&
+    (p.name.toLowerCase().includes(query.toLowerCase()) || p.shortDesc.toLowerCase().includes(query.toLowerCase()))
+  ), [activeCategory, query]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-      {/* Page header */}
-      <div className="mb-8">
-        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Our Collection</p>
-        <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
-        <p className="text-[#8A7E6E] mt-3 max-w-xl font-light">
-          Every product is cold-pressed fresh or authentically Bilona-churned, Agmark standard tested, and 100% pure & chemical-free.
-        </p>
-      </div>
-
-      {/* Delivery & Hours Info Bar */}
-      <div className="bg-[#EBF2F8] border border-[#163A60]/15 rounded-xl p-4 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#0E2A47]">
-        <div className="flex items-center gap-2 font-medium">
-          <FiTruck className="w-4 h-4 text-[#B8860B] flex-shrink-0" />
-          <span><strong>Free Delhi NCR Home Delivery</strong> on orders above ₹799 (₹100 delivery fee on orders below ₹799).</span>
+    <main className="pb-24">
+      <section className="bg-[#173C31] py-20 text-[#F5F1E8] sm:py-28">
+        <div className="rkw-shell">
+          <p className="text-[10px] font-bold uppercase tracking-[.25em] text-[#E7B18A]">The RKW collection · Since 1981</p>
+          <h1 className="rkw-display mt-6 max-w-4xl text-6xl sm:text-7xl lg:text-8xl">The good things<br/><em>for your kitchen.</em></h1>
+          <p className="mt-7 max-w-lg text-sm leading-7 text-white/70">Explore our range of traditional cold-pressed oils and Bilona ghee. Choose a product, find your size, and bring home the way we make it.</p>
+          <div className="mt-10 flex flex-wrap gap-8 border-t border-white/20 pt-6 text-[9px] font-bold uppercase tracking-[.18em] text-white/70">
+            <span>Delhi NCR delivery</span><span>Our own extraction units</span><span>Agmark R.B.O. quality</span>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 text-[#5A5248]">
-            <FiClock className="w-3.5 h-3.5 text-[#0E2A47]" />
-            <span>Unit Hours: {SITE_CONFIG.contact.unitHours}</span>
-          </span>
-          <a
-            href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
-              'Hello RKW, I want to order pure cold-pressed oils & Bilona ghee!'
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full font-semibold shadow-xs"
-          >
-            <FaWhatsapp className="w-3.5 h-3.5" />
-            <span>Order on WhatsApp</span>
-          </a>
+      </section>
+      <section className="rkw-shell py-14 sm:py-20">
+        <div className="mb-10 flex flex-col justify-between gap-7 border-b border-[#D9D0C0] pb-8 md:flex-row md:items-end">
+          <div><p className="rkw-eyebrow">Browse the range</p><h2 className="rkw-display mt-4 text-4xl text-[#202A22] sm:text-5xl">Find your everyday essential.</h2><p className="mt-3 text-xs text-[#817767]">{filtered.length} products in this collection</p></div>
+          <label className="block w-full md:max-w-xs"><span className="mb-2 block text-[9px] font-bold uppercase tracking-[.16em] text-[#817767]">Search products</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Try mustard, sesame, ghee..." className="w-full border-b border-[#AFA694] bg-transparent px-0 py-3 text-sm text-[#202A22] outline-none placeholder:text-[#A69B8B] focus:border-[#B66B3D]"/></label>
         </div>
-      </div>
-
-      {/* Category filters */}
-      <div className="flex flex-wrap gap-2.5 mb-10">
-        {categories.map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
-              activeCategory === cat.id
-                ? 'bg-[#0E2A47] text-white shadow-md'
-                : 'bg-[#EBF2F8] text-[#4A4035] hover:bg-[#DDE9F4] hover:text-[#0E2A47]'
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-        {filtered.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className="text-center py-20 text-[#8A7E6E]">
-          <p>No products in this category yet.</p>
+        <div className="mb-12 flex flex-wrap gap-2">
+          {categories.map(cat=><button key={cat.id} onClick={()=>setActiveCategory(cat.id)} className={`border px-5 py-3 text-[9px] font-bold uppercase tracking-[.14em] transition ${activeCategory===cat.id?'border-[#173C31] bg-[#173C31] text-white':'border-[#CFC6B6] text-[#5E6258] hover:border-[#173C31]'}`}>{cat.label}</button>)}
         </div>
-      )}
-    </div>
+        {filtered.length ? <div className="grid grid-cols-1 gap-x-5 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{filtered.map(p=><ProductCard key={p.id} product={p}/>)}</div> :
+          <div className="border-y border-[#D9D0C0] py-20 text-center"><p className="font-serif text-3xl text-[#202A22]">Nothing in this aisle just yet.</p><p className="mt-3 text-xs text-[#817767]">Try another search or browse the full collection.</p><button onClick={()=>{setQuery('');setActiveCategory('all')}} className="mt-6 border-b border-[#B66B3D] pb-1 text-[10px] font-bold uppercase tracking-widest text-[#B66B3D]">Clear filters</button></div>}
+      </section>
+      <section className="bg-[#EAE2D3] py-10"><div className="rkw-shell flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#B66B3D]">Need a hand choosing?</p><p className="mt-2 font-serif text-2xl text-[#202A22]">Talk to the people who make it.</p><p className="mt-1 text-xs text-[#817767]">Our team is available {SITE_CONFIG.contact.unitHours}.</p></div><a href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent('Hello RKW, I need help choosing a product.')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-[#173C31] px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white transition hover:bg-[#245442]"><FaWhatsapp/> Ask on WhatsApp ↗</a></div></section>
+    </main>
   );
 }
 
 export default function ShopPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[#8A7E6E]">Loading collection...</div>}>
-      <ShopContent />
-    </Suspense>
-  );
+  return <Suspense fallback={<div className="min-h-[60vh] bg-[#F5F1E8]"/>}><ShopContent/></Suspense>;
 }
