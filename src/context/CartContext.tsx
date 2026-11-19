@@ -99,6 +99,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [couponCode, isLoaded]);
 
   const addToCart = (product: Product, volume: ProductVolume, quantity: number = 1) => {
+    // Prevent adding out of stock items
+    if (product.inStock === false || volume.inStock === false) {
+      return;
+    }
+
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex(
         (item) => item.product.id === product.id && item.selectedVolume.size === volume.size

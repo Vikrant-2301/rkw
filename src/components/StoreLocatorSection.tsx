@@ -26,6 +26,7 @@ interface StoreLocatorSectionProps {
   id?: string;
   className?: string;
   showTitle?: boolean;
+  showBanner?: boolean;
 }
 
 type Store = (typeof SITE_CONFIG.stores)[number] & {
@@ -161,7 +162,8 @@ const Counter: React.FC<{ to: number; prefix?: string; suffix?: string }> = ({ t
 export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
   id = 'find-store',
   className = '',
-  showTitle = true,
+  showTitle = false,
+  showBanner = false,
 }) => {
   const allStores = SITE_CONFIG.stores as unknown as Store[];
   const liveStores = useMemo(() => allStores.filter((s) => !isComingSoon(s)), [allStores]);
@@ -445,49 +447,51 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
         )}
 
         {/* Free delivery & WhatsApp banner */}
-        <div className="bg-gradient-to-r from-[#0E2A47] via-[#163A60] to-[#0A1C30] text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border border-[#1E4E80]/40 relative overflow-hidden">
-          <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-[#F5E6B0]/10 blur-2xl" />
-          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="flex items-start sm:items-center gap-4 text-left">
-              <div
-                className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center flex-shrink-0 text-[#F5E6B0]"
-                style={{ animation: 'rkw-float 3s ease-in-out infinite' }}
-              >
-                <FiTruck className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-white text-base sm:text-lg">Free Home Delivery in Delhi NCR</span>
-                  <span className="text-xs bg-[#B8860B] text-white px-2.5 py-0.5 rounded-full font-semibold">
-                    Orders Above ₹799
-                  </span>
+        {showBanner && (
+          <div className="bg-gradient-to-r from-[#0E2A47] via-[#163A60] to-[#0A1C30] text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border border-[#1E4E80]/40 relative overflow-hidden">
+            <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-[#F5E6B0]/10 blur-2xl" />
+            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6">
+              <div className="flex items-start sm:items-center gap-4 text-left">
+                <div
+                  className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center flex-shrink-0 text-[#F5E6B0]"
+                  style={{ animation: 'rkw-float 3s ease-in-out infinite' }}
+                >
+                  <FiTruck className="w-6 h-6" />
                 </div>
-                <p className="text-[#C8D7E6] text-xs sm:text-sm mt-1">
-                  ₹100 delivery fee on orders below ₹799. Same-day &amp; express doorstep delivery across Delhi NCR.
-                </p>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-white text-base sm:text-lg">Free Home Delivery in Delhi NCR</span>
+                    <span className="text-xs bg-[#B8860B] text-white px-2.5 py-0.5 rounded-full font-semibold">
+                      Orders Above ₹799
+                    </span>
+                  </div>
+                  <p className="text-[#C8D7E6] text-xs sm:text-sm mt-1">
+                    ₹100 delivery fee on orders below ₹799. Same-day &amp; express doorstep delivery across Delhi NCR.
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-              <a
-                href={wa(
-                  'Hello Ramesh Kolhu Wale! I would like to place an order for pure cold-pressed oils & Bilona ghee with delivery in Delhi NCR.'
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold text-sm rounded-full transition-all shadow-md hover:scale-[1.02]"
-              >
-                <FaWhatsapp className="w-4 h-4" />
-                <span>Order on WhatsApp: {SITE_CONFIG.contact.whatsapp}</span>
-              </a>
-              <Link
-                href="/shop"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-medium text-sm rounded-full transition-colors border border-white/20"
-              >
-                Shop Online
-              </Link>
+              <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                <a
+                  href={wa(
+                    'Hello Ramesh Kolhu Wale! I would like to place an order for pure cold-pressed oils & Bilona ghee with delivery in Delhi NCR.'
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold text-sm rounded-full transition-all shadow-md hover:scale-[1.02]"
+                >
+                  <FaWhatsapp className="w-4 h-4" />
+                  <span>Order on WhatsApp: {SITE_CONFIG.contact.whatsapp}</span>
+                </a>
+                <Link
+                  href="/shop"
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-medium text-sm rounded-full transition-colors border border-white/20"
+                >
+                  Shop Online
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
 
         {/* Interactive Google Map + Nearest Unit Finder */}

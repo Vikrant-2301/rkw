@@ -444,13 +444,21 @@ export default function HomePage() {
                 Made without shortcuts
               </h2>
             </div>
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-1 border-b-2 pb-0.5 text-sm font-bold"
-              style={{ color: C.navy, borderColor: C.mustard }}
-            >
-              View all products <FiArrowRight />
-            </Link>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link
+                href="/shop?category=most-selling"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F2B705] text-[#0E2A47] text-xs font-bold hover:bg-[#d9a304] transition-colors shadow-xs"
+              >
+                <span>🔥</span> Most Selling
+              </Link>
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-1 border-b-2 pb-0.5 text-sm font-bold"
+                style={{ color: C.navy, borderColor: C.mustard }}
+              >
+                View all products <FiArrowRight />
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">

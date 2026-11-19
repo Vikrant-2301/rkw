@@ -3,6 +3,7 @@ export interface ProductVolume {
   price: number;
   originalPrice: number;
   packaging: string;
+  inStock?: boolean;
 }
 
 export interface Product {
@@ -20,6 +21,9 @@ export interface Product {
   inStock: boolean;
   featured: boolean;
   bestSeller: boolean;
+  specialOffer?: string;
+  isSpecialOffer?: boolean;
+  specialDiscountPercent?: number;
   image: string;
   bottleImage?: string;
   showcaseImage?: string;

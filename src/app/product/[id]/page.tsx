@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,7 +8,7 @@ import { PRODUCTS } from '@/data/products';
 import { useLiveProducts } from '@/hooks/useLiveProducts';
 import { ProductVolume } from '@/types';
 import { useCart } from '@/context/CartContext';
-import { FiArrowRight, FiPlus, FiMinus, FiCheck, FiShoppingBag, FiChevronRight } from 'react-icons/fi';
+import { FiArrowRight, FiPlus, FiMinus, FiCheck, FiShoppingBag, FiChevronRight, FiSlash, FiAlertCircle } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { ProductCard } from '@/components/ProductCard';
 import { SITE_CONFIG } from '@/config/site';
@@ -23,10 +23,24 @@ export default function ProductDetailPage() {
   const product = liveProducts.find((p) => p.slug === slug || p.id === slug) || PRODUCTS.find((p) => p.slug === slug || p.id === slug);
 
   const [selectedVolume, setSelectedVolume] = useState<ProductVolume>(
-    product?.volumes.find((v) => v.size.startsWith('1L')) ||
+    product?.volumes.find((v) => v.size.startsWith('1L') && v.inStock !== false) ||
+    product?.volumes.find((v) => v.inStock !== false) ||
     product?.volumes[0] ||
     { size: '1L (PET bottle)', price: 340, originalPrice: 420, packaging: 'PET bottle' }
   );
+
+  // Sync selected volume when live products change
+  useEffect(() => {
+    if (product && Array.isArray(product.volumes) && product.volumes.length > 0) {
+      setSelectedVolume((prev) => {
+        const found = product.volumes.find((v) => v.size === prev.size);
+        if (found) return found;
+        const firstInStock = product.volumes.find((v) => v.inStock !== false);
+        return firstInStock || product.volumes[0];
+      });
+    }
+  }, [product]);
+
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'benefits' | 'nutrition' | 'extraction' | 'lab'>('benefits');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -47,16 +61,27 @@ export default function ProductDetailPage() {
     );
   }
 
+  // Stock status checks
+  const allVolumesOutOfStock =
+    Array.isArray(product.volumes) &&
+    product.volumes.length > 0 &&
+    product.volumes.every((v) => v.inStock === false);
+
+  const isProductOutOfStock = product.inStock === false || allVolumesOutOfStock;
+  const isSelectedVolumeOutOfStock = isProductOutOfStock || selectedVolume?.inStock === false;
+
   const allImages = [product.image, ...(product.additionalImages || [])];
   const currentImage = allImages[activeImageIndex] || product.image;
 
   const handleAddToCart = () => {
+    if (isSelectedVolumeOutOfStock) return;
     addToCart(product, selectedVolume, quantity);
     setAddedMessage(true);
     setTimeout(() => setAddedMessage(false), 2000);
   };
 
   const handleBuyNow = () => {
+    if (isSelectedVolumeOutOfStock) return;
     addToCart(product, selectedVolume, quantity);
     router.push('/checkout');
   };
@@ -174,19 +199,46 @@ export default function ProductDetailPage() {
         <div className="space-y-7">
           {/* Rating + name */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <div className="flex text-[#B8860B]">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className={`text-sm ${i < Math.floor(product.rating) ? 'text-[#B8860B]' : 'text-[#D0C8B8]'}`}>★</span>
                 ))}
               </div>
               <span className="text-xs text-[#8A7E6E] font-medium">{product.rating} ({product.reviewsCount} reviews)</span>
+              {product.bestSeller && (
+                <span className="px-2.5 py-0.5 bg-[#F2B705] text-[#0E2A47] text-[11px] font-bold rounded-full border border-[#D9A304] flex items-center gap-1 shadow-xs">
+                  <span>🔥</span> Most Selling
+                </span>
+              )}
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl text-[#1C1A16] font-normal leading-snug">
               {product.name}
             </h1>
             <p className="text-[#8A7E6E] text-sm mt-2 font-medium">{product.hindiName}</p>
           </div>
+
+          {/* Special Offer Callout Banner */}
+          {product.isSpecialOffer && (
+            <div className="p-3.5 bg-gradient-to-r from-amber-500/15 via-orange-500/20 to-amber-500/15 border border-orange-300 rounded-2xl flex items-center justify-between gap-3 text-orange-950 shadow-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center text-sm font-bold shrink-0">
+                  ⚡
+                </span>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-800 block">
+                    Special Discount Offer
+                  </span>
+                  <p className="text-xs font-semibold text-orange-950">
+                    {product.specialOffer || 'Special Promotional Discount Applied!'}
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold bg-orange-600 text-white px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0">
+                Deal Active
+              </span>
+            </div>
+          )}
 
           {/* Price */}
           <div className="flex items-baseline gap-3">
@@ -203,24 +255,69 @@ export default function ProductDetailPage() {
 
           <p className="text-sm text-[#5A5248] leading-relaxed">{product.description}</p>
 
+          {/* Out of Stock Warning Banners */}
+          {isProductOutOfStock ? (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3 text-red-800">
+              <FiAlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm">Product Currently Out of Stock</p>
+                <p className="text-xs text-red-700 mt-0.5">
+                  This product is temporarily sold out online. Please visit our live Delhi NCR Units or message us on WhatsApp for fresh batch dates.
+                </p>
+              </div>
+            </div>
+          ) : isSelectedVolumeOutOfStock ? (
+            <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3 text-amber-900">
+              <FiAlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-xs">Selected Size Out of Stock</p>
+                <p className="text-[11px] text-amber-800 mt-0.5">
+                  <strong>{selectedVolume.size}</strong> is currently out of stock. Please select another available size below or inquire on WhatsApp.
+                </p>
+              </div>
+            </div>
+          ) : null}
+
           {/* Volume picker */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold text-[#8A7E6E] uppercase tracking-wider">Select size</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-[#8A7E6E] uppercase tracking-wider">Select size</p>
+              {isSelectedVolumeOutOfStock && (
+                <span className="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                  Size Sold Out
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {product.volumes.map((vol) => {
                 const isSelected = selectedVolume.size === vol.size;
+                const isVolOutOfStock = isProductOutOfStock || vol.inStock === false;
+
                 return (
                   <button
                     key={vol.size}
                     onClick={() => setSelectedVolume(vol)}
-                    className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer relative overflow-hidden ${
                       isSelected
-                        ? 'border-[#0E2A47] bg-[#EBF2F8] shadow-xs'
+                        ? isVolOutOfStock
+                          ? 'border-red-400 bg-red-50/60 shadow-xs'
+                          : 'border-[#0E2A47] bg-[#EBF2F8] shadow-xs'
+                        : isVolOutOfStock
+                        ? 'border-red-200 bg-stone-50/70 hover:border-red-300'
                         : 'border-[#E8E0D0] hover:border-[#D0C8B8] bg-white'
                     }`}
                   >
-                    <p className="text-xs font-semibold text-[#1C1A16]">{vol.size}</p>
-                    <p className="text-sm font-bold text-[#0E2A47] mt-1">₹{vol.price}</p>
+                    {isVolOutOfStock && (
+                      <span className="absolute top-1.5 right-1.5 text-[9px] font-bold text-red-600 bg-red-100/90 px-1.5 py-0.2 rounded-full uppercase tracking-tight">
+                        Out of stock
+                      </span>
+                    )}
+                    <p className={`text-xs font-semibold ${isVolOutOfStock ? 'text-stone-500' : 'text-[#1C1A16]'}`}>
+                      {vol.size}
+                    </p>
+                    <p className={`text-sm font-bold mt-1 ${isVolOutOfStock ? 'text-stone-500' : 'text-[#0E2A47]'}`}>
+                      ₹{vol.price}
+                    </p>
                     <p className="text-[10px] text-[#8A7E6E] mt-0.5 truncate">{vol.packaging}</p>
                   </button>
                 );
@@ -231,47 +328,81 @@ export default function ProductDetailPage() {
           {/* Quantity + CTAs */}
           <div className="space-y-3 pt-1">
             <div className="flex gap-3">
-              <div className="flex items-center border border-[#D0C8B8] rounded-full overflow-hidden h-12 bg-white">
+              <div
+                className={`flex items-center border border-[#D0C8B8] rounded-full overflow-hidden h-12 bg-white ${
+                  isSelectedVolumeOutOfStock ? 'opacity-50 pointer-events-none' : ''
+                }`}
+              >
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer"
+                  disabled={isSelectedVolumeOutOfStock}
+                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer disabled:cursor-not-allowed"
                 >
                   <FiMinus className="w-4 h-4" />
                 </button>
                 <span className="px-4 text-sm font-semibold text-[#1C1A16] min-w-[2rem] text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer"
+                  disabled={isSelectedVolumeOutOfStock}
+                  className="px-4 text-[#5A5248] hover:bg-[#EBF2F8] transition-colors h-full cursor-pointer disabled:cursor-not-allowed"
                 >
                   <FiPlus className="w-4 h-4" />
                 </button>
               </div>
+
               <button
                 onClick={handleAddToCart}
-                className={`flex-1 h-12 px-6 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
-                  addedMessage
-                    ? 'bg-[#0E2A47] text-white'
-                    : 'bg-[#0E2A47] text-white hover:bg-[#163A60]'
+                disabled={isSelectedVolumeOutOfStock}
+                className={`flex-1 h-12 px-6 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md ${
+                  isSelectedVolumeOutOfStock
+                    ? 'bg-stone-300 text-stone-600 cursor-not-allowed shadow-none'
+                    : addedMessage
+                    ? 'bg-[#0E2A47] text-white cursor-pointer'
+                    : 'bg-[#0E2A47] text-white hover:bg-[#163A60] cursor-pointer'
                 }`}
               >
-                {addedMessage ? <><FiCheck className="w-4 h-4 text-emerald-400" /> Added to Basket</> : <><FiShoppingBag className="w-4 h-4" /> Add to Basket</>}
+                {isSelectedVolumeOutOfStock ? (
+                  <>
+                    <FiSlash className="w-4 h-4 text-red-500" /> Out of Stock
+                  </>
+                ) : addedMessage ? (
+                  <>
+                    <FiCheck className="w-4 h-4 text-emerald-400" /> Added to Basket
+                  </>
+                ) : (
+                  <>
+                    <FiShoppingBag className="w-4 h-4" /> Add to Basket
+                  </>
+                )}
               </button>
             </div>
 
             <button
               onClick={handleBuyNow}
-              className="w-full h-12 px-6 rounded-full border-2 border-[#0E2A47] text-[#0E2A47] font-semibold text-sm hover:bg-[#0E2A47] hover:text-white transition-all cursor-pointer"
+              disabled={isSelectedVolumeOutOfStock}
+              className={`w-full h-12 px-6 rounded-full border-2 font-semibold text-sm transition-all ${
+                isSelectedVolumeOutOfStock
+                  ? 'border-stone-300 text-stone-400 bg-stone-100 cursor-not-allowed'
+                  : 'border-[#0E2A47] text-[#0E2A47] hover:bg-[#0E2A47] hover:text-white cursor-pointer'
+              }`}
             >
-              Buy Now
+              {isSelectedVolumeOutOfStock ? 'Selected Size Unavailable' : 'Buy Now'}
             </button>
 
             <a
-              href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=Hello%20Ramesh%20Kolhu%20Wale%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}%20(${selectedVolume.size})`}
+              href={`https://wa.me/${SITE_CONFIG.contact.whatsappRaw}?text=${encodeURIComponent(
+                isSelectedVolumeOutOfStock
+                  ? `Hello Ramesh Kolhu Wale, when will ${product.name} (${selectedVolume.size}) be back in stock? Please notify me!`
+                  : `Hello Ramesh Kolhu Wale, I want to order ${product.name} (${selectedVolume.size})`
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full h-11 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
             >
-              <FaWhatsapp className="text-base" /> Order via WhatsApp
+              <FaWhatsapp className="text-base" />
+              <span>
+                {isSelectedVolumeOutOfStock ? 'Inquire on WhatsApp about Stock' : 'Order via WhatsApp'}
+              </span>
             </a>
           </div>
 

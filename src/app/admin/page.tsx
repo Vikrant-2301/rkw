@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product, ProductVolume } from '@/types';
@@ -25,7 +25,15 @@ import {
   FiLock,
   FiArrowRight,
   FiShield,
-  FiFileText
+  FiFileText,
+  FiTrash2,
+  FiPlus,
+  FiSlash,
+  FiAlertCircle,
+  FiGrid,
+  FiList,
+  FiImage,
+  FiEye
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
@@ -82,6 +90,10 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isSavingProduct, setIsSavingProduct] = useState(false);
   const [productSuccessMsg, setProductSuccessMsg] = useState('');
+  const [productFilter, setProductFilter] = useState<'all' | 'in_stock' | 'out_of_stock' | 'partial' | 'bestseller' | 'special_offer'>('all');
+  const [productSearch, setProductSearch] = useState('');
+  const [productViewMode, setProductViewMode] = useState<'grid' | 'list'>('grid');
+  const [quickStockUpdatingId, setQuickStockUpdatingId] = useState<string | null>(null);
 
   // Settings State
   const [googleWebhookUrl, setGoogleWebhookUrl] = useState('');
@@ -97,6 +109,10 @@ export default function AdminPage() {
     const saved = localStorage.getItem('rkw_admin_auth');
     if (saved === 'true') {
       setIsAuthenticated(true);
+    }
+    const savedView = localStorage.getItem('rkw_admin_product_view');
+    if (savedView === 'list' || savedView === 'grid') {
+      setProductViewMode(savedView);
     }
   }, []);
 
@@ -266,6 +282,238 @@ export default function AdminPage() {
     }
   };
 
+  // Quick toggle product stock (entire product)
+  const handleToggleProductStock = async (product: Product, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    const newStock = !Boolean(product.inStock);
+    setQuickStockUpdatingId(product.id);
+
+    // Optimistic UI update
+    setProducts(prev =>
+      prev.map(p => (p.id === product.id ? { ...p, inStock: newStock } : p))
+    );
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: product.id,
+          action: 'toggle_product_stock',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.product) {
+        setProducts(prev => prev.map(p => (p.id === data.product.id ? data.product : p)));
+        setProductSuccessMsg(
+          `✓ ${product.name} is now marked ${newStock ? 'IN STOCK' : 'OUT OF STOCK'}`
+        );
+        setTimeout(() => setProductSuccessMsg(''), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to toggle product stock:', err);
+      // Revert on error
+      setProducts(prev =>
+        prev.map(p => (p.id === product.id ? { ...p, inStock: !newStock } : p))
+      );
+    } finally {
+      setQuickStockUpdatingId(null);
+    }
+  };
+
+  // Quick toggle volume variant stock (e.g. 200ml)
+  const handleToggleVolumeStock = async (product: Product, volumeSize: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    const currentVol = product.volumes?.find(v => v.size === volumeSize);
+    const newVolStock = currentVol?.inStock === false ? true : false;
+    setQuickStockUpdatingId(`${product.id}-${volumeSize}`);
+
+    // Optimistic UI update
+    setProducts(prev =>
+      prev.map(p => {
+        if (p.id !== product.id) return p;
+        return {
+          ...p,
+          volumes: (p.volumes || []).map(v =>
+            v.size === volumeSize ? { ...v, inStock: newVolStock } : v
+          ),
+        };
+      })
+    );
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: product.id,
+          action: 'toggle_volume_stock',
+          volumeSize,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.product) {
+        setProducts(prev => prev.map(p => (p.id === data.product.id ? data.product : p)));
+        setProductSuccessMsg(
+          `✓ ${product.name} (${volumeSize}) is now marked ${newVolStock ? 'IN STOCK' : 'OUT OF STOCK'}`
+        );
+        setTimeout(() => setProductSuccessMsg(''), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to toggle volume stock:', err);
+      fetchProducts();
+    } finally {
+      setQuickStockUpdatingId(null);
+    }
+  };
+
+  // Quick toggle Best Seller (Most Selling)
+  const handleToggleBestSeller = async (product: Product, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    const newBestSeller = !Boolean(product.bestSeller);
+    setProducts(prev =>
+      prev.map(p => (p.id === product.id ? { ...p, bestSeller: newBestSeller } : p))
+    );
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: product.id,
+          action: 'toggle_bestseller',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.product) {
+        setProducts(prev => prev.map(p => (p.id === data.product.id ? data.product : p)));
+        setProductSuccessMsg(
+          `✓ ${product.name} is now ${newBestSeller ? 'marked as MOST SELLING 🔥' : 'removed from Most Selling'}`
+        );
+        setTimeout(() => setProductSuccessMsg(''), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to toggle bestseller:', err);
+      fetchProducts();
+    }
+  };
+
+  // Quick toggle Special Offer
+  const handleToggleSpecialOffer = async (product: Product, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    const newOffer = !Boolean(product.isSpecialOffer);
+    setProducts(prev =>
+      prev.map(p => (p.id === product.id ? { ...p, isSpecialOffer: newOffer } : p))
+    );
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: product.id,
+          action: 'toggle_special_offer',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.product) {
+        setProducts(prev => prev.map(p => (p.id === data.product.id ? data.product : p)));
+        setProductSuccessMsg(
+          `✓ ${product.name} special discount offer is now ${newOffer ? 'ACTIVATED ⚡' : 'DEACTIVATED'}`
+        );
+        setTimeout(() => setProductSuccessMsg(''), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to toggle special offer:', err);
+      fetchProducts();
+    }
+  };
+
+  // Add volume variant to editing product
+  const handleAddVolume = () => {
+    if (!editingProduct) return;
+    const newVol: ProductVolume = {
+      size: '200ml (PET bottle)',
+      price: 80,
+      originalPrice: 100,
+      packaging: 'PET bottle',
+      inStock: true,
+    };
+    setEditingProduct({
+      ...editingProduct,
+      volumes: [...(editingProduct.volumes || []), newVol],
+    });
+  };
+
+  // Delete volume variant from editing product
+  const handleDeleteVolume = (idx: number) => {
+    if (!editingProduct) return;
+    if ((editingProduct.volumes || []).length <= 1) {
+      alert('A product must have at least one quantity variant.');
+      return;
+    }
+    const updated = editingProduct.volumes.filter((_, i) => i !== idx);
+    setEditingProduct({ ...editingProduct, volumes: updated });
+  };
+
+  // Toggle stock of volume variant inside editing product modal
+  const handleToggleModalVolumeStock = (idx: number) => {
+    if (!editingProduct) return;
+    const updated = [...(editingProduct.volumes || [])];
+    const current = updated[idx].inStock !== false;
+    updated[idx] = { ...updated[idx], inStock: !current };
+    setEditingProduct({ ...editingProduct, volumes: updated });
+  };
+
+  // Filtered products for admin
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => {
+      // Search
+      if (productSearch.trim()) {
+        const q = productSearch.toLowerCase().trim();
+        const matches =
+          p.name.toLowerCase().includes(q) ||
+          p.hindiName?.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q) ||
+          (p.volumes || []).some(v => v.size.toLowerCase().includes(q));
+        if (!matches) return false;
+      }
+
+      // Filter
+      const hasAnyVolumeOut = (p.volumes || []).some(v => v.inStock === false);
+      const isCompletelyOut = p.inStock === false || (p.volumes || []).every(v => v.inStock === false);
+
+      if (productFilter === 'bestseller') {
+        return Boolean(p.bestSeller);
+      }
+      if (productFilter === 'special_offer') {
+        return Boolean(p.isSpecialOffer || p.specialOffer);
+      }
+      if (productFilter === 'in_stock') {
+        return p.inStock !== false && !isCompletelyOut;
+      }
+      if (productFilter === 'out_of_stock') {
+        return isCompletelyOut;
+      }
+      if (productFilter === 'partial') {
+        return p.inStock !== false && hasAnyVolumeOut && !isCompletelyOut;
+      }
+      return true;
+    });
+  }, [products, productSearch, productFilter]);
+
   // Save Edited Product
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -280,9 +528,19 @@ export default function AdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: editingProduct.id,
+          name: editingProduct.name,
+          hindiName: editingProduct.hindiName,
+          category: editingProduct.category,
+          shortDesc: editingProduct.shortDesc,
+          description: editingProduct.description,
+          image: editingProduct.image,
           price: Number(editingProduct.price),
           originalPrice: Number(editingProduct.originalPrice),
           inStock: Boolean(editingProduct.inStock),
+          bestSeller: Boolean(editingProduct.bestSeller),
+          isSpecialOffer: Boolean(editingProduct.isSpecialOffer),
+          specialOffer: editingProduct.specialOffer || '',
+          specialDiscountPercent: editingProduct.specialDiscountPercent ? Number(editingProduct.specialDiscountPercent) : undefined,
           volumes: editingProduct.volumes,
         }),
       });
@@ -739,254 +997,1145 @@ export default function AdminPage() {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 2: PRODUCTS & PRICE CONTROL                          */}
+        {/* TAB 2: PRODUCTS, STOCK & QUANTITY CONTROL                */}
         {/* ======================================================== */}
         {activeTab === 'products' && (
           <div className="space-y-6">
-            <div className="bg-white p-5 rounded-2xl border border-[#E8E0D0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="font-serif text-xl font-bold text-[#0E2A47]">All Products Pricing &amp; MRP</h2>
-                <p className="text-xs text-[#8A7E6E] mt-0.5">
-                  Update selling price, original MRP, or stock availability. Changes reflect in real time.
-                </p>
-              </div>
-
-              <button
-                onClick={fetchProducts}
-                disabled={productsLoading}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FAF8F3] border border-[#D0C8B8] hover:bg-white text-xs font-semibold text-[#0E2A47] cursor-pointer"
-              >
-                <FiRefreshCw className={`w-3.5 h-3.5 ${productsLoading ? 'animate-spin' : ''}`} />
-                <span>Refresh Catalog</span>
-              </button>
-            </div>
-
-            {productSuccessMsg && (
-              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold animate-fadeIn">
-                {productSuccessMsg}
-              </div>
-            )}
-
-            {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map(product => {
-                const discountPercent = Math.round(
-                  ((product.originalPrice - product.price) / product.originalPrice) * 100
-                );
-
-                return (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-2xl p-5 border border-[#E8E0D0] shadow-xs flex flex-col justify-between space-y-4 hover:shadow-sm transition-shadow"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex gap-3 items-center">
-                        <div className="relative w-16 h-16 rounded-xl bg-[#FAF8F3] border border-[#E8E0D0] overflow-hidden shrink-0">
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            sizes="64px"
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">
-                            {product.category}
-                          </span>
-                          <h3 className="font-serif font-bold text-sm text-[#0E2A47] truncate">
-                            {product.name}
-                          </h3>
-                          <p className="text-[11px] text-[#8A7E6E] truncate">{product.hindiName}</p>
-                        </div>
-                      </div>
-
-                      {/* Pricing Tag */}
-                      <div className="bg-[#FAF8F3] p-3 rounded-xl border border-[#E8E0D0] flex items-center justify-between text-xs">
-                        <div>
-                          <span className="text-[#8A7E6E] block text-[10px]">Current Selling Price</span>
-                          <span className="font-serif font-bold text-[#0E2A47] text-base">₹{product.price}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#8A7E6E] block text-[10px]">Original MRP</span>
-                          <span className="line-through text-[#8A7E6E] font-medium">₹{product.originalPrice}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-[10px] font-bold bg-[#EBF2F8] text-[#0E2A47] px-2 py-0.5 rounded-full">
-                            {discountPercent}% OFF
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Volumes List */}
-                      <div className="space-y-1">
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-[#8A7E6E]">
-                          Available Volumes ({product.volumes?.length || 0})
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {product.volumes?.slice(0, 4).map(vol => (
-                            <span
-                              key={vol.size}
-                              className="text-[10px] font-medium bg-[#F2EEE5] text-[#5A5248] px-2 py-0.5 rounded-md"
-                            >
-                              {vol.size}: ₹{vol.price}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-[#E8E0D0] flex items-center justify-between">
-                      <span
-                        className={`text-[11px] font-semibold flex items-center gap-1.5 ${
-                          product.inStock ? 'text-emerald-700' : 'text-red-600'
-                        }`}
-                      >
-                        <span className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-emerald-600' : 'bg-red-600'}`} />
-                        {product.inStock ? 'In Stock' : 'Out of Stock'}
-                      </span>
-
-                      <button
-                        onClick={() => setEditingProduct(product)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0E2A47] hover:bg-[#163A60] text-white text-xs font-semibold cursor-pointer transition-colors shadow-xs"
-                      >
-                        <FiEdit className="w-3 h-3" />
-                        <span>Edit Prices</span>
-                      </button>
-                    </div>
+            {/* Header with Search, View Mode Switcher, and Stock Filter Pills */}
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#E8E0D0] shadow-xs space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider bg-[#FAF8F3] px-2.5 py-0.5 rounded-full border border-[#E8E0D0]">
+                      Inventory &amp; Pricing Management
+                    </span>
+                    <span className="text-[11px] text-[#8A7E6E]">
+                      {products.length} Products Cataloged
+                    </span>
                   </div>
-                );
-              })}
-            </div>
+                  <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#0E2A47] mt-1">
+                    Product &amp; Quantity Stock Inventory
+                  </h2>
+                  <p className="text-xs text-[#8A7E6E] mt-0.5">
+                    Mark entire products or individual quantities (e.g. 200ml out of stock, 1L in stock) on/off. Switch between Card and Table List views.
+                  </p>
+                </div>
 
-            {/* Modal: Edit Product Pricing */}
-            {editingProduct && (
-              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-                <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-[#E8E0D0]">
-                  <div className="flex justify-between items-start border-b border-[#E8E0D0] pb-4">
-                    <div>
-                      <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">
-                        Price &amp; MRP Editor
-                      </span>
-                      <h3 className="font-serif font-bold text-lg text-[#0E2A47]">{editingProduct.name}</h3>
-                    </div>
+                <div className="flex items-center gap-2.5 shrink-0">
+                  {/* View Mode Switcher: Cards vs Table List */}
+                  <div className="flex items-center bg-[#FAF8F3] p-1 rounded-xl border border-[#D0C8B8]">
                     <button
-                      onClick={() => setEditingProduct(null)}
-                      className="p-1.5 text-[#8A7E6E] hover:text-[#0E2A47] rounded-full hover:bg-stone-100 cursor-pointer"
+                      type="button"
+                      onClick={() => {
+                        setProductViewMode('grid');
+                        localStorage.setItem('rkw_admin_product_view', 'grid');
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        productViewMode === 'grid'
+                          ? 'bg-[#0E2A47] text-[#F5E6B0] shadow-xs'
+                          : 'text-[#5A5248] hover:text-[#0E2A47]'
+                      }`}
+                      title="Card Grid View"
                     >
-                      <FiXCircle className="w-5 h-5" />
+                      <FiGrid className="w-3.5 h-3.5" />
+                      <span>Cards</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProductViewMode('list');
+                        localStorage.setItem('rkw_admin_product_view', 'list');
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        productViewMode === 'list'
+                          ? 'bg-[#0E2A47] text-[#F5E6B0] shadow-xs'
+                          : 'text-[#5A5248] hover:text-[#0E2A47]'
+                      }`}
+                      title="Professional Table List View"
+                    >
+                      <FiList className="w-3.5 h-3.5" />
+                      <span>List View</span>
                     </button>
                   </div>
 
-                  <form onSubmit={handleSaveProduct} className="space-y-5 text-xs">
-                    {/* Base Price & MRP */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1.5">
-                          Base Selling Price (₹)
-                        </label>
-                        <input
-                          type="number"
-                          required
-                          value={editingProduct.price}
-                          onChange={e =>
-                            setEditingProduct({ ...editingProduct, price: Number(e.target.value) })
-                          }
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-semibold text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1.5">
-                          Base MRP / Original Price (₹)
-                        </label>
-                        <input
-                          type="number"
-                          required
-                          value={editingProduct.originalPrice}
-                          onChange={e =>
-                            setEditingProduct({ ...editingProduct, originalPrice: Number(e.target.value) })
-                          }
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-semibold text-sm"
-                        />
-                      </div>
-                    </div>
+                  <button
+                    onClick={fetchProducts}
+                    disabled={productsLoading}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF8F3] border border-[#D0C8B8] hover:bg-white text-xs font-semibold text-[#0E2A47] cursor-pointer"
+                  >
+                    <FiRefreshCw className={`w-3.5 h-3.5 ${productsLoading ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </button>
+                </div>
+              </div>
 
-                    {/* Stock Status */}
-                    <div className="flex items-center gap-3 p-3 bg-[#FAF8F3] rounded-xl border border-[#E8E0D0]">
-                      <input
-                        type="checkbox"
-                        id="inStockCheck"
-                        checked={editingProduct.inStock}
-                        onChange={e =>
-                          setEditingProduct({ ...editingProduct, inStock: e.target.checked })
-                        }
-                        className="w-4 h-4 text-[#0E2A47] rounded-sm focus:ring-[#0E2A47]"
-                      />
-                      <label htmlFor="inStockCheck" className="text-xs font-semibold text-[#1C1A16] cursor-pointer">
-                        Product is In Stock &amp; Available for Ordering
-                      </label>
-                    </div>
+              {/* Search + Filter Chips */}
+              <div className="pt-3 border-t border-[#E8E0D0] flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                <div className="relative flex-1 max-w-md">
+                  <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A7E6E]" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, category, or size (e.g. 200ml)..."
+                    value={productSearch}
+                    onChange={e => setProductSearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#D0C8B8] text-xs font-medium focus:border-[#0E2A47] focus:outline-none bg-[#FAF8F3]"
+                  />
+                  {productSearch && (
+                    <button
+                      onClick={() => setProductSearch('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A7E6E] hover:text-[#1C1A16] text-xs"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
 
-                    {/* Volume Variant Pricing */}
-                    <div className="space-y-3">
-                      <label className="block font-semibold text-[#5A5248] uppercase tracking-wider">
-                        Volume Variant Prices (e.g. 500ml, 1L, 2L, 5L, 15kg)
-                      </label>
-                      <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        {editingProduct.volumes?.map((vol, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-2 p-2.5 rounded-xl bg-[#FAF8F3] border border-[#E8E0D0]"
-                          >
-                            <span className="font-semibold text-[#1C1A16] w-32 truncate">{vol.size}</span>
-                            <div className="flex-1">
-                              <span className="text-[10px] text-[#8A7E6E] block">Price (₹)</span>
-                              <input
-                                type="number"
-                                value={vol.price}
-                                onChange={e => {
-                                  const updated = [...editingProduct.volumes];
-                                  updated[idx] = { ...updated[idx], price: Number(e.target.value) };
-                                  setEditingProduct({ ...editingProduct, volumes: updated });
-                                }}
-                                className="w-full px-2 py-1 rounded-md border border-[#D0C8B8] text-xs font-semibold"
+                {/* Filter Pills */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 text-xs">
+                  {[
+                    { id: 'all', label: `All Products (${products.length})` },
+                    {
+                      id: 'bestseller',
+                      label: `🔥 Most Selling (${products.filter(p => p.bestSeller).length})`,
+                    },
+                    {
+                      id: 'special_offer',
+                      label: `⚡ Special Deals (${products.filter(p => p.isSpecialOffer || Boolean(p.specialOffer)).length})`,
+                    },
+                    {
+                      id: 'in_stock',
+                      label: `Fully In Stock (${
+                        products.filter(
+                          p =>
+                            p.inStock !== false &&
+                            (p.volumes || []).every(v => v.inStock !== false)
+                        ).length
+                      })`,
+                    },
+                    {
+                      id: 'partial',
+                      label: `Certain Sizes Out (${
+                        products.filter(
+                          p =>
+                            p.inStock !== false &&
+                            (p.volumes || []).some(v => v.inStock === false) &&
+                            !(p.volumes || []).every(v => v.inStock === false)
+                        ).length
+                      })`,
+                    },
+                    {
+                      id: 'out_of_stock',
+                      label: `Out of Stock (${
+                        products.filter(
+                          p =>
+                            p.inStock === false ||
+                            (p.volumes || []).every(v => v.inStock === false)
+                        ).length
+                      })`,
+                    },
+                  ].map(f => (
+                    <button
+                      key={f.id}
+                      onClick={() => setProductFilter(f.id as typeof productFilter)}
+                      className={`px-3 py-1.5 rounded-full font-semibold whitespace-nowrap transition-colors cursor-pointer text-xs ${
+                        productFilter === f.id
+                          ? 'bg-[#0E2A47] text-white shadow-xs'
+                          : 'bg-[#FAF8F3] hover:bg-stone-200 text-[#5A5248] border border-[#E8E0D0]'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {productSuccessMsg && (
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold animate-fadeIn flex items-center justify-between">
+                <span>{productSuccessMsg}</span>
+                <button onClick={() => setProductSuccessMsg('')} className="text-emerald-700 hover:text-emerald-900 font-bold ml-2">
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* ======================================================== */}
+            {/* VIEW MODE 1: CARD GRID VIEW                              */}
+            {/* ======================================================== */}
+            {productViewMode === 'grid' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map(product => {
+                  const discountPercent = Math.round(
+                    ((product.originalPrice - product.price) / product.originalPrice) * 100
+                  );
+
+                  const hasAnyVolumeOut = (product.volumes || []).some(v => v.inStock === false);
+                  const isAllVolumesOut =
+                    (product.volumes || []).length > 0 &&
+                    (product.volumes || []).every(v => v.inStock === false);
+                  const isProductCompletelyOut = product.inStock === false || isAllVolumesOut;
+
+                  return (
+                    <div
+                      key={product.id}
+                      className={`bg-white rounded-2xl p-5 border shadow-xs flex flex-col justify-between space-y-4 hover:shadow-md transition-all ${
+                        isProductCompletelyOut
+                          ? 'border-red-200 bg-red-50/20'
+                          : hasAnyVolumeOut
+                          ? 'border-amber-200'
+                          : 'border-[#E8E0D0]'
+                      }`}
+                    >
+                      <div className="space-y-3.5">
+                        {/* Top Row: Thumbnail + Title + Quick Master Stock Switch */}
+                        <div className="flex gap-3 items-start justify-between">
+                          <div className="flex gap-3 items-center min-w-0">
+                            <div className="relative w-14 h-14 rounded-xl bg-[#FAF8F3] border border-[#E8E0D0] overflow-hidden shrink-0">
+                              <Image
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                sizes="56px"
+                                className={`object-cover ${isProductCompletelyOut ? 'grayscale-[40%] opacity-80' : ''}`}
                               />
                             </div>
-                            <div className="flex-1">
-                              <span className="text-[10px] text-[#8A7E6E] block">MRP (₹)</span>
+                            <div className="min-w-0 flex-1">
+                              <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider block">
+                                {product.category}
+                              </span>
+                              <h3 className="font-serif font-bold text-sm text-[#0E2A47] truncate">
+                                {product.name}
+                              </h3>
+                              <p className="text-[11px] text-[#8A7E6E] truncate">{product.hindiName}</p>
+                            </div>
+                          </div>
+
+                          {/* One-Click Master Stock Toggle Button */}
+                          <button
+                            onClick={e => handleToggleProductStock(product, e)}
+                            title="Click to toggle entire product In Stock / Out of Stock"
+                            className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight transition-all cursor-pointer shadow-xs border ${
+                              product.inStock !== false
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200'
+                                : 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200'
+                            }`}
+                          >
+                            {quickStockUpdatingId === product.id ? (
+                              'Updating…'
+                            ) : product.inStock !== false ? (
+                              '● Product IN STOCK'
+                            ) : (
+                              '✕ Product OUT OF STOCK'
+                            )}
+                          </button>
+                        </div>
+
+                        {/* Marketing & Promotion Quick Buttons */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                          <button
+                            type="button"
+                            onClick={e => handleToggleBestSeller(product, e)}
+                            title="Click to toggle whether this product is shown as 'Most Selling' to customers"
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1 ${
+                              product.bestSeller
+                                ? 'bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200 shadow-xs'
+                                : 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100'
+                            }`}
+                          >
+                            <span>🔥</span>
+                            <span>{product.bestSeller ? 'Most Selling: ON' : 'Mark Most Selling'}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={e => handleToggleSpecialOffer(product, e)}
+                            title="Click to toggle Special Discount Offer on this product"
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1 ${
+                              product.isSpecialOffer
+                                ? 'bg-orange-100 text-orange-900 border-orange-300 hover:bg-orange-200 shadow-xs'
+                                : 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100'
+                            }`}
+                          >
+                            <span>⚡</span>
+                            <span>
+                              {product.isSpecialOffer
+                                ? `Deal: ${product.specialOffer || 'Active'}`
+                                : '+ Special Offer'}
+                            </span>
+                          </button>
+                        </div>
+
+                        {/* Pricing Tag */}
+                        <div className="bg-[#FAF8F3] p-3 rounded-xl border border-[#E8E0D0] flex items-center justify-between text-xs">
+                          <div>
+                            <span className="text-[#8A7E6E] block text-[10px]">Base Selling Price</span>
+                            <span className="font-serif font-bold text-[#0E2A47] text-base">₹{product.price}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#8A7E6E] block text-[10px]">Original MRP</span>
+                            <span className="line-through text-[#8A7E6E] font-medium">₹{product.originalPrice}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[10px] font-bold bg-[#EBF2F8] text-[#0E2A47] px-2 py-0.5 rounded-full">
+                              {discountPercent}% OFF
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Quantities & Size-Specific Stock Status */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-[#8A7E6E]">
+                              Available Quantities ({product.volumes?.length || 0})
+                            </span>
+                            <span className="text-[10px] text-[#8A7E6E]">Click size to toggle stock</span>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1.5">
+                            {product.volumes?.map(vol => {
+                              const isVolInStock = product.inStock !== false && vol.inStock !== false;
+
+                              return (
+                                <button
+                                  key={vol.size}
+                                  onClick={e => handleToggleVolumeStock(product, vol.size, e)}
+                                  title={`Click to toggle stock for ${vol.size} (Currently ${isVolInStock ? 'In Stock' : 'Out of Stock'})`}
+                                  className={`group text-[11px] font-medium px-2.5 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                    isVolInStock
+                                      ? 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+                                      : 'bg-red-50 text-red-900 border-red-200 hover:bg-red-100 line-through'
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                      isVolInStock ? 'bg-emerald-500' : 'bg-red-500'
+                                    }`}
+                                  />
+                                  <span className="font-semibold">{vol.size}</span>
+                                  <span className="opacity-75">₹{vol.price}</span>
+                                  {!isVolInStock && (
+                                    <span className="text-[9px] font-bold uppercase tracking-tighter text-red-700 bg-red-100 px-1 rounded not-italic">
+                                      Out
+                                    </span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Footer Row: Stock Summary Badge + Edit Details Modal Button */}
+                      <div className="pt-3 border-t border-[#E8E0D0] flex items-center justify-between gap-2">
+                        <div>
+                          {isProductCompletelyOut ? (
+                            <span className="text-[11px] font-bold text-red-700 flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-red-600" />
+                              Entire Product Out of Stock
+                            </span>
+                          ) : hasAnyVolumeOut ? (
+                            <span className="text-[11px] font-bold text-amber-700 flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-amber-500" />
+                              {(product.volumes || []).filter(v => v.inStock === false).length} size(s) Out of Stock
+                            </span>
+                          ) : (
+                            <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                              All {product.volumes?.length || 0} Sizes In Stock
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => setEditingProduct(product)}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0E2A47] hover:bg-[#163A60] text-white text-xs font-semibold cursor-pointer transition-colors shadow-xs"
+                        >
+                          <FiEdit className="w-3 h-3 text-[#F5E6B0]" />
+                          <span>Edit Details</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ======================================================== */}
+            {/* VIEW MODE 2: PROFESSIONAL TABLE LIST VIEW               */}
+            {/* ======================================================== */}
+            {productViewMode === 'list' && (
+              <div className="bg-white rounded-2xl border border-[#E8E0D0] shadow-xs overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-[#FAF8F3] border-b border-[#E8E0D0] text-[#5A5248] uppercase tracking-wider font-semibold text-[11px]">
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Product &amp; Hindi Name</th>
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Category</th>
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Base Price / MRP</th>
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Master Stock</th>
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Promotions &amp; Badges</th>
+                        <th className="py-3.5 px-4 font-bold text-[#0E2A47]">Quantity Sizes Stock (Click to Toggle)</th>
+                        <th className="py-3.5 px-4 text-right font-bold text-[#0E2A47]">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#E8E0D0]">
+                      {filteredProducts.map(product => {
+                        const discountPercent = Math.round(
+                          ((product.originalPrice - product.price) / product.originalPrice) * 100
+                        );
+                        const hasAnyVolumeOut = (product.volumes || []).some(v => v.inStock === false);
+                        const isAllVolumesOut =
+                          (product.volumes || []).length > 0 &&
+                          (product.volumes || []).every(v => v.inStock === false);
+                        const isProductCompletelyOut = product.inStock === false || isAllVolumesOut;
+
+                        return (
+                          <tr
+                            key={product.id}
+                            className={`hover:bg-[#FAF8F3]/60 transition-colors ${
+                              isProductCompletelyOut
+                                ? 'bg-red-50/20'
+                                : hasAnyVolumeOut
+                                ? 'bg-amber-50/10'
+                                : ''
+                            }`}
+                          >
+                            {/* Product Info */}
+                            <td className="py-3.5 px-4">
+                              <div className="flex items-center gap-3">
+                                <div className="relative w-12 h-12 rounded-xl bg-[#FAF8F3] border border-[#E8E0D0] overflow-hidden shrink-0">
+                                  <Image
+                                    src={product.image}
+                                    alt={product.name}
+                                    fill
+                                    sizes="48px"
+                                    className={`object-cover ${isProductCompletelyOut ? 'grayscale-[40%] opacity-80' : ''}`}
+                                  />
+                                </div>
+                                <div className="min-w-0 max-w-[220px]">
+                                  <h4 className="font-serif font-bold text-sm text-[#0E2A47] truncate">
+                                    {product.name}
+                                  </h4>
+                                  <p className="text-[11px] text-[#8A7E6E] truncate">{product.hindiName}</p>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Category */}
+                            <td className="py-3.5 px-4">
+                              <span className="inline-block text-[10px] font-bold text-[#B8860B] uppercase bg-[#FAF8F3] px-2.5 py-1 rounded-lg border border-[#E8E0D0] whitespace-nowrap">
+                                {product.category}
+                              </span>
+                            </td>
+
+                            {/* Price / MRP */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <div className="flex items-center gap-2">
+                                <span className="font-serif font-bold text-[#0E2A47] text-sm">
+                                  ₹{product.price}
+                                </span>
+                                <span className="line-through text-[#8A7E6E] text-[11px]">
+                                  ₹{product.originalPrice}
+                                </span>
+                                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                  {discountPercent}% OFF
+                                </span>
+                              </div>
+                            </td>
+
+                            {/* Master Stock */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <button
+                                onClick={e => handleToggleProductStock(product, e)}
+                                title="Click to toggle entire product In Stock / Out of Stock"
+                                className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight transition-all cursor-pointer border ${
+                                  product.inStock !== false
+                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200'
+                                    : 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200'
+                                }`}
+                              >
+                                {quickStockUpdatingId === product.id ? (
+                                  'Updating…'
+                                ) : product.inStock !== false ? (
+                                  '● In Stock'
+                                ) : (
+                                  '✕ Out of Stock'
+                                )}
+                              </button>
+                            </td>
+
+                            {/* Promotions */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={e => handleToggleBestSeller(product, e)}
+                                  title="Click to toggle Most Selling"
+                                  className={`px-2 py-0.5 rounded-md text-[10px] font-bold border transition-colors cursor-pointer ${
+                                    product.bestSeller
+                                      ? 'bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200'
+                                      : 'bg-stone-50 text-stone-500 border-stone-200 hover:bg-stone-100'
+                                  }`}
+                                >
+                                  🔥 {product.bestSeller ? 'Most Selling' : 'Normal'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={e => handleToggleSpecialOffer(product, e)}
+                                  title="Click to toggle Special Discount Offer"
+                                  className={`px-2 py-0.5 rounded-md text-[10px] font-bold border transition-colors cursor-pointer ${
+                                    product.isSpecialOffer
+                                      ? 'bg-orange-100 text-orange-900 border-orange-300 hover:bg-orange-200'
+                                      : 'bg-stone-50 text-stone-500 border-stone-200 hover:bg-stone-100'
+                                  }`}
+                                >
+                                  ⚡ {product.isSpecialOffer ? (product.specialOffer || 'Offer ON') : 'No Offer'}
+                                </button>
+                              </div>
+                            </td>
+
+                            {/* Quantity Sizes Stock Chips */}
+                            <td className="py-3.5 px-4">
+                              <div className="flex flex-wrap gap-1 max-w-sm">
+                                {product.volumes?.map(vol => {
+                                  const isVolInStock = product.inStock !== false && vol.inStock !== false;
+
+                                  return (
+                                    <button
+                                      key={vol.size}
+                                      onClick={e => handleToggleVolumeStock(product, vol.size, e)}
+                                      title={`Click to toggle stock for ${vol.size} (Currently ${isVolInStock ? 'In Stock' : 'Out of Stock'})`}
+                                      className={`text-[10px] font-medium px-2 py-0.5 rounded-md border transition-all cursor-pointer flex items-center gap-1 ${
+                                        isVolInStock
+                                          ? 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+                                          : 'bg-red-50 text-red-900 border-red-200 hover:bg-red-100 line-through'
+                                      }`}
+                                    >
+                                      <span
+                                        className={`w-1.5 h-1.5 rounded-full ${
+                                          isVolInStock ? 'bg-emerald-500' : 'bg-red-500'
+                                        }`}
+                                      />
+                                      <span>{vol.size}</span>
+                                      <span className="opacity-75">₹{vol.price}</span>
+                                      {!isVolInStock && (
+                                        <span className="text-[8px] font-bold uppercase text-red-700 bg-red-100 px-0.5 rounded not-italic">
+                                          OUT
+                                        </span>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </td>
+
+                            {/* Actions */}
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              <button
+                                onClick={() => setEditingProduct(product)}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0E2A47] hover:bg-[#163A60] text-white text-xs font-semibold cursor-pointer transition-colors shadow-xs"
+                              >
+                                <FiEdit className="w-3 h-3 text-[#F5E6B0]" />
+                                <span>Edit Details</span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {filteredProducts.length === 0 && (
+              <div className="bg-white p-12 text-center rounded-2xl border border-[#E8E0D0] max-w-md mx-auto">
+                <FiPackage className="w-10 h-10 text-[#8A7E6E] mx-auto mb-3" />
+                <h3 className="font-serif text-base font-bold text-[#0E2A47]">No Products Match</h3>
+                <p className="text-xs text-[#8A7E6E] mt-1">
+                  Try clearing your search query or changing the stock filter above.
+                </p>
+                <button
+                  onClick={() => {
+                    setProductSearch('');
+                    setProductFilter('all');
+                  }}
+                  className="mt-4 px-4 py-2 bg-[#0E2A47] text-white rounded-xl text-xs font-semibold"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
+
+            {/* ======================================================== */}
+            {/* DETAILED LANDSCAPE EDIT MODAL (NO SCROLL DESIGN)         */}
+            {/* ======================================================== */}
+            {editingProduct && (
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
+                <div className="bg-white rounded-3xl max-w-6xl w-[96vw] max-h-[94vh] flex flex-col shadow-2xl border border-[#E8E0D0] overflow-hidden">
+                  {/* Fixed Landscape Modal Header */}
+                  <div className="shrink-0 px-6 py-3.5 border-b border-[#E8E0D0] flex items-center justify-between bg-[#FAF8F3]">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-11 h-11 rounded-xl bg-white border border-[#D0C8B8] overflow-hidden shrink-0 shadow-xs">
+                        <Image
+                          src={editingProduct.image}
+                          alt={editingProduct.name}
+                          fill
+                          sizes="44px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider bg-white px-2 py-0.5 rounded-full border border-[#E8E0D0]">
+                            Landscape Product &amp; Inventory Editor
+                          </span>
+                          <span className="text-[10px] font-semibold text-[#8A7E6E]">
+                            ID: {editingProduct.id}
+                          </span>
+                        </div>
+                        <h3 className="font-serif font-bold text-base sm:text-lg text-[#0E2A47] leading-tight">
+                          {editingProduct.name} <span className="font-normal text-xs text-[#8A7E6E] ml-1">({editingProduct.hindiName})</span>
+                        </h3>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setEditingProduct(null)}
+                      className="p-1.5 text-[#8A7E6E] hover:text-[#0E2A47] rounded-full hover:bg-stone-200 transition-colors cursor-pointer"
+                    >
+                      <FiXCircle className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  {/* Form Body - 3 Columns in Landscape */}
+                  <form onSubmit={handleSaveProduct} className="flex-1 flex flex-col justify-between overflow-hidden">
+                    <div className="p-5 sm:p-6 overflow-y-auto lg:overflow-visible flex-1">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-full">
+                        
+                        {/* COLUMN 1: PRODUCT IMAGE & IDENTITY (4 cols) */}
+                        <div className="lg:col-span-4 bg-[#FAF8F3] p-4 rounded-2xl border border-[#E8E0D0] flex flex-col justify-between space-y-3">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between border-b border-[#E8E0D0] pb-2">
+                              <span className="font-serif font-bold text-xs text-[#0E2A47] uppercase tracking-wide flex items-center gap-1.5">
+                                <FiImage className="w-3.5 h-3.5 text-[#B8860B]" />
+                                <span>1. Product Media &amp; Identity</span>
+                              </span>
+                              <span className="text-[10px] text-[#8A7E6E]">Photo &amp; Names</span>
+                            </div>
+
+                            {/* Image Preview & URL Edit */}
+                            <div className="bg-white p-3 rounded-xl border border-[#D0C8B8] space-y-2.5">
+                              <div className="flex items-center gap-3">
+                                <div className="relative w-16 h-16 rounded-xl bg-[#FAF8F3] border border-[#D0C8B8] overflow-hidden shrink-0 shadow-xs">
+                                  <Image
+                                    src={editingProduct.image}
+                                    alt={editingProduct.name}
+                                    fill
+                                    sizes="64px"
+                                    className="object-cover"
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                    Product Image URL
+                                  </label>
+                                  <input
+                                    type="text"
+                                    required
+                                    value={editingProduct.image}
+                                    onChange={e =>
+                                      setEditingProduct({ ...editingProduct, image: e.target.value })
+                                    }
+                                    placeholder="e.g. /images/products/mustard-oil.png"
+                                    className="w-full px-2.5 py-1.5 rounded-lg border border-[#D0C8B8] text-[11px] font-medium bg-[#FAF8F3] focus:border-[#0E2A47] focus:outline-none"
+                                  />
+                                </div>
+                              </div>
+                              <p className="text-[10px] text-[#8A7E6E]">
+                                Displays on product cards, category catalogs, and detail pages.
+                              </p>
+                            </div>
+
+                            {/* Product Name (English) */}
+                            <div>
+                              <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                Product Title (English)
+                              </label>
                               <input
-                                type="number"
-                                value={vol.originalPrice}
-                                onChange={e => {
-                                  const updated = [...editingProduct.volumes];
-                                  updated[idx] = { ...updated[idx], originalPrice: Number(e.target.value) };
-                                  setEditingProduct({ ...editingProduct, volumes: updated });
-                                }}
-                                className="w-full px-2 py-1 rounded-md border border-[#D0C8B8] text-xs font-semibold"
+                                type="text"
+                                required
+                                value={editingProduct.name}
+                                onChange={e =>
+                                  setEditingProduct({ ...editingProduct, name: e.target.value })
+                                }
+                                className="w-full px-3 py-1.5 rounded-xl border border-[#D0C8B8] text-xs font-bold text-[#1C1A16] bg-white focus:border-[#0E2A47] focus:outline-none"
+                              />
+                            </div>
+
+                            {/* Hindi Name */}
+                            <div>
+                              <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                Devanagari Hindi Name
+                              </label>
+                              <input
+                                type="text"
+                                value={editingProduct.hindiName || ''}
+                                onChange={e =>
+                                  setEditingProduct({ ...editingProduct, hindiName: e.target.value })
+                                }
+                                placeholder="e.g. पीली सरसों का शुद्ध तेल"
+                                className="w-full px-3 py-1.5 rounded-xl border border-[#D0C8B8] text-xs font-medium text-[#1C1A16] bg-white focus:border-[#0E2A47] focus:outline-none"
+                              />
+                            </div>
+
+                            {/* Category */}
+                            <div>
+                              <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                Product Category
+                              </label>
+                              <select
+                                value={editingProduct.category}
+                                onChange={e =>
+                                  setEditingProduct({ ...editingProduct, category: e.target.value as Product['category'] })
+                                }
+                                className="w-full px-3 py-1.5 rounded-xl border border-[#D0C8B8] text-xs font-semibold text-[#0E2A47] bg-white focus:border-[#0E2A47] focus:outline-none"
+                              >
+                                <option value="oil">Cold Pressed Oil (oil)</option>
+                                <option value="bilona-ghee">A2 Bilona Desi Ghee (bilona-ghee)</option>
+                                <option value="mustard-oils">Mustard Oils (mustard-oils)</option>
+                                <option value="nut-seed-oils">Nut &amp; Seed Oils (nut-seed-oils)</option>
+                                <option value="wellness-rogan">Wellness &amp; Rogan (wellness-rogan)</option>
+                                <option value="combos">Combos &amp; Gift Packs (combos)</option>
+                              </select>
+                            </div>
+
+                            {/* Short Tagline / Description */}
+                            <div>
+                              <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                Short Tagline / Description
+                              </label>
+                              <textarea
+                                rows={2}
+                                value={editingProduct.shortDesc || ''}
+                                onChange={e =>
+                                  setEditingProduct({ ...editingProduct, shortDesc: e.target.value })
+                                }
+                                placeholder="Cold-pressed extraction from premium grade seeds..."
+                                className="w-full px-3 py-1.5 rounded-xl border border-[#D0C8B8] text-xs font-normal text-[#1C1A16] bg-white focus:border-[#0E2A47] focus:outline-none resize-none"
                               />
                             </div>
                           </div>
-                        ))}
+                        </div>
+
+                        {/* COLUMN 2: PRICING, MASTER STOCK & MARKETING (4 cols) */}
+                        <div className="lg:col-span-4 bg-[#FAF8F3] p-4 rounded-2xl border border-[#E8E0D0] flex flex-col justify-between space-y-3">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between border-b border-[#E8E0D0] pb-2">
+                              <span className="font-serif font-bold text-xs text-[#0E2A47] uppercase tracking-wide flex items-center gap-1.5">
+                                <FiDollarSign className="w-3.5 h-3.5 text-[#B8860B]" />
+                                <span>2. Stock &amp; Pricing Control</span>
+                              </span>
+                              <span className="text-[10px] text-[#8A7E6E]">Master &amp; Offers</span>
+                            </div>
+
+                            {/* Master Product Availability Card */}
+                            <div
+                              className={`p-3.5 rounded-2xl border transition-all ${
+                                editingProduct.inStock
+                                  ? 'bg-emerald-50 border-emerald-300'
+                                  : 'bg-red-50 border-red-300'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <div>
+                                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#5A5248] block">
+                                    Overall Product Availability
+                                  </span>
+                                  <h5
+                                    className={`font-bold text-xs sm:text-sm ${
+                                      editingProduct.inStock ? 'text-emerald-950' : 'text-red-950'
+                                    }`}
+                                  >
+                                    {editingProduct.inStock
+                                      ? '● Entire Product IN STOCK'
+                                      : '✕ Entire Product OUT OF STOCK'}
+                                  </h5>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setEditingProduct({
+                                      ...editingProduct,
+                                      inStock: !editingProduct.inStock,
+                                    })
+                                  }
+                                  className={`px-3 py-1.5 rounded-xl font-bold text-xs shrink-0 cursor-pointer shadow-xs border transition-colors ${
+                                    editingProduct.inStock
+                                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700'
+                                      : 'bg-red-600 hover:bg-red-700 text-white border-red-700'
+                                  }`}
+                                >
+                                  {editingProduct.inStock ? 'In Stock (Turn Off)' : 'Out of Stock (Turn On)'}
+                                </button>
+                              </div>
+                              <p
+                                className={`text-[10px] mt-1.5 ${
+                                  editingProduct.inStock ? 'text-emerald-800' : 'text-red-800'
+                                }`}
+                              >
+                                {editingProduct.inStock
+                                  ? 'Active on storefront. Individual sizes below can still be marked out of stock.'
+                                  : 'Disables all purchases and marks this product completely Out of Stock.'}
+                              </p>
+                            </div>
+
+                            {/* Base Pricing Box */}
+                            <div className="grid grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-[#D0C8B8]">
+                              <div>
+                                <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider mb-1">
+                                  Base Price (₹)
+                                </label>
+                                <input
+                                  type="number"
+                                  required
+                                  value={editingProduct.price}
+                                  onChange={e =>
+                                    setEditingProduct({
+                                      ...editingProduct,
+                                      price: Number(e.target.value),
+                                    })
+                                  }
+                                  className="w-full px-2.5 py-1.5 rounded-lg border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-bold text-sm bg-[#FAF8F3]"
+                                />
+                              </div>
+                              <div>
+                                <div className="flex items-center justify-between mb-1">
+                                  <label className="block text-[10px] font-bold text-[#5A5248] uppercase tracking-wider">
+                                    Base MRP (₹)
+                                  </label>
+                                  <span className="text-[10px] font-bold text-emerald-700">
+                                    {editingProduct.originalPrice > editingProduct.price
+                                      ? `${Math.round(
+                                          ((editingProduct.originalPrice - editingProduct.price) /
+                                            editingProduct.originalPrice) *
+                                            100
+                                        )}% OFF`
+                                      : 'No Off'}
+                                  </span>
+                                </div>
+                                <input
+                                  type="number"
+                                  required
+                                  value={editingProduct.originalPrice}
+                                  onChange={e =>
+                                    setEditingProduct({
+                                      ...editingProduct,
+                                      originalPrice: Number(e.target.value),
+                                    })
+                                  }
+                                  className="w-full px-2.5 py-1.5 rounded-lg border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-bold text-sm bg-[#FAF8F3]"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Most Selling / Best Seller Toggle */}
+                            <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-[#D0C8B8]">
+                              <div className="flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center text-sm font-bold shrink-0">
+                                  🔥
+                                </span>
+                                <div>
+                                  <span className="font-bold text-xs text-[#0E2A47] block">
+                                    Most Selling / Best Seller
+                                  </span>
+                                  <span className="text-[10px] text-[#8A7E6E] block">
+                                    Highlights product to customers
+                                  </span>
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditingProduct({
+                                    ...editingProduct,
+                                    bestSeller: !Boolean(editingProduct.bestSeller),
+                                  })
+                                }
+                                className={`px-3 py-1 rounded-lg font-bold text-[11px] shrink-0 cursor-pointer border transition-colors ${
+                                  editingProduct.bestSeller
+                                    ? 'bg-amber-500 hover:bg-amber-600 text-white border-amber-600'
+                                    : 'bg-stone-100 hover:bg-stone-200 text-stone-600 border-stone-300'
+                                }`}
+                              >
+                                {editingProduct.bestSeller ? '🔥 Active' : 'Off'}
+                              </button>
+                            </div>
+
+                            {/* Special Discount Offer Section */}
+                            <div
+                              className={`p-3 rounded-xl border transition-all space-y-2.5 ${
+                                editingProduct.isSpecialOffer
+                                  ? 'bg-orange-50/70 border-orange-300'
+                                  : 'bg-white border-[#D0C8B8]'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-900 flex items-center justify-center text-sm font-bold shrink-0">
+                                    ⚡
+                                  </span>
+                                  <div>
+                                    <span className="font-bold text-xs text-[#0E2A47] block">
+                                      Special Discount Offer
+                                    </span>
+                                    <span className="text-[10px] text-[#8A7E6E] block">
+                                      Adds deal badge &amp; banner
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const nextState = !Boolean(editingProduct.isSpecialOffer);
+                                    setEditingProduct({
+                                      ...editingProduct,
+                                      isSpecialOffer: nextState,
+                                      specialOffer:
+                                        nextState && !editingProduct.specialOffer
+                                          ? 'Special 15% OFF'
+                                          : editingProduct.specialOffer,
+                                    });
+                                  }}
+                                  className={`px-3 py-1 rounded-lg font-bold text-[11px] shrink-0 cursor-pointer border transition-colors ${
+                                    editingProduct.isSpecialOffer
+                                      ? 'bg-orange-600 hover:bg-orange-700 text-white border-orange-700'
+                                      : 'bg-stone-100 hover:bg-stone-200 text-stone-600 border-stone-300'
+                                  }`}
+                                >
+                                  {editingProduct.isSpecialOffer ? '⚡ Active' : 'Enable'}
+                                </button>
+                              </div>
+
+                              {editingProduct.isSpecialOffer && (
+                                <div className="pt-2 border-t border-orange-200 space-y-2">
+                                  <input
+                                    type="text"
+                                    placeholder="Badge text (e.g. Special 15% OFF)"
+                                    value={editingProduct.specialOffer || ''}
+                                    onChange={e =>
+                                      setEditingProduct({
+                                        ...editingProduct,
+                                        specialOffer: e.target.value,
+                                      })
+                                    }
+                                    className="w-full px-2.5 py-1.5 rounded-lg border border-orange-300 focus:border-orange-600 focus:outline-none bg-white text-xs font-bold text-orange-950"
+                                  />
+                                  <div className="flex flex-wrap items-center gap-1">
+                                    {[
+                                      'Special 10% OFF',
+                                      'Special 15% OFF',
+                                      'Special 20% OFF',
+                                      'Festive Special',
+                                      'Super Saver',
+                                    ].map(preset => (
+                                      <button
+                                        type="button"
+                                        key={preset}
+                                        onClick={() =>
+                                          setEditingProduct({
+                                            ...editingProduct,
+                                            specialOffer: preset,
+                                          })
+                                        }
+                                        className={`text-[9px] px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
+                                          editingProduct.specialOffer === preset
+                                            ? 'bg-orange-600 text-white border-orange-600 font-bold'
+                                            : 'bg-white hover:bg-orange-100 text-orange-900 border-orange-200'
+                                        }`}
+                                      >
+                                        {preset}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* COLUMN 3: QUANTITY VARIANTS & SPECIFIC STOCKS (4 cols) */}
+                        <div className="lg:col-span-4 bg-[#FAF8F3] p-4 rounded-2xl border border-[#E8E0D0] flex flex-col justify-between space-y-3">
+                          <div className="space-y-3 flex-1 flex flex-col min-h-0">
+                            <div className="flex items-center justify-between border-b border-[#E8E0D0] pb-2 shrink-0">
+                              <div>
+                                <span className="font-serif font-bold text-xs text-[#0E2A47] uppercase tracking-wide flex items-center gap-1.5">
+                                  <FiPackage className="w-3.5 h-3.5 text-[#B8860B]" />
+                                  <span>3. Quantities &amp; Sizes</span>
+                                </span>
+                                <span className="text-[10px] text-[#8A7E6E]">
+                                  {editingProduct.volumes?.length || 0} Types Configured
+                                </span>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={handleAddVolume}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0E2A47] hover:bg-[#163A60] text-white text-[11px] font-semibold cursor-pointer shadow-xs"
+                              >
+                                <FiPlus className="w-3 h-3 text-[#F5E6B0]" />
+                                <span>+ Add Size</span>
+                              </button>
+                            </div>
+
+                            {/* Contained Scrollable List of Sizes */}
+                            <div className="space-y-2 overflow-y-auto pr-1 flex-1 max-h-[38vh] lg:max-h-[360px]">
+                              {editingProduct.volumes?.map((vol, idx) => {
+                                const isVolInStock = vol.inStock !== false;
+
+                                return (
+                                  <div
+                                    key={idx}
+                                    className={`p-2.5 rounded-xl border transition-all space-y-2 ${
+                                      isVolInStock
+                                        ? 'bg-white border-[#D0C8B8]'
+                                        : 'bg-red-50/50 border-red-200'
+                                    }`}
+                                  >
+                                    {/* Line 1: Stock Status Button + Size Label + Delete */}
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        type="button"
+                                        onClick={() => handleToggleModalVolumeStock(idx)}
+                                        title={`Click to mark this quantity ${isVolInStock ? 'Out of Stock' : 'In Stock'}`}
+                                        className={`px-2 py-0.5 rounded-md font-bold text-[10px] transition-colors cursor-pointer shrink-0 border ${
+                                          isVolInStock
+                                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700'
+                                            : 'bg-red-600 hover:bg-red-700 text-white border-red-700'
+                                        }`}
+                                      >
+                                        {isVolInStock ? '✓ In Stock' : '✕ Out'}
+                                      </button>
+
+                                      <input
+                                        type="text"
+                                        value={vol.size}
+                                        onChange={e => {
+                                          const updated = [...(editingProduct.volumes || [])];
+                                          updated[idx] = { ...updated[idx], size: e.target.value };
+                                          setEditingProduct({ ...editingProduct, volumes: updated });
+                                        }}
+                                        placeholder="Size name (e.g. 200ml (PET bottle))"
+                                        className="flex-1 px-2 py-1 rounded-md border border-[#D0C8B8] text-xs font-semibold bg-[#FAF8F3]"
+                                      />
+
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteVolume(idx)}
+                                        title="Delete this quantity variant"
+                                        className="p-1 text-stone-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors cursor-pointer shrink-0"
+                                      >
+                                        <FiTrash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+
+                                    {/* Line 2: Price, MRP & Packaging */}
+                                    <div className="grid grid-cols-3 gap-2 items-center text-[10px]">
+                                      <div>
+                                        <span className="text-[#8A7E6E] block font-medium">Price (₹)</span>
+                                        <input
+                                          type="number"
+                                          value={vol.price}
+                                          onChange={e => {
+                                            const updated = [...(editingProduct.volumes || [])];
+                                            updated[idx] = { ...updated[idx], price: Number(e.target.value) };
+                                            setEditingProduct({ ...editingProduct, volumes: updated });
+                                          }}
+                                          className="w-full px-1.5 py-0.5 rounded border border-[#D0C8B8] text-xs font-bold bg-[#FAF8F3]"
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <span className="text-[#8A7E6E] block font-medium">MRP (₹)</span>
+                                        <input
+                                          type="number"
+                                          value={vol.originalPrice}
+                                          onChange={e => {
+                                            const updated = [...(editingProduct.volumes || [])];
+                                            updated[idx] = { ...updated[idx], originalPrice: Number(e.target.value) };
+                                            setEditingProduct({ ...editingProduct, volumes: updated });
+                                          }}
+                                          className="w-full px-1.5 py-0.5 rounded border border-[#D0C8B8] text-xs font-bold bg-[#FAF8F3]"
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <span className="text-[#8A7E6E] block font-medium">Packaging</span>
+                                        <input
+                                          type="text"
+                                          value={vol.packaging || ''}
+                                          onChange={e => {
+                                            const updated = [...(editingProduct.volumes || [])];
+                                            updated[idx] = { ...updated[idx], packaging: e.target.value };
+                                            setEditingProduct({ ...editingProduct, volumes: updated });
+                                          }}
+                                          placeholder="e.g. Glass Jar"
+                                          className="w-full px-1.5 py-0.5 rounded border border-[#D0C8B8] text-xs font-medium bg-[#FAF8F3]"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            {/* Quantities Status Summary */}
+                            <div className="pt-2 border-t border-[#E8E0D0] flex items-center justify-between text-[11px] font-semibold shrink-0">
+                              <span className="text-[#5A5248]">Stock Summary:</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                                  {(editingProduct.volumes || []).filter(v => v.inStock !== false).length} In Stock
+                                </span>
+                                {(editingProduct.volumes || []).filter(v => v.inStock === false).length > 0 && (
+                                  <span className="text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                                    {(editingProduct.volumes || []).filter(v => v.inStock === false).length} Out
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
 
-                    {/* Buttons */}
-                    <div className="flex gap-3 pt-4 border-t border-[#E8E0D0]">
-                      <button
-                        type="button"
-                        onClick={() => setEditingProduct(null)}
-                        className="flex-1 py-3 rounded-xl border border-[#D0C8B8] text-[#5A5248] font-semibold text-xs hover:bg-[#FAF8F3] transition-colors cursor-pointer"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isSavingProduct}
-                        className="flex-1 py-3 rounded-xl bg-[#0E2A47] hover:bg-[#163A60] text-[#F5E6B0] font-semibold text-xs shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2"
-                      >
-                        <FiSave className="w-4 h-4" />
-                        <span>{isSavingProduct ? 'Saving to Database...' : 'Save Changes'}</span>
-                      </button>
+                    {/* Fixed Landscape Modal Footer */}
+                    <div className="shrink-0 px-6 py-3 border-t border-[#E8E0D0] bg-[#FAF8F3] flex items-center justify-between">
+                      <div className="text-[11px] text-[#8A7E6E] hidden sm:block">
+                        ⚡ Changes reflect instantly on the website storefront upon saving.
+                      </div>
+
+                      <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setEditingProduct(null)}
+                          className="px-4 py-2.5 rounded-xl border border-[#D0C8B8] text-[#5A5248] font-semibold text-xs hover:bg-stone-200 transition-colors cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSavingProduct}
+                          className="px-6 py-2.5 rounded-xl bg-[#0E2A47] hover:bg-[#163A60] text-[#F5E6B0] font-semibold text-xs shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2"
+                        >
+                          <FiSave className="w-4 h-4" />
+                          <span>{isSavingProduct ? 'Saving to Database...' : 'Save All Changes'}</span>
+                        </button>
+                      </div>
                     </div>
                   </form>
                 </div>

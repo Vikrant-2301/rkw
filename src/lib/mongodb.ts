@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
     });
     global._mongoClientPromise = client.connect();
   }
-  clientPromise = global._mongoClientPromise;
+  clientPromise = global._mongoClientPromise!;
 } else {
   client = new MongoClient(uri, {
     serverSelectionTimeoutMS: 8000,
