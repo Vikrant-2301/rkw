@@ -267,17 +267,17 @@ export default function HomePage() {
               refined out.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 rounded-full px-8 py-4 font-semibold transition-transform hover:-translate-y-0.5"
-                style={{ background: C.navy, color: C.paper, boxShadow: `5px 5px 0 ${C.ink}` }}
+                className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 sm:py-4 font-semibold text-center transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                style={{ background: C.navy, color: C.paper, boxShadow: `4px 4px 0 ${C.ink}` }}
               >
                 Shop the shelf <FiArrowRight />
               </Link>
               <Link
                 href="#find-store"
-                className="inline-flex items-center gap-2 rounded-full border-2 px-8 py-4 font-semibold transition-colors hover:bg-white/30"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 px-8 py-3.5 sm:py-4 font-semibold text-center transition-colors hover:bg-white/30 active:scale-[0.98]"
                 style={{ borderColor: C.navy, color: C.navy }}
               >
                 Find our store
@@ -294,13 +294,13 @@ export default function HomePage() {
           </div>
 
           {/* arch photo + rotating badge */}
-          <div className="relative mx-auto w-full max-w-md lg:col-span-5">
+          <div className="relative mx-auto w-full max-w-xs sm:max-w-md lg:col-span-5 mt-4 sm:mt-0">
             <div
               className="relative aspect-[4/5] overflow-hidden"
               style={{
                 borderRadius: '999px 999px 24px 24px',
                 border: `6px solid ${C.navy}`,
-                boxShadow: `12px 12px 0 ${C.navy}`,
+                boxShadow: `clamp(6px, 1.5vw, 12px) clamp(6px, 1.5vw, 12px) 0 ${C.navy}`,
                 background: C.navy,
               }}
             >
@@ -309,14 +309,14 @@ export default function HomePage() {
                 alt="Ramesh Kolhu Wale — cold-pressed oils being extracted"
                 fill
                 priority
-                sizes="(max-width: 1024px) 90vw, 420px"
+                sizes="(max-width: 640px) 280px, (max-width: 1024px) 380px, 420px"
                 className="object-cover"
               />
               {/* oil drip */}
               <svg
                 aria-hidden
                 viewBox="0 0 20 60"
-                className="absolute bottom-6 left-1/2 h-24 w-6 -translate-x-1/2 overflow-visible"
+                className="absolute bottom-6 left-1/2 h-20 sm:h-24 w-5 sm:w-6 -translate-x-1/2 overflow-visible"
               >
                 <path
                   className="rkw-drip"
@@ -326,7 +326,8 @@ export default function HomePage() {
               </svg>
             </div>
 
-            <div className="absolute -left-6 -top-6 h-32 w-32 sm:-left-10 sm:h-40 sm:w-40">
+            {/* Rotating Badge - positioned safely on mobile so it never causes horizontal overflow */}
+            <div className="absolute -left-2 -top-4 sm:-left-8 sm:-top-6 lg:-left-10 h-24 w-24 sm:h-36 sm:w-36 lg:h-40 lg:w-40 pointer-events-none z-10">
               <svg viewBox="0 0 200 200" className="rkw-spin h-full w-full" aria-hidden>
                 <defs>
                   <path id="rkw-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
@@ -336,13 +337,13 @@ export default function HomePage() {
                   <textPath href="#rkw-circle">{'COLD PRESSED • PURE & NATURAL • SINCE 1981 • '}</textPath>
                 </text>
               </svg>
-              <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-7">
+              <div className="absolute inset-0 flex items-center justify-center p-5 sm:p-7">
                 <div className="relative h-full w-full">
                   <Image
                     src="/logos/4.svg"
                     alt="Ramesh Kolhu Wale"
                     fill
-                    sizes="(max-width: 640px) 96px, 120px"
+                    sizes="(max-width: 640px) 70px, 120px"
                     className="object-contain"
                     priority
                   />
@@ -452,7 +453,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {displayProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -552,22 +553,22 @@ export default function HomePage() {
       <StoreLocatorSection id="find-store" />
 
       {/* ═══ ORDER SLIP — WhatsApp CTA ═══ */}
-      <section className="px-4 py-16 sm:px-6 sm:py-24" style={{ background: C.mustard }}>
+      <section className="px-4 py-12 sm:px-6 sm:py-24" style={{ background: C.mustard }}>
         <div
-          className="mx-auto max-w-3xl p-8 sm:p-12"
+          className="mx-auto max-w-3xl p-5 sm:p-8 sm:p-12"
           style={{
             background: C.paper,
             border: `3px dashed ${C.navy}`,
             borderRadius: 20,
-            boxShadow: `10px 10px 0 ${C.navy}`,
+            boxShadow: `clamp(6px, 1.5vw, 10px) clamp(6px, 1.5vw, 10px) 0 ${C.navy}`,
           }}
         >
-          <div className="flex items-start justify-between gap-6">
+          <div className="flex items-start justify-between gap-4 sm:gap-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: C.mustardDeep }}>
                 Order slip
               </p>
-              <h2 className="mt-2 font-serif text-3xl sm:text-4xl" style={{ color: C.navy }}>
+              <h2 className="mt-1 sm:mt-2 font-serif text-2xl sm:text-4xl" style={{ color: C.navy }}>
                 Tell us what you need. We&rsquo;ll bring it.
               </h2>
             </div>
@@ -580,34 +581,34 @@ export default function HomePage() {
             </span>
           </div>
 
-          <dl className="mt-8 divide-y text-sm" style={{ borderColor: 'rgba(14,42,71,.2)' }}>
+          <dl className="mt-6 sm:mt-8 divide-y text-xs sm:text-sm" style={{ borderColor: 'rgba(14,42,71,.2)' }}>
             {[
               ['Delivery area', 'Delhi NCR'],
               ['Orders above ₹799', 'Free doorstep delivery'],
               ['Orders below ₹799', '₹100 delivery fee'],
               ['Unit hours', '10:00 AM – 8:30 PM, all 7 days'],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between gap-4 py-3" style={{ borderColor: 'rgba(14,42,71,.2)' }}>
+              <div key={k} className="flex justify-between gap-3 py-2.5 sm:py-3" style={{ borderColor: 'rgba(14,42,71,.2)' }}>
                 <dt className="opacity-70">{k}</dt>
-                <dd className="font-semibold" style={{ color: C.navy }}>{v}</dd>
+                <dd className="font-semibold text-right" style={{ color: C.navy }}>{v}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3">
             <a
               href={waOrder}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-full px-7 py-4 font-semibold text-white transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2.5 rounded-full px-5 sm:px-7 py-3.5 sm:py-4 font-semibold text-white transition-transform hover:-translate-y-0.5 active:scale-[0.98] text-center text-xs sm:text-sm"
               style={{ background: '#1FAF54' }}
             >
-              <FaWhatsapp className="text-xl" />
-              Order on WhatsApp ({SITE_CONFIG.contact.whatsapp})
+              <FaWhatsapp className="text-lg sm:text-xl shrink-0" />
+              <span>Order on WhatsApp ({SITE_CONFIG.contact.whatsapp})</span>
             </a>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 rounded-full border-2 px-7 py-4 font-semibold transition-colors hover:bg-white/60"
+              className="inline-flex items-center justify-center gap-2 rounded-full border-2 px-5 sm:px-7 py-3.5 sm:py-4 font-semibold transition-colors hover:bg-white/60 active:scale-[0.98] text-center text-xs sm:text-sm"
               style={{ borderColor: C.navy, color: C.navy }}
             >
               Or shop online <FiArrowRight />

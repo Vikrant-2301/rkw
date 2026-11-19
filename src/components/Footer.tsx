@@ -166,29 +166,29 @@ export const Footer: React.FC = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ===== Hero CTA: build-your-order ===== */}
-        <div className="pt-16 sm:pt-24 pb-14 grid lg:grid-cols-5 gap-10 items-end">
+        <div className="pt-10 sm:pt-24 pb-10 sm:pb-14 grid lg:grid-cols-5 gap-8 sm:gap-10 items-end">
           <div className="lg:col-span-3">
-            <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.25em] text-[#F5E6B0] mb-5">
-              <span className="w-8 h-px bg-[#F5E6B0]" />
+            <div className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#F5E6B0] mb-3 sm:mb-5">
+              <span className="w-6 sm:w-8 h-px bg-[#F5E6B0]" />
               {yearsOfTrust} years of pressing, one drop at a time
             </div>
-            <h2 className="font-serif text-4xl sm:text-5xl lg:text-7xl text-white leading-[1.02] font-normal">
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-7xl text-white leading-[1.05] sm:leading-[1.02] font-normal">
               Taste what{' '}
               <span className="italic text-[#F5E6B0]">purity</span>
               <br className="hidden sm:block" /> actually tastes like.
             </h2>
-            <p className="mt-6 text-[#8EA5BC] max-w-xl font-light leading-relaxed">
+            <p className="mt-4 sm:mt-6 text-sm sm:text-base text-[#8EA5BC] max-w-xl font-light leading-relaxed">
               100% pure cold-pressed oils and Bilona ghee, pressed fresh before your eyes since 1981. Pick what you
               need and we&apos;ll take it from there on WhatsApp.
             </p>
           </div>
 
-          <div className="lg:col-span-2 relative rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur p-5 sm:p-6 shadow-2xl">
+          <div className="lg:col-span-2 relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur p-4 sm:p-6 shadow-2xl">
             <div className="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#F5E6B0]/70 to-transparent" />
-            <div className="text-xs font-bold uppercase tracking-widest text-[#F5E6B0] mb-3">
+            <div className="text-xs font-bold uppercase tracking-widest text-[#F5E6B0] mb-2.5 sm:mb-3">
               Order in 10 seconds
             </div>
-            <div className="flex flex-wrap gap-2 mb-5">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
               {ORDER_CHIPS.map((c) => {
                 const on = picked.includes(c);
                 return (
@@ -196,9 +196,9 @@ export const Footer: React.FC = () => {
                     key={c}
                     onClick={() => toggle(c)}
                     aria-pressed={on}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold border transition-all cursor-pointer ${
                       on
-                        ? 'bg-[#F5E6B0] text-[#0E2A47] border-[#F5E6B0] scale-[1.03]'
+                        ? 'bg-[#F5E6B0] text-[#0E2A47] border-[#F5E6B0] scale-[1.02]'
                         : 'bg-transparent text-[#C8D7E6] border-white/15 hover:border-[#F5E6B0]/60'
                     }`}
                   >
@@ -212,13 +212,13 @@ export const Footer: React.FC = () => {
               href={orderHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-full inline-flex items-center justify-center gap-2.5 px-5 py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm rounded-2xl transition-all shadow-lg shadow-[#25D366]/20 hover:-translate-y-0.5"
+              className="group w-full inline-flex items-center justify-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-3 sm:py-3.5 bg-[#25D366] hover:bg-[#20ba5a] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-[#25D366]/20"
             >
-              <FaWhatsapp className="w-5 h-5" />
-              {picked.length ? `Send ${picked.length} item${picked.length > 1 ? 's' : ''} on WhatsApp` : 'Order on WhatsApp'}
-              <FiArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <FaWhatsapp className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <span>{picked.length ? `Send ${picked.length} item${picked.length > 1 ? 's' : ''} on WhatsApp` : 'Order on WhatsApp'}</span>
+              <FiArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
             </a>
-            <p className="mt-3 text-[11px] text-center text-[#8EA5BC] flex items-center justify-center gap-1.5">
+            <p className="mt-2.5 sm:mt-3 text-[10px] sm:text-[11px] text-center text-[#8EA5BC] flex items-center justify-center gap-1.5">
               <FiTruck className="w-3.5 h-3.5 text-[#B8860B]" />
               Free Delhi NCR delivery above ₹799 · ₹100 below
             </p>
@@ -226,14 +226,14 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* ===== Units strip ===== */}
-        <div className="pb-14">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-widest">Visit a Unit</h3>
+        <div className="pb-10 sm:pb-14">
+          <div className="flex items-center justify-between mb-4 sm:mb-5">
+            <h3 className="text-xs sm:text-sm font-semibold text-white uppercase tracking-widest">Visit a Unit</h3>
             <Link href="/stores" className="rkwf-link text-xs font-semibold text-[#F5E6B0]">
               All units &amp; live map <FiArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {stores.map((s) => {
               const soon = COMING_SOON.test(`${s.name} ${s.area}`);
               const open = !soon && now ? isOpenNow(s.hours, now) : null;
@@ -395,6 +395,7 @@ export const Footer: React.FC = () => {
             <Link href="/stores" className="hover:text-white transition-colors">Find Unit</Link>
             <Link href="/about" className="hover:text-white transition-colors">About</Link>
             <Link href="/shelf" className="hover:text-white transition-colors">Virtual Shelf</Link>
+            <Link href="/track" className="hover:text-white transition-colors">Track Order</Link>
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
@@ -404,11 +405,11 @@ export const Footer: React.FC = () => {
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
-        className={`fixed bottom-24 right-6 z-40 w-11 h-11 rounded-full bg-[#F5E6B0] text-[#0E2A47] shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer ${
+        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#F5E6B0] text-[#0E2A47] shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer ${
           showTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        <FiArrowUp className="w-5 h-5" />
+        <FiArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
     </footer>
   );

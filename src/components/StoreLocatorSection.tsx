@@ -421,7 +421,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
             </p>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-6 sm:mt-8">
               {[
                 { n: liveStores.length, label: 'Units Open', prefix: '', suffix: '' },
                 { n: allStores.length - liveStores.length, label: 'Opening Soon', prefix: '', suffix: '' },
@@ -667,7 +667,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
             )}
 
             {/* Google Map Container */}
-            <div className="relative w-full h-[480px] sm:h-[540px] lg:h-[580px] bg-[#FAF8F3]">
+            <div className="relative w-full h-[340px] sm:h-[540px] lg:h-[580px] bg-[#FAF8F3]">
               <iframe
                 key={`${selected.id}-${isNavigating ? 'nav' : 'pin'}`}
                 title={`Google Map of ${selected.name}`}
@@ -680,8 +680,8 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
 
               {/* Floating "Store Located!" Popup Card */}
               {showLocatedPopup && (
-                <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-md z-20 rkw-rise">
-                  <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border border-[#E8E0D0] text-[#1C1A16] relative">
+                <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md z-20 rkw-rise">
+                  <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-2xl border border-[#E8E0D0] text-[#1C1A16] relative">
                     <button
                       onClick={() => setShowLocatedPopup(false)}
                       className="absolute top-3.5 right-3.5 text-[#8A7E6E] hover:text-[#1C1A16] p-1 rounded-full hover:bg-stone-100 transition-colors cursor-pointer"
@@ -745,8 +745,8 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
         </div>
 
         {/* Search + filters */}
-        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#E8E0D0] shadow-xs mb-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-[#E8E0D0] shadow-xs mb-8">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-center justify-between">
             <div className="relative w-full md:w-96">
               <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A7E6E]" />
               <input
@@ -766,7 +766,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto rkw-no-bar pb-1 md:pb-0">
               {(
                 [
                   { id: 'all', label: `All Units (${allStores.length})` },
@@ -793,7 +793,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
         </div>
 
         {/* Store cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {filteredStores.map((store, idx) => {
             const soon = isComingSoon(store);
             const status = !soon && now ? getOpenStatus(store.hours, now) : null;
@@ -804,7 +804,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 key={String(store.id)}
                 onClick={() => setSelectedId(store.id)}
                 style={{ animationDelay: `${idx * 90}ms` }}
-                className={`rkw-rise relative bg-white rounded-2xl border p-6 transition-all flex flex-col justify-between cursor-pointer hover:-translate-y-1 hover:shadow-xl ${
+                className={`rkw-rise relative bg-white rounded-2xl border p-4 sm:p-6 transition-all flex flex-col justify-between cursor-pointer hover:-translate-y-1 hover:shadow-xl ${
                   isSel ? 'border-[#0E2A47] ring-2 ring-[#0E2A47]/15 shadow-lg' : 'border-[#E8E0D0] hover:border-[#163A60]/30'
                 } ${soon ? 'bg-gradient-to-br from-white to-[#FBF6E4]' : ''}`}
               >

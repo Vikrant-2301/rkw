@@ -1024,7 +1024,7 @@ export default function ContactExperience() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="mt-3 font-serif text-4xl font-normal leading-[1.1] sm:text-5xl lg:text-6xl"
+                                className="mt-3 font-serif text-3xl sm:text-5xl lg:text-6xl font-normal leading-[1.1]"
                             >
                                 Namaste! Let&apos;s find your <span className="text-amber-300">perfect oil.</span>
                             </motion.h1>
@@ -1039,11 +1039,11 @@ export default function ContactExperience() {
                             </motion.p>
 
                             {/* Guide */}
-                            <div className="mt-8 flex items-end gap-4">
+                            <div className="mt-6 sm:mt-8 flex items-end gap-3 sm:gap-4">
                                 <motion.div
                                     animate={reduce ? undefined : { y: [0, -6, 0] }}
                                     transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
-                                    className="relative size-32 flex-shrink-0 overflow-hidden rounded-[28px] bg-gradient-to-b from-amber-200 to-amber-400 shadow-[0_18px_40px_rgba(0,0,0,0.5)] ring-2 ring-amber-300/60 sm:size-44"
+                                    className="relative size-24 sm:size-44 flex-shrink-0 overflow-hidden rounded-[20px] sm:rounded-[28px] bg-gradient-to-b from-amber-200 to-amber-400 shadow-[0_18px_40px_rgba(0,0,0,0.5)] ring-2 ring-amber-300/60"
                                 >
                                     <GuideAvatar className="absolute inset-x-0 bottom-0 h-[110%] w-full" />
                                 </motion.div>

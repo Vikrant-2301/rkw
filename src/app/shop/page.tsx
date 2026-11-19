@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PRODUCTS } from '@/data/products';
+import { useLiveProducts } from '@/hooks/useLiveProducts';
 import { ProductCard } from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -13,6 +13,7 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const [activeCategory, setActiveCategory] = useState(initialCategory);
+  const { products } = useLiveProducts();
 
   const categories = [
     { id: 'all', label: 'All Products' },
@@ -21,16 +22,16 @@ function ShopContent() {
   ];
 
   const filtered = activeCategory === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === activeCategory);
+    ? products
+    : products.filter(p => p.category === activeCategory);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-20">
       {/* Page header */}
-      <div className="mb-8">
-        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-3 font-semibold">Our Collection</p>
-        <h1 className="font-serif text-4xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
-        <p className="text-[#8A7E6E] mt-3 max-w-xl font-light">
+      <div className="mb-6 sm:mb-8">
+        <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-2 sm:mb-3 font-semibold">Our Collection</p>
+        <h1 className="font-serif text-3xl sm:text-5xl text-[#1C1A16] font-normal">Shop All Pure Oils &amp; Ghee</h1>
+        <p className="text-[#8A7E6E] mt-2 sm:mt-3 max-w-xl font-light text-sm sm:text-base">
           Every product is cold-pressed fresh or authentically Bilona-churned, batch tested, and 100% pure &amp; chemical-free.
         </p>
       </div>
@@ -77,8 +78,8 @@ function ShopContent() {
         ))}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+      {/* Grid: 2 cols on mobile, preserving 3/4 on lg/xl desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
         {filtered.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}

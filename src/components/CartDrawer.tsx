@@ -17,6 +17,18 @@ export const CartDrawer: React.FC = () => {
   const [inputCoupon, setInputCoupon] = useState('');
   const [couponStatus, setCouponStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
+  // Lock body scroll when cart drawer is open
+  React.useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
+
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputCoupon.trim()) return;
@@ -36,8 +48,8 @@ export const CartDrawer: React.FC = () => {
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={() => setIsCartOpen(false)}
       />
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#FAF8F3] shadow-2xl flex flex-col animate-slideIn">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
+        <div className="w-full max-w-md bg-[#FAF8F3] shadow-2xl flex flex-col animate-slideIn">
           {/* Header */}
           <div className="px-6 py-5 border-b border-[#E8E0D0] flex items-center justify-between">
             <div className="flex items-center gap-3">

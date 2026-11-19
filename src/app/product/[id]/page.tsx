@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PRODUCTS } from '@/data/products';
+import { useLiveProducts } from '@/hooks/useLiveProducts';
 import { ProductVolume } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { FiArrowRight, FiPlus, FiMinus, FiCheck, FiShoppingBag, FiChevronRight } from 'react-icons/fi';
@@ -18,7 +19,8 @@ export default function ProductDetailPage() {
   const { addToCart } = useCart();
 
   const slug = params?.id as string;
-  const product = PRODUCTS.find((p) => p.slug === slug || p.id === slug);
+  const { products: liveProducts } = useLiveProducts();
+  const product = liveProducts.find((p) => p.slug === slug || p.id === slug) || PRODUCTS.find((p) => p.slug === slug || p.id === slug);
 
   const [selectedVolume, setSelectedVolume] = useState<ProductVolume>(
     product?.volumes.find((v) => v.size.startsWith('1L')) ||
@@ -118,7 +120,7 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Main layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-14 sm:mb-20">
         {/* Images */}
         <div className="space-y-4">
           <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#EBF2F8] shadow-sm">
@@ -288,8 +290,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-20">
-        <div className="border-b border-[#E8E0D0] flex gap-6 mb-8 overflow-x-auto">
+      <div className="mb-12 sm:mb-20">
+        <div className="border-b border-[#E8E0D0] flex gap-4 sm:gap-6 mb-6 sm:mb-8 overflow-x-auto rkw-no-bar">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -375,10 +377,10 @@ export default function ProductDetailPage() {
         )}
       </div>
 
-      {/* Related */}
-      <div className="space-y-8">
+      {/* Related: 2 columns on mobile, 4 on desktop */}
+      <div className="space-y-6 sm:space-y-8">
         <h3 className="font-serif text-2xl text-[#1C1A16] font-normal">You may also like</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {relatedProducts.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

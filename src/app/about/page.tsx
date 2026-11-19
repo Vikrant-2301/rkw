@@ -53,7 +53,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <main className="bg-[#FAF8F3] text-[#1C1A16] overflow-x-hidden">
+    <main className="bg-[#FAF8F3] text-[#1C1A16]">
       {/* 01 — OPENING */}
       <section className="relative pt-14 sm:pt-20 lg:pt-28 pb-14 sm:pb-20 border-b border-[#E8E0D0]">
         <div className="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-[#EBF2F8]/70 rounded-full blur-3xl pointer-events-none -mr-24 -mt-24" />
@@ -73,7 +73,7 @@ export default function AboutPage() {
               <p className="font-serif italic text-[#B8860B] text-lg sm:text-2xl mb-4">
                 Some things are worth doing slowly.
               </p>
-              <h1 className="font-serif font-normal text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-[#1C1A16]">
+              <h1 className="font-serif font-normal text-3xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-[#1C1A16] leading-[1.08] sm:leading-[1.02]">
                 A legacy of{' '}
                 <span className="relative inline-block">
                   <span className="relative z-10 italic text-[#0E2A47]">good things.</span>
