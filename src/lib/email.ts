@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import { getSettingsCollection } from './mongodb';
 
 export interface OrderEmailData {
   orderId: string;
@@ -25,23 +24,12 @@ export interface OrderEmailData {
 }
 
 export async function getEmailConfig() {
-  let dbConfig: Record<string, string> | null = null;
-  try {
-    const settingsCol = await getSettingsCollection();
-    const doc = await settingsCol.findOne({ key: 'email_config' });
-    if (doc) {
-      dbConfig = doc as Record<string, string>;
-    }
-  } catch (err) {
-    console.error('Failed to get email config from DB:', err);
-  }
-
-  const host = dbConfig?.smtpHost || process.env.SMTP_HOST || 'smtp.gmail.com';
-  const port = parseInt(dbConfig?.smtpPort || process.env.SMTP_PORT || '465', 10);
-  const user = dbConfig?.smtpUser || process.env.SMTP_USER || 'lpure.farms@gmail.com';
-  const pass = (dbConfig?.smtpPass || process.env.SMTP_PASS || 'snbnubmxykzmdqlz').replace(/\s+/g, '');
-  const from = dbConfig?.smtpFrom || process.env.SMTP_FROM || '"Ramesh Kolhu Wale" <lpure.farms@gmail.com>';
-  const adminEmail = dbConfig?.adminEmail || process.env.ADMIN_EMAIL || 'lpure.farms@gmail.com';
+  const host = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const port = parseInt(process.env.SMTP_PORT || '465', 10);
+  const user = process.env.SMTP_USER || 'lpure.farms@gmail.com';
+  const pass = (process.env.SMTP_PASS || 'snbnubmxykzmdqlz').replace(/\s+/g, '');
+  const from = process.env.SMTP_FROM || `"Ramesh Kolhu Wale" <${user}>`;
+  const adminEmail = process.env.ADMIN_EMAIL || user;
 
   return { host, port, user, pass, from, adminEmail };
 }
@@ -60,6 +48,45 @@ export function createTransporter(config: { host: string; port: number; user: st
       pass: config.pass,
     },
   });
+}
+
+export async function sendTestEmail(recipient?: string, customConfig?: { host?: string; port?: number; user?: string; pass?: string; from?: string }) {
+  const activeConfig = await getEmailConfig();
+  const config = {
+    host: customConfig?.host || activeConfig.host,
+    port: customConfig?.port || activeConfig.port,
+    user: customConfig?.user || activeConfig.user,
+    pass: (customConfig?.pass || activeConfig.pass).replace(/\s+/g, ''),
+    from: customConfig?.from || activeConfig.from,
+  };
+
+  const transporter = createTransporter(config);
+  if (!transporter) {
+    return { success: false, error: 'SMTP configuration is incomplete (host, user, or pass missing).' };
+  }
+
+  const to = recipient || activeConfig.adminEmail || config.user;
+
+  try {
+    const info = await transporter.sendMail({
+      from: config.from,
+      to,
+      subject: '✅ RKW Store Email Setup Verified & Active',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; padding: 24px; background: #FAF8F3; border: 1px solid #E8E0D0; border-radius: 12px;">
+          <h2 style="color: #0E2A47; margin-top: 0;">Ramesh Kolhu Wale</h2>
+          <p style="color: #2e7d32; font-weight: bold; font-size: 16px;">✓ Email Integration Test Succeeded!</p>
+          <p style="color: #5A5248; font-size: 14px;">Your store email (<strong>${config.user}</strong>) is successfully configured to send order confirmations, invoices, and receive new order alerts.</p>
+          <hr style="border: 0; border-top: 1px solid #E8E0D0; margin: 16px 0;" />
+          <p style="font-size: 12px; color: #8A7E6E;">Timestamp: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+        </div>
+      `,
+    });
+    return { success: true, messageId: info.messageId, recipient: to };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: msg };
+  }
 }
 
 export async function sendOrderEmails(order: OrderEmailData): Promise<{ customerSent: boolean; adminSent: boolean; error?: string }> {
@@ -146,9 +173,25 @@ export async function sendOrderEmails(order: OrderEmailData): Promise<{ customer
             Payment Mode: <strong>${order.paymentMethod.toUpperCase()}</strong>
           </div>
 
-          <div style="text-align: center; margin-top: 24px; font-size: 12px; color: #8A7E6E;">
-            <p>Questions? Reach out directly via WhatsApp at <strong>+91 92177 44380</strong></p>
-            <p>Ramesh Kolhu Wale · 4 Live Units in Delhi NCR · 100% Pure &amp; Lab-Tested</p>
+          <div style="background-color: #FFFFFF; padding: 18px; border-radius: 12px; margin-top: 16px; border: 1px solid #E8E0D0; font-size: 12px; color: #5A5248; line-height: 1.6;">
+            <div style="margin-bottom: 12px;">
+              <strong style="color: #0E2A47; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Shipping Policy:</strong>
+              <ul style="margin: 6px 0 0 0; padding-left: 18px;">
+                <li>Delivery time varies according to the location</li>
+                <li>Free delivery only upto 15 km from our stores; additional charges may apply for other locations</li>
+                <li>Additional cost of ₹100 will be applied for orders below ₹799</li>
+              </ul>
+            </div>
+            <div>
+              <strong style="color: #0E2A47; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Return and Refund Policy:</strong>
+              <p style="margin: 4px 0 0 0;">
+                Kindly note that all purchases are final and we are unable to offer returns or exchanges.
+              </p>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #8A7E6E;">
+            <p style="margin: 0;">Questions? Reach out directly via WhatsApp at <strong>+91 92177 44380</strong></p>
           </div>
         </div>
       `;

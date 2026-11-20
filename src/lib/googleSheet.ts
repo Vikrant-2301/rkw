@@ -1,5 +1,3 @@
-import { getSettingsCollection } from './mongodb';
-
 export interface OrderSheetPayload {
   orderId: string;
   date: string;
@@ -96,16 +94,6 @@ function doPost(e) {
 `.trim();
 
 export async function getGoogleSheetWebhookUrl(): Promise<string | null> {
-  try {
-    const settingsCol = await getSettingsCollection();
-    const doc = await settingsCol.findOne({ key: 'google_sheet_config' });
-    if (doc?.webhookUrl) {
-      return doc.webhookUrl;
-    }
-  } catch (err) {
-    console.error('Failed to read settings from DB:', err);
-  }
-
   return process.env.GOOGLE_SHEET_WEBHOOK_URL || null;
 }
 

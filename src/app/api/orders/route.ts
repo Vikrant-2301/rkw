@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       shippingFee = 0,
       total = 0,
       paymentMethod = 'Pay on Delivery / Call Confirmation',
+      couponCode = '',
       notes = '',
     } = body;
 
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest) {
       shippingFee: Number(shippingFee),
       total: Number(total),
       paymentMethod,
+      couponCode: couponCode ? String(couponCode).toUpperCase() : '',
       notes,
       status: 'pending_confirmation',
       createdAt: new Date(),
@@ -87,6 +89,31 @@ export async function POST(req: NextRequest) {
     // 1. Save to MongoDB Database (Collection: orders in DB: rkw)
     const ordersCol = await getOrdersCollection();
     await ordersCol.insertOne(newOrder);
+
+    // Track coupon usage if a coupon was used
+    if (couponCode) {
+      try {
+        const { getCouponsCollection } = await import('@/lib/mongodb');
+        const couponsCol = await getCouponsCollection();
+        await couponsCol.updateOne(
+          { code: String(couponCode).toUpperCase() },
+          {
+            $inc: { usageCount: 1 },
+            $push: {
+              usedBy: {
+                orderId,
+                customerName,
+                phone: cleanPhone,
+                discountAmount: Number(discount) || 0,
+                usedAt: new Date(),
+              },
+            } as any,
+          }
+        );
+      } catch (err) {
+        console.error('Failed to log coupon usage:', err);
+      }
+    }
 
     // 2. Sync to Google Sheet (non-blocking)
     syncOrderToGoogleSheet({

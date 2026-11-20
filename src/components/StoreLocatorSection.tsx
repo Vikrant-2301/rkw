@@ -35,7 +35,7 @@ type Store = (typeof SITE_CONFIG.stores)[number] & {
   lng?: number;
 };
 
-type Filter = 'all' | 'open' | 'live' | 'east' | 'northeast';
+type Filter = 'all' | 'open' | 'east' | 'northeast';
 
 /* ------------------------------------------------------------------ */
 /*  Coordinates                                                        */
@@ -107,8 +107,8 @@ const getOpenStatus = (hours: string, now: Date) => {
       ? `Closing in ${minsLeft} min`
       : `Open until ${fmt(close)}`
     : minsLeft <= 120
-    ? `Opens in ${minsLeft} min`
-    : `Opens at ${fmt(open)}`;
+      ? `Opens in ${minsLeft} min`
+      : `Opens at ${fmt(open)}`;
   return { isOpen, label };
 };
 
@@ -204,7 +204,6 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
   const filteredStores = useMemo(() => {
     const list = allStores.filter((store) => {
       const soon = isComingSoon(store);
-      if (selectedFilter === 'live' && !store.hasLiveExtraction) return false;
       if (selectedFilter === 'open') {
         if (soon) return false;
         const st = now ? getOpenStatus(store.hours, now) : null;
@@ -503,22 +502,20 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <span className="text-[10px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-[#F2B705] text-[#0E2A47]">
                     {isComingSoon(selected)
-                      ? '✦ Coming Soon • Live Extraction Unit'
+                      ? ''
                       : showLocatedPopup
-                      ? 'Nearest Unit Located'
-                      : '● Live Extraction Unit Open'}
+                        ? 'Nearest Unit Located'
+                        : '● Live Extraction Unit Open'}
                   </span>
                   <span
-                    className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                      isComingSoon(selected)
-                        ? 'text-amber-200 bg-amber-950/60 border border-amber-500/30'
-                        : 'text-emerald-300 bg-emerald-950/60 border border-emerald-500/30'
-                    }`}
+                    className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full ${isComingSoon(selected)
+                      ? 'text-amber-200 bg-amber-950/60 border border-amber-500/30'
+                      : 'text-emerald-300 bg-emerald-950/60 border border-emerald-500/30'
+                      }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isComingSoon(selected) ? 'bg-[#F2B705] animate-ping' : 'bg-emerald-400 animate-pulse'
-                      }`}
+                      className={`w-1.5 h-1.5 rounded-full ${isComingSoon(selected) ? 'bg-[#F2B705] animate-ping' : 'bg-emerald-400 animate-pulse'
+                        }`}
                     />
                     {isComingSoon(selected) ? 'Launching Soon in Delhi NCR' : 'Open Today: 10:00 AM – 8:30 PM'}
                   </span>
@@ -583,16 +580,14 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                   <button
                     key={String(store.id)}
                     onClick={() => setSelectedId(store.id)}
-                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                      isCur
-                        ? 'bg-[#0E2A47] text-white shadow-xs'
-                        : 'bg-white hover:bg-[#EBF2F8] text-[#3A3228] border border-[#E8E0D0]'
-                    }`}
+                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${isCur
+                      ? 'bg-[#0E2A47] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#EBF2F8] text-[#3A3228] border border-[#E8E0D0]'
+                      }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isCur ? 'bg-[#F2B705]' : soon ? 'bg-amber-400' : 'bg-emerald-500'
-                      }`}
+                      className={`w-1.5 h-1.5 rounded-full ${isCur ? 'bg-[#F2B705]' : soon ? 'bg-amber-400' : 'bg-emerald-500'
+                        }`}
                     />
                     <span>{store.name.replace(/^RKW\s+/i, '')}</span>
                     {soon ? (
@@ -602,9 +597,8 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                     ) : (
                       d !== null && (
                         <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                            isCur ? 'bg-white/20 text-[#F5E6B0]' : 'bg-stone-100 text-[#8A7E6E]'
-                          }`}
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full ${isCur ? 'bg-white/20 text-[#F5E6B0]' : 'bg-stone-100 text-[#8A7E6E]'
+                            }`}
                         >
                           {d.toFixed(1)} km
                         </span>
@@ -775,7 +769,6 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 [
                   { id: 'all', label: `All Units (${allStores.length})` },
                   { id: 'open', label: '● Open Now' },
-                  { id: 'live', label: 'Live Cold-Press' },
                   { id: 'east', label: 'East Delhi' },
                   { id: 'northeast', label: 'North East Delhi' },
                 ] as { id: Filter; label: string }[]
@@ -783,11 +776,10 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 <button
                   key={pill.id}
                   onClick={() => setSelectedFilter(pill.id)}
-                  className={`px-3.5 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                    selectedFilter === pill.id
-                      ? 'bg-[#0E2A47] text-white shadow-xs'
-                      : 'bg-[#FAF8F3] text-[#4A4035] hover:bg-[#EBF2F8] border border-[#E8E0D0]'
-                  }`}
+                  className={`px-3.5 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${selectedFilter === pill.id
+                    ? 'bg-[#0E2A47] text-white shadow-xs'
+                    : 'bg-[#FAF8F3] text-[#4A4035] hover:bg-[#EBF2F8] border border-[#E8E0D0]'
+                    }`}
                 >
                   {pill.label}
                 </button>
@@ -808,17 +800,10 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                 key={String(store.id)}
                 onClick={() => setSelectedId(store.id)}
                 style={{ animationDelay: `${idx * 90}ms` }}
-                className={`rkw-rise relative bg-white rounded-2xl border p-4 sm:p-6 transition-all flex flex-col justify-between cursor-pointer hover:-translate-y-1 hover:shadow-xl ${
-                  isSel ? 'border-[#0E2A47] ring-2 ring-[#0E2A47]/15 shadow-lg' : 'border-[#E8E0D0] hover:border-[#163A60]/30'
-                } ${soon ? 'bg-gradient-to-br from-white to-[#FBF6E4]' : ''}`}
+                className={`rkw-rise relative bg-white rounded-2xl border p-4 sm:p-6 transition-all flex flex-col justify-between cursor-pointer hover:-translate-y-1 hover:shadow-xl ${isSel ? 'border-[#0E2A47] ring-2 ring-[#0E2A47]/15 shadow-lg' : 'border-[#E8E0D0] hover:border-[#163A60]/30'
+                  } ${soon ? 'bg-gradient-to-br from-white to-[#FBF6E4]' : ''}`}
               >
-                {soon && (
-                  <div className="absolute top-0 right-0 overflow-hidden w-28 h-28 pointer-events-none rounded-tr-2xl">
-                    <div className="rkw-shimmer absolute top-5 -right-9 rotate-45 w-36 text-center text-[10px] font-extrabold tracking-widest text-[#7A5A06] py-1">
-                      COMING SOON
-                    </div>
-                  </div>
-                )}
+
 
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
@@ -834,7 +819,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                         )}
                         {store.isFlagship ? (
                           <span className="text-[10px] font-bold tracking-wider text-[#B8860B] bg-[#F5E6B0]/70 px-2.5 py-0.5 rounded-full uppercase border border-[#B8860B]/20">
-                            ★ Flagship Unit
+                            Flagship Unit
                           </span>
                         ) : (
                           <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
@@ -847,9 +832,8 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
 
                   {status && (
                     <div
-                      className={`inline-flex items-center gap-2 text-xs font-bold mb-3 px-3 py-1.5 rounded-full ${
-                        status.isOpen ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'
-                      }`}
+                      className={`inline-flex items-center gap-2 text-xs font-bold mb-3 px-3 py-1.5 rounded-full ${status.isOpen ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'
+                        }`}
                     >
                       <span className="relative flex w-2.5 h-2.5">
                         {status.isOpen && <span className="rkw-ring bg-emerald-500/60" />}
@@ -875,12 +859,9 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
 
                   {soon ? (
                     <div>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full mb-3">
-                        <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                        ✦ COMING SOON • LIVE EXTRACTION UNIT
-                      </div>
+
                       <h3 className="font-serif text-2xl font-bold text-[#0E2A47] leading-snug mb-2">
-                        {store.name} — Launching Soon!
+                        {store.name}
                       </h3>
                       <p className="text-sm text-[#5A5248] leading-relaxed mb-4">
                         We are bringing our pure live Kolhu cold-press extraction to {store.area.split('/')[0].trim()}! Stand and watch seeds crushed cold right before your eyes with nothing added and nothing refined out. Handcrafted Vedic Bilona Ghee also available.
@@ -891,7 +872,7 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                           <span>100% Traditional Live Kolhu (Ghani) Setup</span>
                         </div>
                         <div className="text-[#C8D7E6]">
-                          <strong>Target Area:</strong> {store.area} (Covering {store.pincodesCovered.join(', ')})
+                          <strong>Target Area:</strong> {store.area}
                         </div>
                         <div className="text-xs text-amber-200">
                           Exact location &amp; launch date will be revealed on opening day!

@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { PRODUCTS } from '@/data/products';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.rameshkolhuwale.com';
+  const baseUrl = 'https://rameshkolhuwale.com';
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -13,10 +13,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/stores`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    {
       url: `${baseUrl}/shop`,
       lastModified: now,
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/shelf`,
@@ -40,13 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/lab-reports`,
       lastModified: now,
       changeFrequency: 'weekly',
-      priority: 0.75,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.75,
     },
   ];
 
@@ -54,7 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}/product/${product.slug || product.id}`,
     lastModified: now,
     changeFrequency: 'weekly',
-    priority: 0.85,
+    priority: 0.9,
   }));
 
   return [...staticPages, ...productPages];

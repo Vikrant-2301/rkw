@@ -45,7 +45,7 @@ interface FinalOrderSnapshot {
 }
 
 export default function CheckoutPage() {
-  const { cart, subtotal, discount, shippingFee, total, clearCart } = useCart();
+  const { cart, subtotal, discount, shippingFee, total, clearCart, couponCode } = useCart();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -102,6 +102,7 @@ export default function CheckoutPage() {
           discount,
           shippingFee,
           total,
+          couponCode: couponCode || '',
           paymentMethod: 'Pay on Delivery / Call Confirmation',
           notes: formData.notes.trim(),
         }),
@@ -374,17 +375,28 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Authenticity Guarantee & Signature */}
-            <div className="border-t border-dashed border-neutral-300 pt-4 flex justify-between items-end text-[10px] text-neutral-600">
-              <div className="space-y-0.5 max-w-xs">
-                <p className="font-bold text-neutral-800">100% PURE &amp; CHEMICAL FREE GUARANTEE</p>
-                <p>Extracted cold in traditional wooden/stone Kolhus at slow speed without artificial additives.</p>
-                <p>Thank you for choosing pure health and supporting India&apos;s heritage!</p>
+            {/* Policies & Signature */}
+            <div className="border-t border-dashed border-neutral-300 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-[10px] text-neutral-600">
+              <div className="space-y-2 max-w-sm">
+                <div>
+                  <p className="font-bold text-neutral-800 uppercase tracking-wider text-[10px]">Shipping policy:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-neutral-600 text-[9.5px]">
+                    <li>Delivery time varies according to the location</li>
+                    <li>Free delivery only upto 15 km from our stores; additional charges may apply for other locations</li>
+                    <li>Additional cost of ₹100 will be applied for orders below ₹799</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-bold text-neutral-800 uppercase tracking-wider text-[10px]">Return and refund policy:</p>
+                  <p className="text-neutral-600 text-[9.5px]">
+                    Kindly note that all purchases are final and we are unable to offer returns or exchanges.
+                  </p>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="w-28 border-b border-black mb-1"></div>
+              <div className="text-right sm:text-right shrink-0">
+                <div className="w-28 border-b border-black mb-1 ml-auto"></div>
                 <p className="font-bold uppercase text-[9px] text-neutral-800">Authorized Dispatch Desk</p>
-                <p>Ramesh Kolhu Wale, Delhi</p>
+                <p className="text-[9px]">Ramesh Kolhu Wale, Delhi</p>
               </div>
             </div>
           </div>

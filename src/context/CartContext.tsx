@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Product, ProductVolume, CartItem } from '@/types';
 
 interface CartContextType {
@@ -12,7 +12,8 @@ interface CartContextType {
   subtotal: number;
   discount: number;
   couponCode: string;
-  applyCoupon: (code: string) => { success: boolean; message: string };
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
+  removeCoupon: () => void;
   shippingFee: number;
   total: number;
   totalItems: number;
@@ -29,7 +30,8 @@ const defaultCartContext: CartContextType = {
   subtotal: 0,
   discount: 0,
   couponCode: '',
-  applyCoupon: () => ({ success: false, message: 'Cart not ready' }),
+  applyCoupon: async () => ({ success: false, message: 'Cart not ready' }),
+  removeCoupon: () => {},
   shippingFee: 0,
   total: 0,
   totalItems: 0,
@@ -46,24 +48,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>([]);
   const [couponCode, setCouponCode] = useState<string>('');
   const [discountPercent, setDiscountPercent] = useState<number>(0);
+  const [fixedDiscount, setFixedDiscount] = useState<number>(0);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  // Load cart from localStorage after mount
+  // Load cart and coupon from localStorage after mount
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('rkw_cart');
       if (savedCart) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCart(JSON.parse(savedCart));
       }
       const savedCoupon = localStorage.getItem('rkw_coupon');
-      if (savedCoupon === 'RKW10' || savedCoupon === 'PURE10') {
+      if (savedCoupon) {
         setCouponCode(savedCoupon);
-        setDiscountPercent(10);
-      } else if (savedCoupon === 'RAMESHKOLHU') {
-        setCouponCode(savedCoupon);
-        setDiscountPercent(15);
       }
     } catch {
       // ignore
@@ -98,12 +96,98 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [couponCode, isLoaded]);
 
-  const addToCart = (product: Product, volume: ProductVolume, quantity: number = 1) => {
-    // Prevent adding out of stock items
-    if (product.inStock === false || volume.inStock === false) {
-      return;
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.selectedVolume.price * item.quantity,
+    0
+  );
+
+  // Dynamic apply coupon function connected to MongoDB
+  const applyCoupon = useCallback(async (code: string): Promise<{ success: boolean; message: string }> => {
+    const cleanCode = code.trim().toUpperCase();
+    if (!cleanCode) {
+      setCouponCode('');
+      setDiscountPercent(0);
+      setFixedDiscount(0);
+      try {
+        localStorage.removeItem('rkw_coupon');
+      } catch {}
+      return { success: false, message: 'Please enter a coupon code' };
     }
 
+    try {
+      const res = await fetch('/api/coupons/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: cleanCode, subtotal }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setCouponCode(data.code);
+        if (data.discountType === 'percentage') {
+          setDiscountPercent(data.discountValue);
+          setFixedDiscount(0);
+        } else {
+          setDiscountPercent(0);
+          setFixedDiscount(data.discountAmount);
+        }
+        try {
+          localStorage.setItem('rkw_coupon', data.code);
+        } catch {}
+        return { success: true, message: data.message };
+      } else {
+        setCouponCode('');
+        setDiscountPercent(0);
+        setFixedDiscount(0);
+        try {
+          localStorage.removeItem('rkw_coupon');
+        } catch {}
+        return { success: false, message: data.message || 'Invalid coupon code' };
+      }
+    } catch {
+      return { success: false, message: 'Could not validate coupon. Please try again.' };
+    }
+  }, [subtotal]);
+
+  const removeCoupon = useCallback(() => {
+    setCouponCode('');
+    setDiscountPercent(0);
+    setFixedDiscount(0);
+    try {
+      localStorage.removeItem('rkw_coupon');
+    } catch {}
+  }, []);
+
+  // Re-validate coupon when subtotal changes
+  useEffect(() => {
+    if (couponCode && subtotal > 0 && isLoaded) {
+      fetch('/api/coupons/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode, subtotal }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            if (data.discountType === 'percentage') {
+              setDiscountPercent(data.discountValue);
+              setFixedDiscount(0);
+            } else {
+              setDiscountPercent(0);
+              setFixedDiscount(data.discountAmount);
+            }
+          } else {
+            removeCoupon();
+          }
+        })
+        .catch(() => {});
+    } else if (subtotal === 0) {
+      setDiscountPercent(0);
+      setFixedDiscount(0);
+    }
+  }, [subtotal, couponCode, isLoaded, removeCoupon]);
+
+  const addToCart = (product: Product, volume: ProductVolume, quantity: number = 1) => {
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex(
         (item) => item.product.id === product.id && item.selectedVolume.size === volume.size
@@ -148,6 +232,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCart([]);
     setCouponCode('');
     setDiscountPercent(0);
+    setFixedDiscount(0);
     try {
       localStorage.removeItem('rkw_cart');
       localStorage.removeItem('rkw_coupon');
@@ -156,26 +241,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const applyCoupon = (code: string) => {
-    const cleanCode = code.trim().toUpperCase();
-    if (cleanCode === 'RKW10' || cleanCode === 'PURE10') {
-      setCouponCode(cleanCode);
-      setDiscountPercent(10);
-      return { success: true, message: '10% discount applied!' };
-    } else if (cleanCode === 'RAMESHKOLHU') {
-      setCouponCode(cleanCode);
-      setDiscountPercent(15);
-      return { success: true, message: 'Special 15% discount applied!' };
-    }
-    return { success: false, message: 'Invalid coupon code' };
-  };
+  const discount = fixedDiscount > 0
+    ? fixedDiscount
+    : Math.round((subtotal * discountPercent) / 100);
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.selectedVolume.price * item.quantity,
-    0
-  );
-
-  const discount = Math.round((subtotal * discountPercent) / 100);
   const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING;
   const total = Math.max(0, subtotal - discount + shippingFee);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -192,6 +261,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         discount,
         couponCode,
         applyCoupon,
+        removeCoupon,
         shippingFee,
         total,
         totalItems,
@@ -204,6 +274,4 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-export const useCart = () => {
-  return useContext(CartContext);
-};
+export const useCart = () => useContext(CartContext);

@@ -34,7 +34,7 @@ export const SITE_CONFIG = {
       address: 'B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump (Opp. Samuday Bhawan), Delhi-51',
       landmark: 'Near HP Petrol Pump, Opposite Samuday Bhawan, West Laxmi Market',
       hours: '10:00 AM – 8:30 PM (All 7 Days)',
-      isFlagship: true,
+      isFlagship: false,
       hasLiveExtraction: true,
       lat: 28.6446813,
       lng: 77.2800298,

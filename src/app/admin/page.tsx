@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Product, ProductVolume } from '@/types';
+import { Product, ProductVolume, Coupon, CouponUsageRecord } from '@/types';
 import {
   FiPackage,
   FiShoppingBag,
@@ -33,7 +33,10 @@ import {
   FiGrid,
   FiList,
   FiImage,
-  FiEye
+  FiEye,
+  FiTag,
+  FiUsers,
+  FiPercent
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
@@ -75,7 +78,7 @@ export default function AdminPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState('');
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'sheets'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'coupons'>('orders');
 
   // Orders State
   const [orders, setOrders] = useState<OrderRecord[]>([]);
@@ -83,6 +86,25 @@ export default function AdminPage() {
   const [orderFilter, setOrderFilter] = useState('all');
   const [orderSearch, setOrderSearch] = useState('');
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+
+  // Coupons State
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [isCreatingCoupon, setIsCreatingCoupon] = useState(false);
+  const [newCoupon, setNewCoupon] = useState({
+    code: '',
+    discountType: 'percentage' as 'percentage' | 'fixed',
+    discountValue: 10,
+    minOrderValue: 0,
+    maxDiscountCap: '',
+    expiryDate: '',
+    usageLimit: '',
+    isActive: true,
+  });
+  const [couponError, setCouponError] = useState('');
+  const [couponSuccess, setCouponSuccess] = useState('');
+  const [inspectingCoupon, setInspectingCoupon] = useState<Coupon | null>(null);
+  const [couponSubmitting, setCouponSubmitting] = useState(false);
 
   // Products State
   const [products, setProducts] = useState<Product[]>([]);
@@ -94,15 +116,6 @@ export default function AdminPage() {
   const [productSearch, setProductSearch] = useState('');
   const [productViewMode, setProductViewMode] = useState<'grid' | 'list'>('grid');
   const [quickStockUpdatingId, setQuickStockUpdatingId] = useState<string | null>(null);
-
-  // Settings State
-  const [googleWebhookUrl, setGoogleWebhookUrl] = useState('');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [scriptTemplate, setScriptTemplate] = useState('');
-  const [isTestingSheet, setIsTestingSheet] = useState(false);
-  const [sheetTestResult, setSheetTestResult] = useState<{ success: boolean; message: string } | null>(null);
-  const [isSavingSettings, setIsSavingSettings] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
 
   // Check existing session
   useEffect(() => {
@@ -235,28 +248,124 @@ export default function AdminPage() {
     }
   }, []);
 
-  // Fetch Settings
-  const fetchSettings = useCallback(async () => {
+  // Fetch Coupons
+  const fetchCoupons = useCallback(async () => {
+    setCouponsLoading(true);
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetch('/api/coupons');
       const data = await res.json();
-      if (data.success) {
-        setGoogleWebhookUrl(data.googleSheet?.webhookUrl || '');
-        setScriptTemplate(data.googleSheet?.scriptTemplate || '');
-        setAdminEmail(data.emailConfig?.adminEmail || '');
+      if (data.success && Array.isArray(data.coupons)) {
+        setCoupons(data.coupons);
       }
     } catch (err) {
-      console.error('Failed to fetch settings:', err);
+      console.error('Failed to fetch coupons:', err);
+    } finally {
+      setCouponsLoading(false);
     }
   }, []);
+
+  const handleCreateCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCouponError('');
+    setCouponSuccess('');
+    setCouponSubmitting(true);
+
+    try {
+      const res = await fetch('/api/coupons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: newCoupon.code,
+          discountType: newCoupon.discountType,
+          discountValue: Number(newCoupon.discountValue),
+          minOrderValue: Number(newCoupon.minOrderValue) || 0,
+          maxDiscountCap: newCoupon.maxDiscountCap ? Number(newCoupon.maxDiscountCap) : null,
+          expiryDate: newCoupon.expiryDate || null,
+          usageLimit: newCoupon.usageLimit ? Number(newCoupon.usageLimit) : null,
+          isActive: newCoupon.isActive,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setCouponSuccess(data.message || 'Coupon created successfully!');
+        setNewCoupon({
+          code: '',
+          discountType: 'percentage',
+          discountValue: 10,
+          minOrderValue: 0,
+          maxDiscountCap: '',
+          expiryDate: '',
+          usageLimit: '',
+          isActive: true,
+        });
+        fetchCoupons();
+        setTimeout(() => {
+          setIsCreatingCoupon(false);
+          setCouponSuccess('');
+        }, 1200);
+      } else {
+        setCouponError(data.error || 'Failed to create coupon');
+      }
+    } catch {
+      setCouponError('Network error creating coupon');
+    } finally {
+      setCouponSubmitting(false);
+    }
+  };
+
+  const handleToggleCouponActive = async (coupon: Coupon) => {
+    try {
+      const res = await fetch(`/api/coupons/${coupon.code}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: !coupon.isActive }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCoupons(prev =>
+          prev.map(c => (c.code === coupon.code ? { ...c, isActive: !c.isActive } : c))
+        );
+      }
+    } catch (err) {
+      console.error('Failed to toggle coupon:', err);
+    }
+  };
+
+  const handleDeleteCoupon = async (code: string) => {
+    if (!window.confirm(`Are you sure you want to delete coupon '${code}'?`)) return;
+    try {
+      const res = await fetch(`/api/coupons/${code}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setCoupons(prev => prev.filter(c => c.code !== code));
+      }
+    } catch (err) {
+      console.error('Failed to delete coupon:', err);
+    }
+  };
+
+  const handleClearAllCoupons = async () => {
+    if (!window.confirm('Are you sure you want to DELETE ALL coupons from the database? This cannot be undone.')) return;
+    try {
+      const res = await fetch('/api/coupons?action=clear_all', { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setCoupons([]);
+        alert(data.message || 'All coupons cleared.');
+      }
+    } catch (err) {
+      console.error('Failed to clear all coupons:', err);
+    }
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchOrders();
       fetchProducts();
-      fetchSettings();
+      fetchCoupons();
     }
-  }, [isAuthenticated, fetchOrders, fetchProducts, fetchSettings]);
+  }, [isAuthenticated, fetchOrders, fetchProducts, fetchCoupons]);
 
   // Update Order Status
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
@@ -558,53 +667,6 @@ export default function AdminPage() {
     }
   };
 
-  // Save Settings
-  const handleSaveGoogleSheetUrl = async () => {
-    setIsSavingSettings(true);
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'save_google_sheet',
-          googleSheetWebhookUrl: googleWebhookUrl,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert('Google Sheet Webhook URL saved successfully!');
-      }
-    } catch (err) {
-      console.error('Failed to save sheet url:', err);
-    } finally {
-      setIsSavingSettings(false);
-    }
-  };
-
-  // Test Google Sheet
-  const handleTestGoogleSheet = async () => {
-    setIsTestingSheet(true);
-    setSheetTestResult(null);
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'test_google_sheet' }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSheetTestResult({ success: true, message: data.message });
-      } else {
-        setSheetTestResult({ success: false, message: data.error || 'Failed to ping Google Sheet.' });
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      setSheetTestResult({ success: false, message: msg });
-    } finally {
-      setIsTestingSheet(false);
-    }
-  };
-
   // Quick metrics
   const totalRevenue = orders.reduce((acc, ord) => acc + (ord.status !== 'cancelled' ? ord.total : 0), 0);
   const pendingOrdersCount = orders.filter(o => o.status === 'pending_confirmation').length;
@@ -676,7 +738,7 @@ export default function AdminPage() {
                 RKW Admin Management
               </h1>
               <p className="text-[10px] text-[#CBD5E1]">
-                Orders, Pricing Control &amp; Google Sheet Live Sync
+                Orders, Pricing Control &amp; Discounts
               </p>
             </div>
           </div>
@@ -729,15 +791,15 @@ export default function AdminPage() {
             <span>Product Prices &amp; MRP</span>
           </button>
           <button
-            onClick={() => setActiveTab('sheets')}
+            onClick={() => setActiveTab('coupons')}
             className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ${
-              activeTab === 'sheets'
+              activeTab === 'coupons'
                 ? 'border-[#D4A017] text-[#F5E6B0]'
                 : 'border-transparent text-white/70 hover:text-white'
             }`}
           >
-            <FiFileText className="w-4 h-4" />
-            <span>Google Sheet Live Sync</span>
+            <FiTag className="w-4 h-4" />
+            <span>Coupons &amp; Discounts ({coupons.length})</span>
           </button>
         </div>
       </header>
@@ -2145,119 +2207,474 @@ export default function AdminPage() {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 3: GOOGLE SHEETS LIVE SYNC                          */}
+        {/* TAB 3: COUPONS & DISCOUNT CONTROLS                       */}
         {/* ======================================================== */}
-        {activeTab === 'sheets' && (
-          <div className="space-y-8 max-w-4xl mx-auto">
-            {/* Sheet URL Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E8E0D0] shadow-xs space-y-6">
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">
-                  Live Spreadsheet Integration
-                </span>
-                <h2 className="font-serif text-2xl font-bold text-[#0E2A47]">
-                  Google Sheet Auto-Sync Setup
-                </h2>
-                <p className="text-xs text-[#5A5248] leading-relaxed">
-                  Every order placed on the website automatically appends a new row to your Google Sheet with the unique Order ID, customer name, phone, address, items, and total amount.
+        {activeTab === 'coupons' && (
+          <div className="space-y-6">
+            {/* Top Toolbar */}
+            <div className="bg-white p-5 rounded-2xl border border-[#E8E0D0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-[#0E2A47]">Coupons &amp; Promotional Discounts</h2>
+                <p className="text-xs text-[#8A7E6E] mt-0.5">
+                  Create, configure, and monitor promo codes. Track which customers redeemed them with order numbers and phone contacts.
                 </p>
               </div>
 
-              <div className="space-y-3">
-                <label className="block text-xs font-semibold text-[#1C1A16] uppercase tracking-wider">
-                  Google Apps Script Web App URL
-                </label>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="url"
-                    placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
-                    value={googleWebhookUrl}
-                    onChange={e => setGoogleWebhookUrl(e.target.value)}
-                    className="flex-1 px-4 py-3 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] text-xs sm:text-sm font-mono"
-                  />
-                  <button
-                    onClick={handleSaveGoogleSheetUrl}
-                    disabled={isSavingSettings}
-                    className="px-6 py-3 rounded-xl bg-[#0E2A47] hover:bg-[#163A60] text-[#F5E6B0] font-semibold text-xs shadow-sm transition-colors cursor-pointer shrink-0"
-                  >
-                    {isSavingSettings ? 'Saving...' : 'Save Webhook URL'}
-                  </button>
-                </div>
-              </div>
-
-              {/* Test Button */}
-              <div className="p-4 bg-[#FAF8F3] rounded-2xl border border-[#E8E0D0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="space-y-0.5">
-                  <h4 className="font-semibold text-xs text-[#1C1A16]">Verify Connection</h4>
-                  <p className="text-[11px] text-[#8A7E6E]">
-                    Sends a test order row directly to your Google Sheet to confirm synchronization.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 flex-wrap">
                 <button
-                  onClick={handleTestGoogleSheet}
-                  disabled={isTestingSheet || !googleWebhookUrl}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer ${
-                    !googleWebhookUrl
-                      ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                      : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                  }`}
+                  onClick={() => setIsCreatingCoupon(true)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0E2A47] hover:bg-[#163A60] text-white text-xs font-semibold cursor-pointer shadow-xs transition-colors"
                 >
-                  {isTestingSheet ? 'Pinging Google Sheet...' : 'Test Google Sheet Connection'}
+                  <FiPlus className="w-3.5 h-3.5" />
+                  <span>Create New Coupon</span>
+                </button>
+
+                <button
+                  onClick={fetchCoupons}
+                  disabled={couponsLoading}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FAF8F3] border border-[#D0C8B8] hover:bg-white text-xs font-semibold text-[#0E2A47] cursor-pointer"
+                  title="Refresh Coupons"
+                >
+                  <FiRefreshCw className={`w-3.5 h-3.5 ${couponsLoading ? 'animate-spin' : ''}`} />
+                  <span className="hidden xs:inline">Refresh</span>
+                </button>
+
+                {coupons.length > 0 && (
+                  <button
+                    onClick={handleClearAllCoupons}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 text-xs font-semibold text-red-700 cursor-pointer transition-colors"
+                    title="Delete all coupons from database"
+                  >
+                    <FiTrash2 className="w-3.5 h-3.5" />
+                    <span>Clear All</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-xl border border-[#E8E0D0] shadow-xs">
+                <span className="text-[11px] font-semibold text-[#8A7E6E] uppercase">Total Coupons</span>
+                <p className="text-xl font-bold text-[#0E2A47] mt-1">{coupons.length}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-[#E8E0D0] shadow-xs">
+                <span className="text-[11px] font-semibold text-[#8A7E6E] uppercase">Active Codes</span>
+                <p className="text-xl font-bold text-emerald-700 mt-1">{coupons.filter(c => c.isActive).length}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-[#E8E0D0] shadow-xs">
+                <span className="text-[11px] font-semibold text-[#8A7E6E] uppercase">Total Redemptions</span>
+                <p className="text-xl font-bold text-[#B8860B] mt-1">
+                  {coupons.reduce((sum, c) => sum + (c.usageCount || 0), 0)}
+                </p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-[#E8E0D0] shadow-xs">
+                <span className="text-[11px] font-semibold text-[#8A7E6E] uppercase">Customer Savings</span>
+                <p className="text-xl font-bold text-[#0E2A47] mt-1">
+                  ₹{coupons.reduce((sum, c) => {
+                    const usages = c.usedBy || [];
+                    return sum + usages.reduce((uSum, u) => uSum + (u.discountAmount || 0), 0);
+                  }, 0).toLocaleString('en-IN')}
+                </p>
+              </div>
+            </div>
+
+            {/* Coupons List */}
+            {couponsLoading && coupons.length === 0 ? (
+              <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0]">
+                <FiRefreshCw className="w-8 h-8 animate-spin mx-auto text-[#0E2A47] mb-3" />
+                <p className="text-sm">Loading coupons from MongoDB...</p>
+              </div>
+            ) : coupons.length === 0 ? (
+              <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0] space-y-3">
+                <FiTag className="w-12 h-12 mx-auto text-[#C8BFA8]" />
+                <h3 className="font-serif text-lg text-[#1C1A16] font-bold">No Coupons in Database</h3>
+                <p className="text-xs text-[#8A7E6E] max-w-md mx-auto">
+                  Click &ldquo;Create New Coupon&rdquo; above to set up promo codes for discounts, festive deals, or marketing campaigns.
+                </p>
+                <button
+                  onClick={() => setIsCreatingCoupon(true)}
+                  className="px-5 py-2.5 rounded-full bg-[#0E2A47] hover:bg-[#163A60] text-white text-xs font-semibold shadow-xs inline-flex items-center gap-1.5"
+                >
+                  <FiPlus className="w-3.5 h-3.5" />
+                  <span>Create First Coupon</span>
                 </button>
               </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {coupons.map((coupon) => {
+                  const isExpired = coupon.expiryDate ? new Date() > new Date(coupon.expiryDate + 'T23:59:59') : false;
+                  const isLimitReached = coupon.usageLimit ? coupon.usageCount >= coupon.usageLimit : false;
+                  const redemptionsCount = (coupon.usedBy || []).length;
 
-              {sheetTestResult && (
-                <div
-                  className={`p-4 rounded-xl text-xs font-semibold border ${
-                    sheetTestResult.success
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                      : 'bg-red-50 text-red-800 border-red-200'
-                  }`}
-                >
-                  {sheetTestResult.message}
-                </div>
-              )}
-            </div>
+                  return (
+                    <div
+                      key={coupon.code}
+                      className={`bg-white rounded-2xl p-5 border shadow-xs flex flex-col justify-between space-y-4 transition-all ${
+                        !coupon.isActive || isExpired || isLimitReached
+                          ? 'border-stone-200 bg-stone-50/70 opacity-90'
+                          : 'border-[#E8E0D0] hover:border-[#0E2A47]/40 hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="space-y-3">
+                        {/* Header: Code & Active Toggle */}
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="font-mono text-base font-bold text-[#0E2A47] bg-[#EBF2F8] px-2.5 py-1 rounded-md border border-[#C5D8EB] tracking-wider select-all">
+                              {coupon.code}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-2">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                coupon.isActive && !isExpired && !isLimitReached
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-stone-200 text-stone-700'
+                              }`}>
+                                {isExpired
+                                  ? 'Expired'
+                                  : isLimitReached
+                                  ? 'Limit Reached'
+                                  : coupon.isActive
+                                  ? 'Active'
+                                  : 'Disabled'}
+                              </span>
+                              <span className="text-[10px] font-semibold text-[#8A7E6E]">
+                                {coupon.discountType === 'percentage' ? `${coupon.discountValue}% Off` : `₹${coupon.discountValue} Flat Off`}
+                              </span>
+                            </div>
+                          </div>
 
-            {/* Step-by-Step Instructions & Copy Code */}
-            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E8E0D0] shadow-xs space-y-6">
-              <div>
-                <h3 className="font-serif text-lg font-bold text-[#0E2A47]">
-                  How to Connect Google Sheet in 60 Seconds
-                </h3>
-                <ol className="list-decimal list-inside text-xs text-[#5A5248] space-y-2 mt-3 leading-relaxed">
-                  <li>Open Google Sheets and create a new blank spreadsheet (e.g. named &ldquo;RKW Orders&rdquo;).</li>
-                  <li>Click on <strong>Extensions &gt; Apps Script</strong> in the top menu.</li>
-                  <li>Delete any existing code, and paste the code snippet below.</li>
-                  <li>Click <strong>Deploy &gt; New deployment</strong>.</li>
-                  <li>Select type: <strong>Web app</strong>. Set &ldquo;Execute as&rdquo; to <strong>Me</strong> and &ldquo;Who has access&rdquo; to <strong>Anyone</strong>.</li>
-                  <li>Click <strong>Deploy</strong>, grant permission, and paste the generated Web App URL into the box above!</li>
-                </ol>
+                          {/* Toggle switch */}
+                          <button
+                            onClick={() => handleToggleCouponActive(coupon)}
+                            className={`text-xs px-2.5 py-1 rounded-full font-semibold border transition-colors cursor-pointer ${
+                              coupon.isActive
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100'
+                                : 'bg-stone-100 text-stone-600 border-stone-300 hover:bg-stone-200'
+                            }`}
+                            title="Toggle active status"
+                          >
+                            {coupon.isActive ? 'Active' : 'Paused'}
+                          </button>
+                        </div>
+
+                        {/* Rules / Limitations */}
+                        <div className="bg-[#FAF8F3] p-3 rounded-xl border border-[#E8E0D0] text-xs space-y-1 text-[#5A5248]">
+                          <div className="flex justify-between">
+                            <span className="text-[#8A7E6E]">Discount:</span>
+                            <span className="font-bold text-[#0E2A47]">
+                              {coupon.discountType === 'percentage'
+                                ? `${coupon.discountValue}% ${coupon.maxDiscountCap ? `(Max ₹${coupon.maxDiscountCap})` : ''}`
+                                : `₹${coupon.discountValue} Flat`}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#8A7E6E]">Min Order:</span>
+                            <span className="font-semibold">{coupon.minOrderValue > 0 ? `₹${coupon.minOrderValue}` : 'None'}</span>
+                          </div>
+                          {coupon.expiryDate && (
+                            <div className="flex justify-between">
+                              <span className="text-[#8A7E6E]">Expiry:</span>
+                              <span className={isExpired ? 'text-red-600 font-bold' : 'font-medium'}>
+                                {coupon.expiryDate}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex justify-between">
+                            <span className="text-[#8A7E6E]">Usage:</span>
+                            <span className="font-semibold text-[#1C1A16]">
+                              {coupon.usageCount} {coupon.usageLimit ? `/ ${coupon.usageLimit} max` : 'times'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Footer: Who used it & Delete */}
+                      <div className="pt-2 border-t border-[#E8E0D0] flex items-center justify-between gap-2">
+                        <button
+                          onClick={() => setInspectingCoupon(coupon)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#EBF2F8] text-[#0E2A47] text-xs font-semibold border border-[#D0C8B8] cursor-pointer transition-colors"
+                        >
+                          <FiUsers className="w-3.5 h-3.5 text-[#B8860B]" />
+                          <span>Who Used ({redemptionsCount})</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteCoupon(coupon.code)}
+                          className="p-2 text-stone-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                          title="Delete Coupon"
+                        >
+                          <FiTrash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+            )}
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-semibold text-[#5A5248] uppercase tracking-wider">
-                    Ready-to-Use Google Apps Script Code
-                  </span>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(scriptTemplate);
-                      setCopiedCode(true);
-                      setTimeout(() => setCopiedCode(false), 2000);
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-stone-100 border border-[#D0C8B8] text-xs font-semibold text-[#0E2A47] cursor-pointer"
-                  >
-                    {copiedCode ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
-                    <span>{copiedCode ? 'Copied to Clipboard!' : 'Copy Code'}</span>
-                  </button>
+            {/* MODAL: CREATE NEW COUPON */}
+            {isCreatingCoupon && (
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+                <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-[#E8E0D0]">
+                  <div className="flex justify-between items-center border-b border-[#E8E0D0] pb-3">
+                    <div>
+                      <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">New Promo Code</span>
+                      <h3 className="font-serif font-bold text-lg text-[#0E2A47]">Create Coupon</h3>
+                    </div>
+                    <button
+                      onClick={() => setIsCreatingCoupon(false)}
+                      className="p-1.5 text-[#8A7E6E] hover:text-[#0E2A47] rounded-full hover:bg-stone-100 cursor-pointer"
+                    >
+                      <FiXCircle className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {couponError && (
+                    <div className="p-3 bg-red-50 text-red-700 text-xs rounded-xl border border-red-200">
+                      {couponError}
+                    </div>
+                  )}
+
+                  {couponSuccess && (
+                    <div className="p-3 bg-emerald-50 text-emerald-800 text-xs font-semibold rounded-xl border border-emerald-200">
+                      {couponSuccess}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleCreateCoupon} className="space-y-4 text-xs">
+                    <div>
+                      <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                        Coupon Code <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. WELCOME10, FESTIVE100"
+                        value={newCoupon.code}
+                        onChange={e => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase().replace(/\s+/g, '') })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-mono font-bold text-sm tracking-wider uppercase"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                          Discount Type
+                        </label>
+                        <select
+                          value={newCoupon.discountType}
+                          onChange={e => setNewCoupon({ ...newCoupon, discountType: e.target.value as 'percentage' | 'fixed' })}
+                          className="w-full px-3 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-medium"
+                        >
+                          <option value="percentage">Percentage (%) Off</option>
+                          <option value="fixed">Fixed Amount (₹) Off</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                          {newCoupon.discountType === 'percentage' ? 'Percent Value (%)' : 'Discount (₹)'} <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          min={1}
+                          max={newCoupon.discountType === 'percentage' ? 100 : 10000}
+                          value={newCoupon.discountValue}
+                          onChange={e => setNewCoupon({ ...newCoupon, discountValue: Number(e.target.value) })}
+                          className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16] font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                          Min Order Value (₹)
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="0 (no minimum)"
+                          value={newCoupon.minOrderValue}
+                          onChange={e => setNewCoupon({ ...newCoupon, minOrderValue: Number(e.target.value) })}
+                          className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16]"
+                        />
+                      </div>
+
+                      {newCoupon.discountType === 'percentage' ? (
+                        <div>
+                          <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                            Max Cap (₹) (Optional)
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="e.g. 200 (max cap)"
+                            value={newCoupon.maxDiscountCap}
+                            onChange={e => setNewCoupon({ ...newCoupon, maxDiscountCap: e.target.value })}
+                            className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16]"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                            Total Usage Limit
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="e.g. 100 uses"
+                            value={newCoupon.usageLimit}
+                            onChange={e => setNewCoupon({ ...newCoupon, usageLimit: e.target.value })}
+                            className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16]"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                          Expiry Date (Optional)
+                        </label>
+                        <input
+                          type="date"
+                          value={newCoupon.expiryDate}
+                          onChange={e => setNewCoupon({ ...newCoupon, expiryDate: e.target.value })}
+                          className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16]"
+                        />
+                      </div>
+
+                      {newCoupon.discountType === 'percentage' && (
+                        <div>
+                          <label className="block font-semibold text-[#5A5248] uppercase tracking-wider mb-1">
+                            Total Usage Limit
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="e.g. 100 uses"
+                            value={newCoupon.usageLimit}
+                            onChange={e => setNewCoupon({ ...newCoupon, usageLimit: e.target.value })}
+                            className="w-full px-3.5 py-2 rounded-xl border border-[#D0C8B8] focus:border-[#0E2A47] focus:outline-none text-[#1C1A16]"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <input
+                        type="checkbox"
+                        id="newCouponActive"
+                        checked={newCoupon.isActive}
+                        onChange={e => setNewCoupon({ ...newCoupon, isActive: e.target.checked })}
+                        className="w-4 h-4 text-[#0E2A47] rounded-sm focus:ring-[#0E2A47]"
+                      />
+                      <label htmlFor="newCouponActive" className="text-xs font-semibold text-[#1C1A16] cursor-pointer">
+                        Coupon is Active Immediately
+                      </label>
+                    </div>
+
+                    <div className="flex gap-3 pt-3 border-t border-[#E8E0D0]">
+                      <button
+                        type="button"
+                        onClick={() => setIsCreatingCoupon(false)}
+                        className="flex-1 py-2.5 rounded-xl border border-[#D0C8B8] text-[#5A5248] font-semibold text-xs hover:bg-[#FAF8F3] transition-colors cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={couponSubmitting}
+                        className="flex-1 py-2.5 rounded-xl bg-[#0E2A47] hover:bg-[#163A60] text-[#F5E6B0] font-semibold text-xs shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <FiSave className="w-4 h-4" />
+                        <span>{couponSubmitting ? 'Creating...' : 'Save Coupon'}</span>
+                      </button>
+                    </div>
+                  </form>
                 </div>
-
-                <pre className="p-4 rounded-2xl bg-[#0E2A47] text-[#E2E8F0] text-[11px] font-mono overflow-x-auto max-h-64 leading-relaxed">
-                  {scriptTemplate}
-                </pre>
               </div>
-            </div>
+            )}
+
+            {/* MODAL: VIEW WHO USED IT (USAGE LOG) */}
+            {inspectingCoupon && (
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+                <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-[#E8E0D0]">
+                  <div className="flex justify-between items-start border-b border-[#E8E0D0] pb-3">
+                    <div>
+                      <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-wider">Coupon Redemptions History</span>
+                      <h3 className="font-serif font-bold text-lg text-[#0E2A47] flex items-center gap-2">
+                        <span>Code: {inspectingCoupon.code}</span>
+                        <span className="text-xs font-normal text-[#8A7E6E]">({(inspectingCoupon.usedBy || []).length} uses)</span>
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => setInspectingCoupon(null)}
+                      className="p-1.5 text-[#8A7E6E] hover:text-[#0E2A47] rounded-full hover:bg-stone-100 cursor-pointer"
+                    >
+                      <FiXCircle className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {(!inspectingCoupon.usedBy || inspectingCoupon.usedBy.length === 0) ? (
+                    <div className="p-8 text-center text-[#8A7E6E] space-y-2">
+                      <FiUsers className="w-10 h-10 mx-auto text-[#C8BFA8]" />
+                      <p className="text-sm font-semibold text-[#1C1A16]">No Customer Redemptions Yet</p>
+                      <p className="text-xs">
+                        When customers apply code <strong>{inspectingCoupon.code}</strong> and complete an order, their name, phone, order ID, and discount saved will be logged here automatically.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                      {inspectingCoupon.usedBy.map((usage, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-[#FAF8F3] p-3.5 rounded-xl border border-[#E8E0D0] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                        >
+                          <div className="space-y-0.5">
+                            <p className="font-bold text-[#1C1A16] text-sm">{usage.customerName}</p>
+                            <div className="flex items-center gap-2 text-[#5A5248]">
+                              <span className="font-mono text-[#0E2A47] font-semibold">{usage.orderId}</span>
+                              <span>&bull;</span>
+                              <span>{new Date(usage.usedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                            </div>
+                            <p className="text-[11px] text-emerald-700 font-semibold">
+                              Saved ₹{usage.discountAmount} with this code
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={`tel:${usage.phone}`}
+                              className="px-2.5 py-1 rounded-lg bg-[#0E2A47] text-white font-semibold text-[11px] flex items-center gap-1 shadow-xs hover:bg-[#163A60]"
+                            >
+                              <FiPhone className="w-3 h-3" />
+                              <span>{usage.phone}</span>
+                            </a>
+                            <a
+                              href={`https://wa.me/91${usage.phone.replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-lg bg-[#25D366] text-white hover:bg-[#1ebe5d] shadow-xs"
+                              title="Chat on WhatsApp"
+                            >
+                              <FaWhatsapp className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="pt-2 border-t border-[#E8E0D0] flex justify-end">
+                    <button
+                      onClick={() => setInspectingCoupon(null)}
+                      className="px-5 py-2 rounded-xl bg-[#0E2A47] text-white text-xs font-semibold hover:bg-[#163A60] cursor-pointer"
+                    >
+                      Close Log
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

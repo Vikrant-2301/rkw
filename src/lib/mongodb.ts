@@ -51,3 +51,8 @@ export async function getSettingsCollection(): Promise<Collection> {
   const db = await getDatabase();
   return db.collection('settings');
 }
+
+export async function getCouponsCollection(): Promise<Collection> {
+  const db = await getDatabase();
+  return db.collection('coupons');
+}

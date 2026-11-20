@@ -2123,7 +2123,7 @@ export function ProductPage({
                       onClick={() => snapAngle(0.5)}
                       className="rounded-full px-2.5 py-0.5 hover:bg-white/20 transition"
                     >
-                      Nutrition
+                      Purity Seal
                     </button>
                     <button
                       type="button"
@@ -2213,57 +2213,13 @@ export function ProductPage({
             <span className="text-[11px] font-semibold text-stone-500">Taxes included &bull; Free Delhi NCR above ₹799</span>
           </div>
 
-          {/* Tab Navigation */}
-          <div className="mt-3 flex items-center rounded-xl bg-stone-100 p-1 border border-stone-200 text-xs font-bold text-stone-600">
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab("order");
-                soundSystem?.playWoodClick();
-              }}
-              className={cn(
-                "flex-1 py-1.5 rounded-lg text-center transition-all",
-                activeTab === "order" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
-              )}
-            >
-              🛒 Select &amp; Order
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab("process");
-                soundSystem?.playWoodClick();
-              }}
-              className={cn(
-                "flex-1 py-1.5 rounded-lg text-center transition-all",
-                activeTab === "process" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
-              )}
-            >
-              🌿 Cold-Press Heritage
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab("lab");
-                soundSystem?.playWoodClick();
-              }}
-              className={cn(
-                "flex-1 py-1.5 rounded-lg text-center transition-all",
-                activeTab === "lab" ? "bg-white text-[#0E2A47] shadow-sm font-black" : "hover:text-stone-900"
-              )}
-            >
-              🧪 Purity &amp; Nutrition
-            </button>
-          </div>
-
-          {/* TAB 1: ORDER */}
-          {activeTab === "order" && (
-            <div className="mt-3.5 space-y-3.5">
-              <div>
-                <div className="mb-1.5 flex items-center justify-between">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-stone-700">Select Volume / Packaging:</span>
-                  <span className="text-[11px] font-bold text-[#0E2A47]">{size}</span>
-                </div>
+          {/* ORDER & VOLUME SELECTION */}
+          <div className="mt-3.5 space-y-3.5">
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-[11px] font-black uppercase tracking-wider text-stone-700">Select Volume / Packaging:</span>
+                <span className="text-[11px] font-bold text-[#0E2A47]">{size}</span>
+              </div>
                 <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {p.sizes.map((sz) => {
                     const on = size === sz;
@@ -2401,76 +2357,8 @@ export function ProductPage({
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 2: EXTRACTION & PROCESS */}
-          {activeTab === "process" && (
-            <div className="mt-3.5 space-y-3 text-xs text-stone-700">
-              <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
-                <p className="font-bold text-amber-900">
-                  <span className="font-black">Cold Extraction Method:</span> Traditional Kachi Ghani (Kolhu) at slow 14 RPM without friction heat. Made without chemical solvents or artificial refining.
-                </p>
-                <p className="mt-1 text-[11px] text-amber-800">
-                  <span className="font-bold">Source Region:</span> {p.sourceType || "Seeds sourced from"} {p.origin || "Rajasthan certified fields"}.
-                </p>
-              </div>
-
-              <div>
-                <p className="font-black uppercase tracking-wider text-stone-800 text-[11px] mb-1.5">Key Health Benefits:</p>
-                <div className="space-y-1.5">
-                  {p.benefits.map((b, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <ShieldCheck className="size-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-stone-700 font-medium leading-snug">{b}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-stone-100 pt-2">
-                <p className="font-black text-[11px] text-stone-800">Ingredients:</p>
-                <p className="text-[11px] text-stone-600 mt-0.5 italic">{p.ingredients}</p>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: LAB VERIFIED & NUTRITION */}
-          {activeTab === "lab" && (
-            <div className="mt-3.5 space-y-3 text-xs">
-              <div className="flex items-center justify-between rounded-xl bg-stone-50 border border-stone-200 p-2.5">
-                <div>
-                  <span className="font-black text-[#0E2A47] text-sm italic">fssai</span>
-                  <span className="ml-1.5 text-[11px] font-bold text-stone-700">Lic. No. 10018011004919</span>
-                </div>
-                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-800">
-                  100% PURE &bull; 0% ARGEMONE
-                </span>
-              </div>
-
-              <div>
-                <p className="font-black uppercase tracking-wider text-stone-800 text-[11px] mb-1">Nutrition Facts (per 100g):</p>
-                <div className="max-h-40 overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/50 p-2">
-                  <table className="w-full text-[11px]">
-                    <tbody>
-                      {getNutritionFacts(p).map(([lbl, val], idx) => (
-                        <tr key={idx} className="border-b border-stone-100 last:border-0">
-                          <td className="py-1 text-stone-600 font-medium">{lbl}</td>
-                          <td className="py-1 text-right font-black text-stone-900">{val}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="border-t border-stone-100 pt-2">
-                <p className="font-black text-[11px] text-stone-800">Culinary &amp; Wellness Instructions:</p>
-                <p className="text-[11px] text-stone-600 mt-0.5 leading-relaxed">{p.howTo}</p>
-              </div>
-            </div>
-          )}
-
-          <p className="mt-3 text-center text-[11px] italic leading-snug text-stone-600">{p.tagline}</p>
+            <p className="mt-3 text-center text-[11px] italic leading-snug text-stone-600">{p.tagline}</p>
         </motion.div>
       </div>
     </motion.div>

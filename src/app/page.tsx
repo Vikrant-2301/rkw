@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Tiro_Devanagari_Hindi } from 'next/font/google';
@@ -8,6 +9,76 @@ import { StoreLocatorSection } from '@/components/StoreLocatorSection';
 import { FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/config/site';
+
+export const metadata: Metadata = {
+  title: 'Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Authentic Vedic Bilona Ghee Delhi NCR',
+  description:
+    'Experience 100% pure cold-pressed oils (Yellow Mustard, Black Mustard, Coconut, Sesame, Groundnut) extracted live before your eyes and pure A2 Vedic Bilona Ghee in Delhi NCR. 4 Stores in Delhi. Free home delivery above ₹799.',
+  keywords: [
+    'edible oil near me',
+    'cold pressed oil near me',
+    'mustard oil near me',
+    'kachi ghani mustard oil near me',
+    'bilona ghee near me',
+    'desi cow ghee near me',
+    'oil mill Delhi',
+    'pure cold pressed oil Delhi NCR',
+    'Ramesh Kolhu Wale',
+    'RKW oils',
+    'pure mustard oil shop East Delhi',
+    'yellow mustard oil cold pressed',
+    'black mustard oil jhal',
+    'wood cold press oil Delhi',
+  ],
+  alternates: {
+    canonical: 'https://rameshkolhuwale.com',
+  },
+  openGraph: {
+    title: 'Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Vedic Bilona Ghee',
+    description: '100% pure live-extracted cold-pressed oils and authentic Vedic Bilona Desi Ghee in Delhi NCR. Free delivery above ₹799.',
+    url: 'https://rameshkolhuwale.com',
+    images: [{ url: '/images/hero.jpg', width: 1200, height: 630 }],
+  },
+};
+
+const homeFaqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where can I buy pure cold-pressed oil near me in Delhi NCR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can buy pure, live-extracted cold-pressed oils directly at Ramesh Kolhu Wale experience stores in East Delhi (Khureji Khas, New Ashok Nagar) and North East Delhi (Maujpur, Karawal Nagar). We also offer free home delivery across all Delhi NCR pin codes on orders above ₹799."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Ramesh Kolhu Wale cold-pressed oils different from supermarket oils?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unlike refined supermarket oils which use chemical solvents (hexane) and extreme temperatures up to 200°C, Ramesh Kolhu Wale presses single-origin seeds at slow 14 RPM room temperature. You can stand at our live extraction units and watch the pure oil extracted fresh before your eyes, with zero additives, zero preservatives, and zero palm oil adulteration."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is Ramesh Kolhu Wale Vedic Bilona Ghee prepared?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our Bilona Ghee is prepared strictly via the authentic Ayurvedic 5-samskara method: fresh whole milk is cultured into curd, churned with wooden bilona to separate fresh makkhan (butter), and then gently slow-simmered on low flame to produce aromatic, golden, granular A2 Desi Cow & Buffalo Ghee."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are your store timings and home delivery policies?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our live extraction units in Delhi are open all 7 days from 10:00 AM to 8:30 PM. We provide doorstep delivery across Delhi NCR with free delivery on orders above ₹799 (₹100 delivery fee on orders below ₹799)."
+      }
+    }
+  ]
+};
 
 const deva = Tiro_Devanagari_Hindi({ subsets: ['devanagari', 'latin'], weight: '400' });
 
@@ -165,6 +236,10 @@ export default function HomePage() {
 
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: 'clip' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd) }}
+      />
       <style>{`
         @keyframes rkw-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
         @keyframes rkw-spin { to { transform: rotate(360deg) } }
