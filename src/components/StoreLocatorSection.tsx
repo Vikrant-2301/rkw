@@ -21,6 +21,7 @@ import {
   FiX,
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import { Loader } from '@/components/ui/loader';
 
 interface StoreLocatorSectionProps {
   id?: string;
@@ -540,7 +541,11 @@ export const StoreLocatorSection: React.FC<StoreLocatorSectionProps> = ({
                   disabled={geoState === 'loading'}
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#F2B705] hover:bg-[#d9a304] text-[#0E2A47] font-bold text-xs sm:text-sm rounded-xl transition-all shadow-sm hover:scale-[1.02] cursor-pointer disabled:opacity-75"
                 >
-                  <FiCrosshair className={`w-4 h-4 ${geoState === 'loading' ? 'animate-spin' : ''}`} />
+                  {geoState === 'loading' ? (
+                    <Loader size={18} tone="dark" />
+                  ) : (
+                    <FiCrosshair className="w-4 h-4" />
+                  )}
                   {geoState === 'loading' ? 'Locating nearest unit…' : userLoc ? 'Update my location' : 'Find a unit near me'}
                 </button>
                 {isComingSoon(selected) ? (

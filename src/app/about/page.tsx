@@ -102,7 +102,7 @@ export default function AboutPage() {
 
           <div className="mt-12 sm:mt-20 relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2.35/1] overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg border border-[#E8E0D0]">
             <Image
-              src="/images/Rustic RKW Mustard Oil Workshop.png"
+              src="/images/RKW Mustard Oil Rustic Press Setting.png"
               alt="Traditional cold-press extraction at Ramesh Kolhu Wale"
               fill
               priority
@@ -217,7 +217,7 @@ export default function AboutPage() {
             <div className="order-1 lg:order-2 relative">
               <div className="aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/5] relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15 shadow-2xl">
                 <Image
-                  src="/images/hero.jpg"
+                  src="/images/hero.png"
                   alt="The traditional cold-pressing process"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -238,9 +238,8 @@ export default function AboutPage() {
             {stats.map((item, i) => (
               <div
                 key={item.label}
-                className={`py-6 sm:py-9 pl-4 sm:pl-7 border-white/10 ${i % 2 === 0 ? 'border-r' : ''} ${
-                  i < 2 ? 'border-b md:border-b-0' : ''
-                } ${i === 1 ? 'md:border-r' : ''} ${i === 2 ? 'md:border-r' : ''}`}
+                className={`py-6 sm:py-9 pl-4 sm:pl-7 border-white/10 ${i % 2 === 0 ? 'border-r' : ''} ${i < 2 ? 'border-b md:border-b-0' : ''
+                  } ${i === 1 ? 'md:border-r' : ''} ${i === 2 ? 'md:border-r' : ''}`}
               >
                 <p className="font-serif text-3xl sm:text-5xl text-[#F5E6B0]">{item.value}</p>
                 <p className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#8EA5BC]">

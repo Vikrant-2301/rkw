@@ -39,6 +39,7 @@ import {
   FiPercent
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import { Loader, SectionLoader } from '@/components/ui/loader';
 
 interface OrderItem {
   id: string;
@@ -906,9 +907,8 @@ export default function AdminPage() {
 
             {/* Orders Feed */}
             {ordersLoading && orders.length === 0 ? (
-              <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0]">
-                <FiRefreshCw className="w-8 h-8 animate-spin mx-auto text-[#0E2A47] mb-3" />
-                <p className="text-sm">Loading orders from MongoDB database...</p>
+              <div className="bg-white rounded-2xl p-12 text-center border border-[#E8E0D0]">
+                <SectionLoader label="Loading orders from MongoDB database..." minHeight={160} />
               </div>
             ) : orders.length === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0] space-y-2">
@@ -1218,6 +1218,12 @@ export default function AdminPage() {
                 <button onClick={() => setProductSuccessMsg('')} className="text-emerald-700 hover:text-emerald-900 font-bold ml-2">
                   ✕
                 </button>
+              </div>
+            )}
+
+            {productsLoading && products.length === 0 && (
+              <div className="bg-white rounded-2xl p-12 text-center border border-[#E8E0D0]">
+                <SectionLoader label="Loading product catalog from database..." minHeight={180} />
               </div>
             )}
 
@@ -2281,9 +2287,8 @@ export default function AdminPage() {
 
             {/* Coupons List */}
             {couponsLoading && coupons.length === 0 ? (
-              <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0]">
-                <FiRefreshCw className="w-8 h-8 animate-spin mx-auto text-[#0E2A47] mb-3" />
-                <p className="text-sm">Loading coupons from MongoDB...</p>
+              <div className="bg-white rounded-2xl p-12 text-center border border-[#E8E0D0]">
+                <SectionLoader label="Loading coupons from MongoDB..." minHeight={160} />
               </div>
             ) : coupons.length === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center text-[#8A7E6E] border border-[#E8E0D0] space-y-3">

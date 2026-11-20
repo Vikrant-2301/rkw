@@ -13,12 +13,12 @@ import {
   FiPrinter,
   FiHome,
   FiPhone,
-  FiLoader,
   FiShield,
   FiClock
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/config/site';
+import { Loader } from '@/components/ui/loader';
 
 interface FinalOrderSnapshot {
   orderId: string;
@@ -644,7 +644,7 @@ export default function CheckoutPage() {
             >
               {isSubmitting ? (
                 <>
-                  <FiLoader className="w-4 h-4 animate-spin" />
+                  <Loader size={18} tone="light" />
                   <span>Submitting Order...</span>
                 </>
               ) : (

@@ -7,6 +7,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { WhatsAppOrderButton } from "@/components/WhatsAppOrderButton";
 import { SITE_CONFIG } from "@/config/site";
+import Preloader from "@/components/ui/preloader";
 
 const siteUrl = "https://rameshkolhuwale.com";
 
@@ -394,6 +395,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-[#FAF8F3] text-stone-900 font-sans antialiased selection:bg-amber-300 selection:text-[#0E2A47]">
         <CartProvider>
+          <Preloader />
           <ScrollToTop />
           <Navbar />
           <main className="flex-1">

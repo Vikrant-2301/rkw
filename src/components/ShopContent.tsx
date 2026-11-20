@@ -7,13 +7,14 @@ import { useSearchParams } from 'next/navigation';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiTruck, FiClock, FiFilter } from 'react-icons/fi';
 import { SITE_CONFIG } from '@/config/site';
+import { SectionLoader } from '@/components/ui/loader';
 
 export function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState<'featured' | 'price_low' | 'price_high'>('featured');
-  const { products } = useLiveProducts();
+  const { products, loading } = useLiveProducts();
 
   const categories = [
     { id: 'all', label: 'All Products' },
@@ -110,11 +111,15 @@ export function ShopContent() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-        {filteredAndSorted.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {loading && products.length === 0 ? (
+        <SectionLoader label="Loading fresh cold-pressed oils & Vedic ghee…" minHeight={320} />
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+          {filteredAndSorted.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
 
       {filteredAndSorted.length === 0 && (
         <div className="text-center py-20 text-[#8A7E6E] space-y-3">

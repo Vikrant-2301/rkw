@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/config/site';
+import { Loader } from '@/components/ui/loader';
 
 interface OrderData {
   orderId: string;
@@ -116,7 +117,14 @@ export default function TrackOrderPage() {
             disabled={loading}
             className="px-6 py-3 bg-[#0E2A47] hover:bg-[#163A60] text-[#F5E6B0] font-semibold text-xs sm:text-sm rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
           >
-            {loading ? <span>Searching...</span> : <span>Track Status</span>}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <Loader size={16} tone="light" />
+                <span>Searching...</span>
+              </span>
+            ) : (
+              <span>Track Status</span>
+            )}
             <FiArrowRight className="w-4 h-4" />
           </button>
         </div>
