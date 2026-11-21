@@ -6,13 +6,73 @@ import { FaWhatsapp } from 'react-icons/fa';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site';
 
+const siteUrl = 'https://rameshkolhuwale.com';
+
 export const metadata: Metadata = {
-  title: 'Our Story Since 1981 | Ramesh Kolhu Wale',
+  title: 'Our Story Since 1981 | Heritage of Pure Cold-Pressed Oils | Ramesh Kolhu Wale (RKW)',
   description:
-    'Discover the story of Ramesh Kolhu Wale. A Delhi-based family tradition of authentic cold-pressed oils and traditional Bilona ghee since 1981.',
+    'Discover the 40+ year legacy of Ramesh Kolhu Wale (RKW). Four generations dedicated to 100% pure live cold-pressed oils and authentic Vedic Bilona Desi Ghee in Delhi NCR since 1981.',
+  keywords: [
+    'Ramesh Kolhu Wale story',
+    'RKW history',
+    'rameshkolhuwale history',
+    'cold pressed oil manufacturer Delhi',
+    'heritage oil mill Delhi',
+    'Ramesh Kolhu Wale founder',
+    'traditional oil ghani Delhi',
+  ],
   alternates: {
-    canonical: '/about',
+    canonical: `${siteUrl}/about`,
   },
+  openGraph: {
+    title: 'Our Story Since 1981 | Ramesh Kolhu Wale (RKW)',
+    description: 'Four generations of purity, slow cold-pressed oils, and authentic Vedic Bilona Ghee in Delhi NCR.',
+    url: `${siteUrl}/about`,
+    images: [{ url: '/images/hero.jpg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Our Story Since 1981 | Ramesh Kolhu Wale (RKW)',
+    description: 'Four generations of purity, slow cold-pressed oils, and authentic Vedic Bilona Ghee in Delhi NCR.',
+    images: ['/images/hero.jpg'],
+  },
+};
+
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: siteUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Our Story',
+          item: `${siteUrl}/about`,
+        },
+      ],
+    },
+    {
+      '@type': 'AboutPage',
+      name: 'About Ramesh Kolhu Wale (RKW) - Heritage Cold Pressed Oils Since 1981',
+      description:
+        'The story and principles behind Ramesh Kolhu Wale (RKW), family-owned extractors of 100% pure cold-pressed oils and Vedic Bilona Ghee in Delhi NCR.',
+      url: `${siteUrl}/about`,
+      mainEntity: {
+        '@type': 'Organization',
+        name: 'Ramesh Kolhu Wale',
+        alternateName: 'RKW',
+        foundingDate: '1981',
+        url: siteUrl,
+      },
+    },
+  ],
 };
 
 const UNIT_HOURS = '10:00 AM – 8:30 PM';
@@ -54,6 +114,10 @@ export default function AboutPage() {
 
   return (
     <main className="bg-[#FAF8F3] text-[#1C1A16]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
       {/* 01 — OPENING */}
       <section className="relative pt-14 sm:pt-20 lg:pt-28 pb-14 sm:pb-20 border-b border-[#E8E0D0]">
         <div className="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-[#EBF2F8]/70 rounded-full blur-3xl pointer-events-none -mr-24 -mt-24" />

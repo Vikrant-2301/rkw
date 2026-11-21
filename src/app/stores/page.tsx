@@ -5,10 +5,12 @@ import { SITE_CONFIG } from '@/config/site';
 import { FiClock, FiTruck } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
+const siteUrl = 'https://rameshkolhuwale.com';
+
 export const metadata: Metadata = {
-  title: 'Cold-Pressed Oil & Bilona Ghee Stores Near Me | 4 Units Delhi NCR | Ramesh Kolhu Wale',
+  title: 'Cold-Pressed Oil & Bilona Ghee Stores Near Me | 4 Units Delhi NCR | Ramesh Kolhu Wale (RKW)',
   description:
-    'Find pure cold-pressed oil and authentic Vedic Bilona Ghee near you in Delhi NCR. Visit Ramesh Kolhu Wale live extraction units in Khureji Khas, New Ashok Nagar, Maujpur & Karawal Nagar. Open all 7 days 10:00 AM – 8:30 PM. Free doorstep delivery above ₹799.',
+    'Find pure cold-pressed oil and authentic Vedic Bilona Ghee near you in Delhi NCR. Visit Ramesh Kolhu Wale (RKW) live extraction units in Khureji Khas, New Ashok Nagar, Maujpur & Karawal Nagar. Open all 7 days 10:00 AM – 8:30 PM. Free doorstep delivery above ₹799.',
   keywords: [
     'edible oil near me',
     'cold pressed oil near me',
@@ -28,149 +30,216 @@ export const metadata: Metadata = {
     'cold press oil mill Shahdara',
     'pure mustard oil Delhi NCR',
     'Ramesh Kolhu Wale store locations',
+    'RKW stores Delhi',
+    'rameshkolhuwale stores',
   ],
   alternates: {
-    canonical: 'https://rameshkolhuwale.com/stores',
+    canonical: `${siteUrl}/stores`,
   },
   openGraph: {
-    title: 'Find Ramesh Kolhu Wale Stores & Live Oil Extraction Units in Delhi NCR',
+    title: 'Find Ramesh Kolhu Wale (RKW) Stores & Live Oil Extraction Units in Delhi NCR',
     description: 'Visit our 4 live cold-press units in Delhi NCR to watch pure oils extracted fresh before your eyes, or get doorstep delivery.',
-    url: 'https://rameshkolhuwale.com/stores',
+    url: `${siteUrl}/stores`,
     images: [{ url: '/images/hero.jpg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ramesh Kolhu Wale (RKW) Store Locator Delhi NCR',
+    description: 'Visit our 4 live extraction units in Delhi or order fresh home delivery above ₹799.',
+    images: ['/images/hero.jpg'],
   },
 };
 
 const storesJsonLd = {
   "@context": "https://schema.org",
-  "@type": "ItemList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@type": "GroceryStore",
-        "name": "Ramesh Kolhu Wale - Khureji Khas Unit",
-        "telephone": "+91-9217744381",
-        "priceRange": "₹₹",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump (Opp. Samuday Bhawan)",
-          "addressLocality": "East Delhi",
-          "addressRegion": "Delhi",
-          "postalCode": "110051",
-          "addressCountry": "IN"
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": siteUrl
         },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 28.6446813,
-          "longitude": 77.2800298
-        },
-        "hasMap": "https://maps.app.goo.gl/y1iW6qWyyDJ5TTU7A",
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            "opens": "10:00",
-            "closes": "20:30"
-          }
-        ]
-      }
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Store Locator",
+          "item": `${siteUrl}/stores`
+        }
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "item": {
-        "@type": "GroceryStore",
-        "name": "Ramesh Kolhu Wale - New Ashok Nagar Unit",
-        "telephone": "+91-9217744382",
-        "priceRange": "₹₹",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "A-688, New Ashok Nagar, Near DPA Public School",
-          "addressLocality": "East Delhi",
-          "addressRegion": "Delhi",
-          "postalCode": "110096",
-          "addressCountry": "IN"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 28.594224,
-          "longitude": 77.3112919
-        },
-        "hasMap": "https://maps.app.goo.gl/R5WSvmgL81Yp3CPB6",
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            "opens": "10:00",
-            "closes": "20:30"
+      "@type": "ItemList",
+      "name": "Ramesh Kolhu Wale Experience Stores & Live Extraction Units",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "GroceryStore",
+            "name": "Ramesh Kolhu Wale - Khureji Khas Unit (RKW)",
+            "telephone": "+91-9217744381",
+            "priceRange": "₹₹",
+            "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+            "currenciesAccepted": "INR",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump (Opp. Samuday Bhawan)",
+              "addressLocality": "East Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110051",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 28.6446813,
+              "longitude": 77.2800298
+            },
+            "hasMap": "https://maps.app.goo.gl/y1iW6qWyyDJ5TTU7A",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "10:00",
+                "closes": "20:30"
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "GroceryStore",
+            "name": "Ramesh Kolhu Wale - New Ashok Nagar Unit (RKW)",
+            "telephone": "+91-9217744382",
+            "priceRange": "₹₹",
+            "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+            "currenciesAccepted": "INR",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "A-688, New Ashok Nagar, Near DPA Public School",
+              "addressLocality": "East Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110096",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 28.594224,
+              "longitude": 77.3112919
+            },
+            "hasMap": "https://maps.app.goo.gl/R5WSvmgL81Yp3CPB6",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "10:00",
+                "closes": "20:30"
+              }
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "GroceryStore",
+            "name": "Ramesh Kolhu Wale - Maujpur Unit (RKW)",
+            "telephone": "+91-9217744380",
+            "priceRange": "₹₹",
+            "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+            "currenciesAccepted": "INR",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Main Road Maujpur",
+              "addressLocality": "North East Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110053",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 28.6967,
+              "longitude": 77.2763
+            },
+            "hasMap": "https://maps.google.com/?q=Maujpur+Main+Road+Delhi+110053",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "10:00",
+                "closes": "20:30"
+              }
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "GroceryStore",
+            "name": "Ramesh Kolhu Wale - Karawal Nagar Unit (RKW)",
+            "telephone": "+91-9217744380",
+            "priceRange": "₹₹",
+            "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+            "currenciesAccepted": "INR",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Karawal Nagar Road",
+              "addressLocality": "North East Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110094",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 28.713226318359375,
+              "longitude": 77.26315307617188
+            },
+            "hasMap": "https://www.google.com/maps?q=28.713226318359375,77.26315307617188",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "10:00",
+                "closes": "20:30"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "item": {
-        "@type": "GroceryStore",
-        "name": "Ramesh Kolhu Wale - Maujpur Unit",
-        "telephone": "+91-9217744380",
-        "priceRange": "₹₹",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Main Road Maujpur",
-          "addressLocality": "North East Delhi",
-          "addressRegion": "Delhi",
-          "postalCode": "110053",
-          "addressCountry": "IN"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 28.6967,
-          "longitude": 77.2763
-        },
-        "hasMap": "https://maps.google.com/?q=Maujpur+Main+Road+Delhi+110053",
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            "opens": "10:00",
-            "closes": "20:30"
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I watch oil being extracted live at Ramesh Kolhu Wale stores?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! All Ramesh Kolhu Wale units feature live cold-press ghanis. You can choose seeds, inspect them, and watch the pure, golden oil cold pressed right in front of you."
           }
-        ]
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "item": {
-        "@type": "GroceryStore",
-        "name": "Ramesh Kolhu Wale - Karawal Nagar Unit",
-        "telephone": "+91-9217744380",
-        "priceRange": "₹₹",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Karawal Nagar Road",
-          "addressLocality": "North East Delhi",
-          "addressRegion": "Delhi",
-          "postalCode": "110094",
-          "addressCountry": "IN"
         },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 28.713226318359375,
-          "longitude": 77.26315307617188
-        },
-        "hasMap": "https://www.google.com/maps?q=28.713226318359375,77.26315307617188",
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            "opens": "10:00",
-            "closes": "20:30"
+        {
+          "@type": "Question",
+          "name": "What are the opening hours of Ramesh Kolhu Wale experience stores?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All our units in Delhi NCR are open all 7 days a week, Monday through Sunday, from 10:00 AM to 8:30 PM."
           }
-        ]
-      }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you offer home delivery from the stores?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we provide doorstep delivery across all pin codes in Delhi NCR. Delivery is completely free on orders above ₹799, and ₹100 for orders below ₹799."
+          }
+        }
+      ]
     }
   ]
 };

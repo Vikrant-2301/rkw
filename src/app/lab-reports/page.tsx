@@ -4,12 +4,79 @@ import { FiShield, FiCheckCircle, FiArrowRight } from 'react-icons/fi';
 import { PRODUCTS } from '@/data/products';
 import type { Metadata } from 'next';
 
+const siteUrl = 'https://rameshkolhuwale.com';
+
 export const metadata: Metadata = {
-  title: 'Quality & Purity Standards | Ramesh Kolhu Wale',
-  description: 'View authentic laboratory purity standards for our cold-pressed oils and pure Bilona ghee. 100% pure, batch tested for every single batch.',
+  title: 'Quality & Purity Standards | Lab Reports | Ramesh Kolhu Wale (RKW)',
+  description:
+    'View authentic laboratory purity test standards for Ramesh Kolhu Wale (RKW) cold-pressed oils and pure Vedic Bilona Ghee. Certified 100% pure, zero argemone, zero mineral oil, zero chemical solvents.',
+  keywords: [
+    'cold pressed oil lab test',
+    'pure mustard oil lab report',
+    'argemone free mustard oil',
+    'chemical free cooking oil test',
+    'bilona ghee purity certificate',
+    'Ramesh Kolhu Wale lab reports',
+    'RKW quality standards',
+    'rameshkolhuwale purity',
+  ],
   alternates: {
-    canonical: '/lab-reports',
+    canonical: `${siteUrl}/lab-reports`,
   },
+  openGraph: {
+    title: 'Lab Reports & Quality Purity Standards | Ramesh Kolhu Wale (RKW)',
+    description: 'Certified 100% pure single-origin cold pressed oils & A2 Vedic Bilona Ghee. Zero adulteration.',
+    url: `${siteUrl}/lab-reports`,
+    images: [{ url: '/images/hero.jpg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Purity Standards & Lab Reports | Ramesh Kolhu Wale (RKW)',
+    description: 'Certified 100% pure single-origin cold pressed oils & A2 Vedic Bilona Ghee. Zero adulteration.',
+    images: ['/images/hero.jpg'],
+  },
+};
+
+const labReportsJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: siteUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Quality & Lab Reports',
+          item: `${siteUrl}/lab-reports`,
+        },
+      ],
+    },
+    {
+      '@type': 'TechArticle',
+      headline: 'Ramesh Kolhu Wale (RKW) Edible Oil Purity & Laboratory Testing Standards',
+      description:
+        'Certified chemical and biological testing protocols verifying 100% pure cold-press oil without mineral oil, argemone, or artificial heating.',
+      author: {
+        '@type': 'Organization',
+        name: 'Ramesh Kolhu Wale (RKW)',
+        url: siteUrl,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Ramesh Kolhu Wale (RKW)',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/logos/5.svg`,
+        },
+      },
+    },
+  ],
 };
 
 export default function LabReportsPage() {
@@ -24,6 +91,10 @@ export default function LabReportsPage() {
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(labReportsJsonLd) }}
+      />
       {/* Header */}
       <section className="bg-[#F2EEE5] py-20 sm:py-28 border-b border-[#E8E0D0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

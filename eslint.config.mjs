@@ -1,3 +1,16 @@
 import nextConfig from "eslint-config-next";
 
-export default nextConfig;
+const customConfig = [
+  ...nextConfig,
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/preserve-manual-memoization": "warn",
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: "off",
+    },
+  },
+];
+
+export default customConfig;

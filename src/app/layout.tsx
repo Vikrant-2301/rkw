@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { WhatsAppOrderButton } from "@/components/WhatsAppOrderButton";
-import { SITE_CONFIG } from "@/config/site";
 import Preloader from "@/components/ui/preloader";
 
 const siteUrl = "https://rameshkolhuwale.com";
@@ -20,20 +19,30 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Vedic Bilona Ghee Delhi NCR",
-    template: "%s | Ramesh Kolhu Wale",
+    default: "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Authentic Vedic Bilona Ghee Delhi NCR",
+    template: "%s | Ramesh Kolhu Wale (RKW)",
   },
   description:
-    "Ramesh Kolhu Wale (RKW) — Est. 1981. 100% pure, unrefined, chemical-free cold-pressed edible oils (Yellow & Black Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic A2 Vedic Bilona Desi Ghee in Delhi NCR. 4 Live Units across Delhi. Free home delivery in Delhi NCR above ₹799.",
+    "Ramesh Kolhu Wale (RKW) — Est. 1981. India's trusted brand for 100% pure, unrefined, chemical-free cold-pressed edible oils (Yellow & Black Mustard, Groundnut, Sesame, Coconut, Badam Rogan) extracted live and authentic A2 Vedic Bilona Desi Ghee in Delhi NCR. 4 Live Units across Delhi. Free doorstep delivery above ₹799.",
   keywords: [
-    // Brand & Legacy
+    // Brand & Power Entities
     "Ramesh Kolhu Wale",
+    "RKW",
+    "rameshkolhuwale",
+    "ramesh kolhu wale",
     "RKW Oils",
+    "RKW Pure Oils",
+    "RKW Edible Oils",
+    "RKW Mustard Oil",
+    "RKW Desi Ghee",
+    "RKW Cold Pressed Oils",
+    "RKW Brand",
     "Ramesh Kolhu Wale Delhi",
     "रमेश कोल्हू वाले",
+    "आरकेडब्ल्यू",
     "RKW Pure Oils & Ghee",
 
-    // High-Intent Local Searches (Near Me / Delhi NCR)
+    // High-Intent Regional & Local Searches (Near Me / Delhi NCR)
     "edible oil near me",
     "cold pressed oil near me",
     "mustard oil near me",
@@ -42,6 +51,7 @@ export const metadata: Metadata = {
     "desi cow ghee near me",
     "oil mill near me",
     "cold press oil store near me",
+    "best cold pressed oil brand in Delhi",
     "pure mustard oil shop in Delhi",
     "cold pressed oil Delhi NCR",
     "live oil extraction Delhi",
@@ -55,7 +65,7 @@ export const metadata: Metadata = {
     "cold pressed oil Noida",
     "pure oil delivery Delhi NCR",
 
-    // Products
+    // Core Products & Hindi Synonyms
     "Cold Pressed Mustard Oil",
     "Yellow Mustard Oil",
     "Pili Sarson Ka Tel",
@@ -79,8 +89,10 @@ export const metadata: Metadata = {
     "Pure Cooking Oil India",
     "Chemical Free Cooking Oil",
     "Unrefined Edible Oil",
+    "Wood Pressed Oil Delhi NCR",
+    "Lakdi Ghani Tel Delhi",
   ],
-  authors: [{ name: "Ramesh Kolhu Wale", url: siteUrl }],
+  authors: [{ name: "Ramesh Kolhu Wale (RKW)", url: siteUrl }],
   creator: "Ramesh Kolhu Wale",
   publisher: "Ramesh Kolhu Wale",
   formatDetection: {
@@ -100,7 +112,7 @@ export const metadata: Metadata = {
     description:
       "100% chemical-free cold-pressed oils extracted live and pure Vedic Bilona Desi Ghee. 4 Units in Delhi NCR. Free home delivery above ₹799.",
     url: siteUrl,
-    siteName: "Ramesh Kolhu Wale",
+    siteName: "Ramesh Kolhu Wale (RKW)",
     locale: "en_IN",
     type: "website",
     images: [
@@ -108,13 +120,13 @@ export const metadata: Metadata = {
         url: "/images/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Ramesh Kolhu Wale — Pure Traditional Cold-Pressed Oils and Bilona Ghee",
+        alt: "Ramesh Kolhu Wale (RKW) — Pure Traditional Cold-Pressed Oils and Bilona Ghee",
       },
       {
         url: "/logos/5.svg",
         width: 800,
         height: 350,
-        alt: "Ramesh Kolhu Wale Official Brand Logo",
+        alt: "Ramesh Kolhu Wale (RKW) Official Brand Logo",
       },
     ],
   },
@@ -127,7 +139,7 @@ export const metadata: Metadata = {
   },
   other: {
     "geo.region": "IN-DL",
-    "geo.placename": "Delhi, New Delhi",
+    "geo.placename": "Delhi, New Delhi, Noida, Delhi NCR",
     "geo.position": "28.644681;77.28003",
     "ICBM": "28.644681, 77.28003",
   },
@@ -166,58 +178,134 @@ export default function RootLayout({
   const jsonLdOrg = {
     "@context": "https://schema.org",
     "@graph": [
+      // 1. Brand Entity
+      {
+        "@type": "Brand",
+        "@id": `${siteUrl}/#brand`,
+        "name": "Ramesh Kolhu Wale",
+        "alternateName": ["RKW", "rameshkolhuwale", "ramesh kolhu wale", "रमेश कोल्हू वाले", "RKW Pure Oils"],
+        "logo": `${siteUrl}/logos/5.svg`,
+        "image": `${siteUrl}/images/hero.jpg`,
+        "slogan": "अनुभव चार पीढ़ियों का, स्वाद हर पीढ़ी का | 100% Pure & Live Cold Pressed Oils Since 1981",
+        "description": "Ramesh Kolhu Wale (RKW) is a pioneer Indian brand producing 100% unrefined, chemical-free cold-pressed edible oils and authentic Ayurvedic Vedic Bilona Desi Ghee.",
+        "url": siteUrl,
+      },
+      // 2. Organization Entity
       {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`,
         "name": "Ramesh Kolhu Wale",
-        "alternateName": ["RKW", "RKW Pure Oils", "रमेश कोल्हू वाले"],
+        "legalName": "Ramesh Kolhu Wale",
+        "alternateName": [
+          "RKW",
+          "rameshkolhuwale",
+          "ramesh kolhu wale",
+          "रमेश कोल्हू वाले",
+          "RKW Pure Oils",
+          "RKW Cold Pressed Oils",
+          "RKW Bilona Ghee"
+        ],
+        "brand": {
+          "@id": `${siteUrl}/#brand`
+        },
         "url": siteUrl,
         "logo": {
           "@type": "ImageObject",
           "url": `${siteUrl}/logos/5.svg`,
-          "caption": "Ramesh Kolhu Wale Logo",
+          "caption": "Ramesh Kolhu Wale (RKW) Brand Logo",
+          "width": 800,
+          "height": 350
         },
-        "description": "Manufacturer, extractor and retailer of authentic 100% chemical-free cold-pressed oils and pure Vedic Bilona Desi Ghee since 1981.",
+        "image": `${siteUrl}/images/hero.jpg`,
+        "description": "Manufacturer, extractor, and retailer of authentic 100% chemical-free cold-pressed oils and pure Vedic Bilona Desi Ghee in Delhi NCR since 1981. Four live extraction units across Delhi.",
         "foundingDate": "1981",
         "telephone": "+91-9217744380",
         "email": "care@rameshkolhuwale.com",
         "sameAs": [
           "https://instagram.com/rameshkolhuwale",
-          "https://facebook.com/rameshkolhuwale",
+          "https://facebook.com/rameshkolhuwale"
         ],
+        "knowsAbout": [
+          "Cold Pressed Oils",
+          "Wood Pressed Oils (Lakdi Ghani / Chekku)",
+          "Kachi Ghani Mustard Oil",
+          "Vedic A2 Bilona Desi Ghee",
+          "Live Cold-Press Extraction",
+          "Yellow Mustard Oil (Pili Sarson Ka Tel)",
+          "Black Mustard Oil (Kali Sarson Ka Tel)",
+          "Cold Pressed White & Black Sesame Oil (Til Ka Tel)",
+          "Cold Pressed Groundnut Oil (Mungfali Ka Tel)",
+          "Extra Virgin Cold Pressed Coconut Oil",
+          "Pure Badam Rogan Almond Oil",
+          "Edible Oil Lab Testing & Purity Certification"
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "2840",
+          "reviewCount": "2840"
+        },
         "contactPoint": [
           {
             "@type": "ContactPoint",
             "telephone": "+91-9217744380",
             "contactType": "customer service",
             "areaServed": "IN",
-            "availableLanguage": ["English", "Hindi"],
-          },
+            "availableLanguage": ["English", "Hindi"]
+          }
         ],
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump",
+          "addressLocality": "East Delhi",
+          "addressRegion": "Delhi",
+          "postalCode": "110051",
+          "addressCountry": "IN"
+        }
       },
+      // 3. WebSite with SearchAction
       {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         "url": siteUrl,
-        "name": "Ramesh Kolhu Wale",
+        "name": "Ramesh Kolhu Wale (RKW)",
+        "alternateName": ["RKW", "rameshkolhuwale"],
         "publisher": {
-          "@id": `${siteUrl}/#organization`,
+          "@id": `${siteUrl}/#organization`
         },
         "potentialAction": {
           "@type": "SearchAction",
           "target": `${siteUrl}/shop?q={search_term_string}`,
-          "query-input": "required name=search_term_string",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      // 4. Speakable Specification for Voice Search & AI Assistants
+      {
+        "@type": "WebPage",
+        "@id": `${siteUrl}/#webpage`,
+        "url": siteUrl,
+        "name": "Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Bilona Ghee",
+        "isPartOf": {
+          "@id": `${siteUrl}/#website`
         },
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["h1", "h2", ".hero-tagline", ".speakable-content"]
+        }
       },
       // Store 1: Khureji Khas Flagship Unit
       {
         "@type": "GroceryStore",
         "@id": `${siteUrl}/#unit-khureji`,
-        "name": "Ramesh Kolhu Wale - Khureji Khas Unit",
+        "name": "Ramesh Kolhu Wale - Khureji Khas Unit (RKW)",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": `${siteUrl}/stores`,
         "telephone": "+91-9217744381",
         "priceRange": "₹₹",
+        "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+        "currenciesAccepted": "INR",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "B-2, Village Khurreji Khas, West Laxmi Market, Nr. HP Petrol Pump (Opp. Samuday Bhawan)",
@@ -258,11 +346,13 @@ export default function RootLayout({
       {
         "@type": "GroceryStore",
         "@id": `${siteUrl}/#unit-ashok-nagar`,
-        "name": "Ramesh Kolhu Wale - New Ashok Nagar Unit",
+        "name": "Ramesh Kolhu Wale - New Ashok Nagar Unit (RKW)",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": `${siteUrl}/stores`,
         "telephone": "+91-9217744382",
         "priceRange": "₹₹",
+        "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+        "currenciesAccepted": "INR",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "A-688, New Ashok Nagar, Near DPA Public School",
@@ -302,11 +392,13 @@ export default function RootLayout({
       {
         "@type": "GroceryStore",
         "@id": `${siteUrl}/#unit-maujpur`,
-        "name": "Ramesh Kolhu Wale - Maujpur Unit",
+        "name": "Ramesh Kolhu Wale - Maujpur Unit (RKW)",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": `${siteUrl}/stores`,
         "telephone": "+91-9217744380",
         "priceRange": "₹₹",
+        "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+        "currenciesAccepted": "INR",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Main Road Maujpur",
@@ -344,11 +436,13 @@ export default function RootLayout({
       {
         "@type": "GroceryStore",
         "@id": `${siteUrl}/#unit-karawal-nagar`,
-        "name": "Ramesh Kolhu Wale - Karawal Nagar Unit",
+        "name": "Ramesh Kolhu Wale - Karawal Nagar Unit (RKW)",
         "image": `${siteUrl}/images/hero.jpg`,
         "url": `${siteUrl}/stores`,
         "telephone": "+91-9217744380",
         "priceRange": "₹₹",
+        "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "UPI", "Google Pay", "PhonePe", "Paytm"],
+        "currenciesAccepted": "INR",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Karawal Nagar Road",

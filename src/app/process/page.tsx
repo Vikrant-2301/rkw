@@ -3,11 +3,37 @@ import Link from 'next/link';
 import { FiArrowRight } from 'react-icons/fi';
 import type { Metadata } from 'next';
 
+const siteUrl = 'https://rameshkolhuwale.com';
+
 export const metadata: Metadata = {
-  title: 'Our Traditional Extraction Process | Ramesh Kolhu Wale',
-  description: 'Discover how we cold-press our oils in traditional cold-press units and churn authentic Bilona Ghee at Ramesh Kolhu Wale.',
+  title: 'Our Traditional Extraction Process | Cold-Pressed Oils & Bilona Ghee | Ramesh Kolhu Wale (RKW)',
+  description:
+    'Discover how Ramesh Kolhu Wale (RKW) extracts 100% pure cold-pressed oils in traditional slow-speed kolhu ghanis at 14 RPM and churns authentic Vedic Bilona Ghee in clay pots since 1981.',
+  keywords: [
+    'cold pressed oil extraction process',
+    'kachi ghani extraction method',
+    'bilona ghee making process',
+    'how cold pressed oil is made',
+    'vedic bilona method',
+    'live oil extraction Delhi',
+    'Ramesh Kolhu Wale process',
+    'RKW oils process',
+    'rameshkolhuwale process',
+  ],
   alternates: {
-    canonical: '/process',
+    canonical: `${siteUrl}/process`,
+  },
+  openGraph: {
+    title: 'How Pure Cold-Pressed Oil & Bilona Ghee are Crafted | Ramesh Kolhu Wale (RKW)',
+    description: 'Zero heat, zero chemical refining, slow 14 RPM kolhu extraction. Discover the 6-step artisanal oil making process.',
+    url: `${siteUrl}/process`,
+    images: [{ url: '/images/hero.jpg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cold-Pressed Extraction Process | Ramesh Kolhu Wale (RKW)',
+    description: 'Zero heat, zero chemical refining. Traditional slow cold-pressed oils & authentic Vedic Bilona Ghee.',
+    images: ['/images/hero.jpg'],
   },
 };
 
@@ -53,8 +79,47 @@ export default function ProcessPage() {
     { num: '05', title: 'Slow Heating', desc: 'Makkhan is heated slowly in a heavy-bottomed brass vessel over slow traditional earthen heat. This is a 2–3 hour process — no shortcuts with high heat.' },
   ];
 
+  const processJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: siteUrl,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Our Traditional Extraction Process',
+            item: `${siteUrl}/process`,
+          },
+        ],
+      },
+      {
+        '@type': 'HowTo',
+        name: 'How Pure Cold-Pressed Oil is Extracted at Ramesh Kolhu Wale (RKW)',
+        description: 'A 6-step artisanal cold-press process without friction heat or chemical solvents.',
+        image: `${siteUrl}/images/hero.jpg`,
+        step: oilSteps.map((step, idx) => ({
+          '@type': 'HowToStep',
+          position: idx + 1,
+          name: step.title,
+          text: step.desc,
+        })),
+      },
+    ],
+  };
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(processJsonLd) }}
+      />
       <section className="bg-[#F2EEE5] py-20 sm:py-28 border-b border-[#E8E0D0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
           <p className="text-[#B8860B] text-xs uppercase tracking-widest mb-4 font-semibold">How We Make It</p>

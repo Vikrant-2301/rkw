@@ -13,8 +13,16 @@ import { SITE_CONFIG } from '@/config/site';
 export const metadata: Metadata = {
   title: 'Ramesh Kolhu Wale (RKW) | Pure Cold-Pressed Oils & Authentic Vedic Bilona Ghee Delhi NCR',
   description:
-    'Experience 100% pure cold-pressed oils (Yellow Mustard, Black Mustard, Coconut, Sesame, Groundnut) extracted live before your eyes and pure A2 Vedic Bilona Ghee in Delhi NCR. 4 Stores in Delhi. Free home delivery above ₹799.',
+    'Ramesh Kolhu Wale (RKW) — Est. 1981. Experience 100% pure cold-pressed oils (Yellow Mustard, Black Mustard, Coconut, Sesame, Groundnut) extracted live before your eyes and pure A2 Vedic Bilona Ghee in Delhi NCR. 4 Stores in Delhi. Free home delivery above ₹799.',
   keywords: [
+    'Ramesh Kolhu Wale',
+    'RKW',
+    'rameshkolhuwale',
+    'ramesh kolhu wale',
+    'RKW oils',
+    'RKW mustard oil',
+    'RKW desi ghee',
+    'RKW cold pressed oil',
     'edible oil near me',
     'cold pressed oil near me',
     'mustard oil near me',
@@ -23,8 +31,6 @@ export const metadata: Metadata = {
     'desi cow ghee near me',
     'oil mill Delhi',
     'pure cold pressed oil Delhi NCR',
-    'Ramesh Kolhu Wale',
-    'RKW oils',
     'pure mustard oil shop East Delhi',
     'yellow mustard oil cold pressed',
     'black mustard oil jhal',
@@ -47,15 +53,23 @@ const homeFaqJsonLd = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Where can I buy pure cold-pressed oil near me in Delhi NCR?",
+      "name": "Who is Ramesh Kolhu Wale (RKW)?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You can buy pure, live-extracted cold-pressed oils directly at Ramesh Kolhu Wale experience stores in East Delhi (Khureji Khas, New Ashok Nagar) and North East Delhi (Maujpur, Karawal Nagar). We also offer free home delivery across all Delhi NCR pin codes on orders above ₹799."
+        "text": "Ramesh Kolhu Wale (RKW) is an iconic Delhi-based artisanal edible oil brand established in 1981 across 4 generations. We are renowned for live-crushed, chemical-free cold-pressed oils (kacchi ghani) and authentic Vedic A2 Bilona Desi Ghee prepared in accordance with traditional Ayurvedic methods."
       }
     },
     {
       "@type": "Question",
-      "name": "What makes Ramesh Kolhu Wale cold-pressed oils different from supermarket oils?",
+      "name": "Where can I buy pure cold-pressed oil near me in Delhi NCR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can buy pure, live-extracted cold-pressed oils directly at Ramesh Kolhu Wale (RKW) experience stores in East Delhi (Khureji Khas, New Ashok Nagar) and North East Delhi (Maujpur, Karawal Nagar). We also offer fast doorstep delivery across all Delhi NCR pin codes with free shipping on orders above ₹799."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes Ramesh Kolhu Wale (RKW) cold-pressed oils different from supermarket oils?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Unlike refined supermarket oils which use chemical solvents (hexane) and extreme temperatures up to 200°C, Ramesh Kolhu Wale presses single-origin seeds at slow 14 RPM room temperature. You can stand at our live extraction units and watch the pure oil extracted fresh before your eyes, with zero additives, zero preservatives, and zero palm oil adulteration."
